@@ -92,13 +92,13 @@ public final class SnailShell {
     }
 
     private PersistentDataContainer getData() {
-        return position.getLowerCornerBlock().getChunk().getPersistentDataContainer();
+        return position.getCornerBlock().getChunk().getPersistentDataContainer();
     }
 
     private Set<Block> getFloorBlocks() {
         final Set<Block> blocks = new HashSet<>();
         final int size = getSize();
-        final Block cornerBlock = position.getLowerCornerBlock();
+        final Block cornerBlock = position.getCornerBlock();
         for (int x = cornerBlock.getX(); x <= cornerBlock.getX() + size + 1; x++) {
             for (int z = cornerBlock.getZ(); z <= cornerBlock.getZ() + size + 1; z++) {
                 blocks.add(world.getBlockAt(x, cornerBlock.getY(), z));
@@ -120,7 +120,7 @@ public final class SnailShell {
     private Set<Block> getWallBlocks(final BlockFace side) {
         final Set<Block> blocks = new HashSet<>();
         final int size = getSize();
-        final Block cornerBlock = position.getLowerCornerBlock();
+        final Block cornerBlock = position.getCornerBlock();
         for (int y = cornerBlock.getY() + 1; y <= cornerBlock.getY() + size; y++) {
             final int horizontalStart;
             if (side == BlockFace.EAST || side == BlockFace.WEST) {
@@ -162,7 +162,7 @@ public final class SnailShell {
     }
 
     private void placeWall() {
-        final Block cornerBlock = position.getLowerCornerBlock();
+        final Block cornerBlock = position.getCornerBlock();
         final DyeColor color = getColor();
         final Material terracotta = MaterialUtil.getColoredTerracotta(color);
         final Material concrete = MaterialUtil.getColoredConcrete(color);
@@ -178,7 +178,7 @@ public final class SnailShell {
     private Set<Block> getRoofBlocks() {
         Set<Block> blocks = new HashSet<>();
         final int size = getSize();
-        final Block cornerBlock = position.getLowerCornerBlock();
+        final Block cornerBlock = position.getCornerBlock();
         final int y = cornerBlock.getY() + size + 1;
         for (int x = cornerBlock.getX(); x <= cornerBlock.getX() + size + 1; x++) {
             for (int z = cornerBlock.getZ(); z <= cornerBlock.getZ() + size + 1; z++) {

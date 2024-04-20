@@ -43,11 +43,11 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
     /**
      * Returns the zero-indexed z-coordinate of this position.
      * <pre>
-     * 0 0 0 0 0
-     * 1 1 1 1 1
-     * 2 2 2 2 2
-     * 3 3 3 3 3
      * 4 4 4 4 4
+     * 3 3 3 3 3
+     * 2 2 2 2 2
+     * 1 1 1 1 1
+     * 0 0 0 0 0
      * </pre>
      */
     public abstract int getZ();
@@ -56,16 +56,14 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
      * Returns the side length of the smallest quadrat that contains this id.
      * Examples:
      * <pre>
-     * Id -> Return value
-     * 1 -> 1
-     * 2 -> 2
-     * 3 -> 2
-     * 4 -> 2
-     * 5 -> 3
-     * ...
-     * 9 -> 3
+     * id -> side length
+     * 1  -> 1
+     * 2  -> 2
+     * 3  -> 2
+     * 4  -> 2
+     * 5  -> 3
+     * 9  -> 3
      * 10 -> 4
-     * ...
      * </pre>
      */
     public abstract int getQuadratSideLength();
@@ -86,12 +84,12 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
     /**
      * Returns the block of this grid cell with the smallest sum of its coordinates and a y-coordinate of zero.
      */
-    public final Block getLowerCornerBlock() {
+    public final Block getCornerBlock() {
         return SchneckenPlugin.INSTANCE.getWorld().getBlockAt(getX() * CELL_SIZE, 0, getZ() * CELL_SIZE);
     }
 
     public final Block getLowerDoorBlock() {
-        return getLowerCornerBlock().getRelative(1, 1, 0);
+        return getCornerBlock().getRelative(1, 1, 0);
     }
 
     public final Block getUpperDoorBlock() {
@@ -99,6 +97,6 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
     }
 
     public final Location getSpawnLocation() {
-        return getLowerCornerBlock().getLocation().add(2, 1, 2);
+        return getCornerBlock().getLocation().add(2, 1, 2).setDirection(BlockFace.SOUTH.getDirection());
     }
 }

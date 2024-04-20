@@ -20,7 +20,7 @@ public final class CoordinatesGridPosition extends GridPosition {
     }
 
     /**
-     * Returns null if the given location is not in the snail shells world.
+     * Returns null if the given location has a world that isn't the snail shells world.
      * Otherwise, returns the grid position that contains the given location or null if there is none.
      */
     public static CoordinatesGridPosition fromWorldPosition(final Location location) {

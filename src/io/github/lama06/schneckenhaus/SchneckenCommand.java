@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
+import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -15,6 +16,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.awt.*;
 import java.util.Arrays;
@@ -108,6 +113,16 @@ public final class SchneckenCommand implements TabExecutor {
         final SnailShell snailShell = new SnailShell(new IdGridPosition(id));
         snailShell.create(size, color, player);
         player.teleport(snailShell.getPosition().getSpawnLocation());
+
+        final ItemStack item = new ItemStack(MaterialUtil.getColoredShulkerBox(color));
+        final ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName("Snail Shell");
+        final PersistentDataContainer itemData = meta.getPersistentDataContainer();
+        itemData.set(Data.SHULKER_ITEM_ID, PersistentDataType.INTEGER, id);
+        item.setItemMeta(meta);
+        if (!player.getInventory().addItem(item).isEmpty()) {
+            player.spigot().sendMessage(new ComponentBuilder("Your inventory is full").color(ChatColor.RED).build());
+        }
     }
 
     private List<String> createTabComplete(final CommandSender sender, final String[] args) {
@@ -166,10 +181,10 @@ public final class SchneckenCommand implements TabExecutor {
 
     private static List<Map.Entry<String, String>> getSnailShellInfoProperties(final SnailShell snailShell) {
         final GridPosition position = snailShell.getPosition();
-        final Block cornerBlock = position.getLowerCornerBlock();
+        final Block cornerBlock = position.getCornerBlock();
         final int size = snailShell.getSize();
         final String creatorName = snailShell.getCreator().getName();
-        return List.of(
+        return List.of( // When editing certain keys, also edit them above
                 Map.entry("Id", Integer.toString(position.getId())),
                 Map.entry("Grid Position", "X: %d, Z: %d".formatted(position.getX(), position.getZ())),
                 Map.entry("World Position", "X: %d, Z: %d".formatted(cornerBlock.getX(), cornerBlock.getZ())),

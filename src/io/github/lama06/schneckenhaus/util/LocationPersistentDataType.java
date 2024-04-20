@@ -10,7 +10,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 /**
- * Stores a {@link Location} including its world (if present), the yaw and pitch
+ * Stores a {@link Location} including its world (if present), yaw and pitch
  */
 public final class LocationPersistentDataType implements PersistentDataType<PersistentDataContainer, Location> {
     public static final LocationPersistentDataType INSTANCE = new LocationPersistentDataType();
@@ -51,7 +51,7 @@ public final class LocationPersistentDataType implements PersistentDataType<Pers
 
     @Override
     public Location fromPrimitive(final PersistentDataContainer primitive, final PersistentDataAdapterContext context) {
-        final String worldName = primitive.has(WORLD, STRING) ? primitive.get(WORLD, STRING) : null;
+        final String worldName = primitive.get(WORLD, STRING);
         final World world = worldName != null ? Bukkit.getWorld(worldName) : null;
         final double x = primitive.get(X, DOUBLE);
         final double y = primitive.get(Y, DOUBLE);

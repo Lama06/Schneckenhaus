@@ -7,12 +7,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 /**
- * {@link NamespacedKey}s used to store data in {@link PersistentDataContainer}s.
+ * Provides {@link NamespacedKey}s this plugin uses to store data in {@link PersistentDataContainer}s.
  */
 public final class Data {
     /**
      * The snail shell id that will be assigned to the next snail shell.
-     * This is attached to the snail shell world.
      * Type: {@link PersistentDataType#INTEGER}.
      */
     public static final NamespacedKey WORLD_NEXT_ID = new NamespacedKey(SchneckenPlugin.INSTANCE, "next_id");
@@ -21,13 +20,13 @@ public final class Data {
      * The snail shell id of a shulker box item.
      * Type: {@link PersistentDataType#INTEGER}.
      */
-    public static final NamespacedKey ITEM_ID = new NamespacedKey(SchneckenPlugin.INSTANCE, "id");
+    public static final NamespacedKey SHULKER_ITEM_ID = new NamespacedKey(SchneckenPlugin.INSTANCE, "id");
 
     /**
      * The snail shell id of a shulker box block.
      * Type: {@link PersistentDataType#INTEGER}.
      */
-    public static final NamespacedKey SHULKER_ID = new NamespacedKey(SchneckenPlugin.INSTANCE, "id");
+    public static final NamespacedKey SHULKER_BLOCK_ID = new NamespacedKey(SchneckenPlugin.INSTANCE, "id");
 
     /**
      * The size of a snail shell.

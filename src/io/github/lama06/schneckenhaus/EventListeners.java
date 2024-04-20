@@ -42,7 +42,7 @@ public final class EventListeners implements Listener {
         final ItemMeta meta = item.getItemMeta();
         final PersistentDataContainer itemData = meta.getPersistentDataContainer();
         final int id = SchneckenPlugin.INSTANCE.getAndIncrementNextId();
-        itemData.set(Data.ITEM_ID, PersistentDataType.INTEGER, id);
+        itemData.set(Data.SHULKER_ITEM_ID, PersistentDataType.INTEGER, id);
         item.setItemMeta(meta);
         final SnailShell snailShell = new SnailShell(new IdGridPosition(id));
         snailShell.create(data.size(), data.color(), (Player) event.getWhoClicked());
@@ -52,7 +52,7 @@ public final class EventListeners implements Listener {
     private void preserveSnailHouseIdWhenPlaced(final BlockPlaceEvent event) {
         final ItemStack itemInHand = event.getItemInHand();
         final PersistentDataContainer itemData = itemInHand.getItemMeta().getPersistentDataContainer();
-        final Integer id = itemData.get(Data.ITEM_ID, PersistentDataType.INTEGER);
+        final Integer id = itemData.get(Data.SHULKER_ITEM_ID, PersistentDataType.INTEGER);
         if (id == null) {
             return;
         }
@@ -61,7 +61,7 @@ public final class EventListeners implements Listener {
             return;
         }
         final PersistentDataContainer shulkerPdc = shulkerBox.getPersistentDataContainer();
-        shulkerPdc.set(Data.SHULKER_ID, PersistentDataType.INTEGER, id);
+        shulkerPdc.set(Data.SHULKER_BLOCK_ID, PersistentDataType.INTEGER, id);
         shulkerBox.update();
     }
 
@@ -71,7 +71,7 @@ public final class EventListeners implements Listener {
             return;
         }
         final PersistentDataContainer shulkerData = shulkerBox.getPersistentDataContainer();
-        final Integer id = shulkerData.get(Data.SHULKER_ID, PersistentDataType.INTEGER);
+        final Integer id = shulkerData.get(Data.SHULKER_BLOCK_ID, PersistentDataType.INTEGER);
         if (id == null) {
             return;
         }
@@ -81,7 +81,7 @@ public final class EventListeners implements Listener {
         final ItemStack item = event.getItems().get(0).getItemStack();
         final ItemMeta meta = item.getItemMeta();
         final PersistentDataContainer itemData = meta.getPersistentDataContainer();
-        itemData.set(Data.ITEM_ID, PersistentDataType.INTEGER, id);
+        itemData.set(Data.SHULKER_ITEM_ID, PersistentDataType.INTEGER, id);
         item.setItemMeta(meta);
     }
 
@@ -99,7 +99,7 @@ public final class EventListeners implements Listener {
             return;
         }
         final PersistentDataContainer shulkerData = shulkerBox.getPersistentDataContainer();
-        final Integer id = shulkerData.get(Data.SHULKER_ID, PersistentDataType.INTEGER);
+        final Integer id = shulkerData.get(Data.SHULKER_BLOCK_ID, PersistentDataType.INTEGER);
         if (id == null) {
             return;
         }
@@ -111,11 +111,11 @@ public final class EventListeners implements Listener {
         if (player.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld())) {
             return;
         }
-        player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_OPEN, 1, 1);
         final Location oldLocation = player.getLocation();
         player.teleport(snailShell.getPosition().getSpawnLocation());
         final PersistentDataContainer playerData = player.getPersistentDataContainer();
         playerData.set(Data.PLAYER_PREVIOUS_LOCATION, LocationPersistentDataType.INSTANCE, oldLocation);
+        player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_OPEN, 1, 1);
     }
 
     @EventHandler
@@ -151,6 +151,7 @@ public final class EventListeners implements Listener {
         );
         data.remove(Data.PLAYER_PREVIOUS_LOCATION);
         player.teleport(newLocation);
+        player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
     }
 
     @EventHandler

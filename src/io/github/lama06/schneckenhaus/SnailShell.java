@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public final class SnailShell {
     public static final int MIN_SIZE = 2;
-    public static final int MAX_SIZE = 32 - 2;
+    public static final int MAX_SIZE = 32 - 2; // Minus two because of the walls on each side.
 
     private final World world;
     private final GridPosition position;

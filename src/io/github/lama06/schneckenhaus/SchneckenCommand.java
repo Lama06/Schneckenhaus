@@ -113,10 +113,10 @@ public final class SchneckenCommand implements TabExecutor {
         final SnailShell snailShell = new SnailShell(new IdGridPosition(id));
         snailShell.create(size, color, player);
         player.teleport(snailShell.getPosition().getSpawnLocation());
-
         final ItemStack item = new ItemStack(MaterialUtil.getColoredShulkerBox(color));
         final ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName("Snail Shell");
+        final ChatColor chatColor = ChatColor.of(new Color(color.getColor().asRGB()));
+        meta.setDisplayName(new ComponentBuilder("Snail Shell").color(chatColor).build().toLegacyText());
         final PersistentDataContainer itemData = meta.getPersistentDataContainer();
         itemData.set(Data.SHULKER_ITEM_ID, PersistentDataType.INTEGER, id);
         item.setItemMeta(meta);
@@ -179,7 +179,7 @@ public final class SchneckenCommand implements TabExecutor {
         sender.spigot().sendMessage(builder.build());
     }
 
-    private static List<Map.Entry<String, String>> getSnailShellInfoProperties(final SnailShell snailShell) {
+    private List<Map.Entry<String, String>> getSnailShellInfoProperties(final SnailShell snailShell) {
         final GridPosition position = snailShell.getPosition();
         final Block cornerBlock = position.getCornerBlock();
         final int size = snailShell.getSize();

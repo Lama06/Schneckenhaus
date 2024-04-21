@@ -4,9 +4,7 @@
     <option name="WORKING_DIRECTORY" value="$ProjectFileDir$\server" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <method v="2">
-      <option name="BuildArtifacts" enabled="true">
-        <artifact name="Test Server Plugin" />
-      </option>
+      <option name="BuildArtifacts" enabled="true" />
     </method>
   </configuration>
 </component>

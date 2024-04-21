@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.*;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -42,6 +43,8 @@ public final class SchneckenPlugin extends JavaPlugin {
         final SchneckenCommand executor = new SchneckenCommand();
         command.setExecutor(executor);
         command.setTabCompleter(executor);
+
+        new Metrics(this, 21674);
     }
 
     private void loadWorld() {

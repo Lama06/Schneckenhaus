@@ -1,5 +1,6 @@
-lib
+target
 server
+dependency-reduced-pom.xml
 
 ### IntelliJ IDEA ###
 out/

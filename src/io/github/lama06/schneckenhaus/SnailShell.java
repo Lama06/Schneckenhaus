@@ -4,15 +4,20 @@ import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.util.EnumPersistentDataType;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import io.github.lama06.schneckenhaus.util.UuidPersistentDataType;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.type.Door;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.awt.Color;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -73,6 +78,20 @@ public final class SnailShell {
         blocks.add(position.getLowerDoorBlock());
         blocks.add(position.getUpperDoorBlock());
         return blocks;
+    }
+
+    /**
+     * Returns a shulker box that teleports to this snail shell.
+     */
+    public ItemStack createShulkerBox() {
+        final ItemStack item = new ItemStack(MaterialUtil.getColoredShulkerBox(getColor()));
+        final ItemMeta meta = item.getItemMeta();
+        final ChatColor color = ChatColor.of(new Color(getColor().getColor().asRGB()));
+        meta.setDisplayName(new ComponentBuilder("Snail Shell").color(color).build().toLegacyText());
+        final PersistentDataContainer itemData = meta.getPersistentDataContainer();
+        itemData.set(Data.SHULKER_ITEM_ID, PersistentDataType.INTEGER, getPosition().getId());
+        item.setItemMeta(meta);
+        return item;
     }
 
     public int getSize() {

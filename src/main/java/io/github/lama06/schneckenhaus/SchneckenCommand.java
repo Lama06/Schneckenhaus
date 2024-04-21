@@ -137,6 +137,9 @@ public final class SchneckenCommand implements TabExecutor {
 
     private void info(final CommandSender sender, final String[] args) {
         final SnailShell snailShell = requireSnailShell(sender, args.length == 1 ? args[0] : null);
+        if (snailShell == null) {
+            return;
+        }
 
         final ComponentBuilder builder = new ComponentBuilder();
         builder.append("Snail Shell\n").color(ChatColor.YELLOW).bold(true);

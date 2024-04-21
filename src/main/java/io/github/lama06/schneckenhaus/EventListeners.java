@@ -3,10 +3,7 @@ package io.github.lama06.schneckenhaus;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
 import io.github.lama06.schneckenhaus.util.LocationPersistentDataType;
-import org.bukkit.Bukkit;
-import org.bukkit.Keyed;
-import org.bukkit.Location;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.ShulkerBox;
@@ -144,11 +141,16 @@ public final class EventListeners implements Listener {
         }
         event.setCancelled(true);
         final PersistentDataContainer data = player.getPersistentDataContainer();
-        final Location newLocation = data.getOrDefault(
-                Data.PLAYER_PREVIOUS_LOCATION,
-                LocationPersistentDataType.INSTANCE,
-                Bukkit.getWorld("world").getSpawnLocation()
-        );
+        final Location newLocation;
+        if (data.has(Data.PLAYER_PREVIOUS_LOCATION, LocationPersistentDataType.INSTANCE)) {
+            newLocation = data.get(Data.PLAYER_PREVIOUS_LOCATION, LocationPersistentDataType.INSTANCE);
+        } else {
+            World world = Bukkit.getWorld("world");
+            if (world == null) { // Some servers don't have this world
+                world = Bukkit.getWorlds().get(0);
+            }
+            newLocation = world.getSpawnLocation();
+        }
         data.remove(Data.PLAYER_PREVIOUS_LOCATION);
         player.teleport(newLocation);
         player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);

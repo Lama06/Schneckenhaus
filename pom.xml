@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <groupId>io.github.lama06</groupId>
     <artifactId>schneckenhaus</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <modelVersion>4.0.0</modelVersion>
     <name>Schneckenhaus-Plugin</name>
     <url>https://github.com/Lama06/Schneckenhaus</url>
@@ -30,9 +30,34 @@
             <version>3.0.2</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <jarOutputDirectory>${project.build.directory}</jarOutputDirectory>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <jarOutputDirectory>server/plugins</jarOutputDirectory>
+            </properties>
+        </profile>
+    </profiles>
+
     <build>
+        <defaultGoal>verify</defaultGoal>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -45,6 +70,14 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.5.2</version>
                 <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>org.bstats:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
@@ -75,7 +108,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <outputDirectory>server/plugins</outputDirectory>
+                    <outputDirectory>${jarOutputDirectory}</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

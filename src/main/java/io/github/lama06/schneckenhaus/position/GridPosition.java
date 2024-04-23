@@ -66,7 +66,7 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
      * 10 -> 4
      * </pre>
      */
-    public abstract int getQuadratSideLength();
+    protected abstract int getQuadratSideLength();
 
     /**
      * Returns if this grid position is above or on the diagonal.
@@ -79,7 +79,7 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
      * 1 0 0 0 0
      * </pre>
      */
-    public abstract boolean isAboveOrOnDiagonal();
+    protected abstract boolean isAboveOrOnDiagonal();
 
     /**
      * Returns the block of this grid cell with the smallest sum of its coordinates and a y-coordinate of zero.

@@ -45,12 +45,12 @@ public final class CoordinatesGridPosition extends GridPosition {
     }
 
     @Override
-    public int getQuadratSideLength() {
+    protected int getQuadratSideLength() {
         return Math.max(x, z) + 1;
     }
 
     @Override
-    public boolean isAboveOrOnDiagonal() {
+    protected boolean isAboveOrOnDiagonal() {
         return z >= x;
     }
 

@@ -17,7 +17,7 @@ public final class IdGridPosition extends GridPosition {
     }
 
     @Override
-    public int getQuadratSideLength() {
+    protected int getQuadratSideLength() {
         final int sqrt = (int) Math.sqrt(id);
         if (sqrt * sqrt == id) {
             return sqrt;
@@ -26,7 +26,7 @@ public final class IdGridPosition extends GridPosition {
     }
 
     @Override
-    public boolean isAboveOrOnDiagonal() {
+    protected boolean isAboveOrOnDiagonal() {
         final int quadratSideLength = getQuadratSideLength();
         final int quadratArea = quadratSideLength * quadratSideLength;
         final int firstId = quadratArea - (quadratSideLength - 1);

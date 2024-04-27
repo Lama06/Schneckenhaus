@@ -24,7 +24,7 @@ public final class CoordinatesGridPosition extends GridPosition {
      * Otherwise, returns the grid position that contains the given location or null if there is none.
      */
     public static CoordinatesGridPosition fromWorldPosition(final Location location) {
-        if (location.getWorld() != null && !location.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld())) {
+        if (location.getWorld() != null && !location.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld().getBukkit())) {
             return null;
         }
         return fromWorldPosition(location.getX(), location.getZ());

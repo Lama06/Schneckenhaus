@@ -7,6 +7,24 @@ website: ${project.url}
 author: Lama06
 commands:
   schneckenhaus:
-    usage: /sh help|create|info|giveShulker
     description: The main command of the Schneckenhaus plugin.
+    usage: /sh help
     aliases: sh
+    permission: schneckenhaus.command
+permissions:
+  schneckenhaus.*:
+    default: op
+    description: Allows to use every feature of the Schneckenhaus plugin
+    children:
+      schneckenhaus.craft: true
+      schneckenhaus.enter: true
+      schneckenhaus.command: true
+  schneckenhaus.craft:
+    description: Allows to craft snail shells
+    default: true
+  schneckenhaus.enter:
+    description: Allows to enter snail shells
+    default: true
+  schneckenhaus.command:
+    description: Allows to use the /schneckenhaus command
+    default: op

@@ -81,18 +81,31 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
      */
     protected abstract boolean isAboveOrOnDiagonal();
 
+    @Override
+    public boolean equals(final Object other) {
+        if (!(other instanceof final GridPosition otherPosition)) {
+            return false;
+        }
+        return getId() == otherPosition.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return getId();
+    }
+
     /**
      * Returns the block of this grid cell with the smallest sum of its coordinates and a y-coordinate of zero.
      */
     public final Block getCornerBlock() {
-        return SchneckenPlugin.INSTANCE.getWorld().getBlockAt(getX() * CELL_SIZE, 0, getZ() * CELL_SIZE);
+        return SchneckenPlugin.INSTANCE.getWorld().getBukkit().getBlockAt(getX() * CELL_SIZE, 0, getZ() * CELL_SIZE);
     }
 
-    public final Block getLowerDoorBlock() {
+    public Block getLowerDoorBlock() {
         return getCornerBlock().getRelative(1, 1, 0);
     }
 
-    public final Block getUpperDoorBlock() {
+    public Block getUpperDoorBlock() {
         return getLowerDoorBlock().getRelative(BlockFace.UP);
     }
 

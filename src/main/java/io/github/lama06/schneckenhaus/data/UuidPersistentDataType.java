@@ -1,14 +1,10 @@
-package io.github.lama06.schneckenhaus.util;
+package io.github.lama06.schneckenhaus.data;
 
 import org.bukkit.persistence.PersistentDataAdapterContext;
-import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.UUID;
 
-/**
- * Stores {@link UUID}s in {@link PersistentDataContainer}s.
- */
 public final class UuidPersistentDataType implements PersistentDataType<String, UUID> {
     public static final UuidPersistentDataType INSTANCE = new UuidPersistentDataType();
 

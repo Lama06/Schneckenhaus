@@ -7,18 +7,24 @@
 
 # Please report issues, give feedback or request features on GitHub: https://github.com/Lama06/Schneckenhaus
 
-# The recipe used to craft a snail shell:
-# A shulker box is always required to craft the snail shell.
-# Additional required ingredients can be specified.
-# Furthermore, a size ingredient can be set which can be used to increase the snail shell's size.
-recipe:
-  # These ingredients must always be present apart from the shulker box:
-  required_ingredients:
-    - minecraft:spyglass
+data_version: 1.0.1
 
-  # The amount of this ingredient determines the size of the snail shell's size:
-  size_ingredient: minecraft:gold_ingot
-  # If no size ingredient is used, the snail shell will have the following size:
-  initial_size: 3
-  # For every size ingredient used, the snail shell's size will increase by this value:
-  size_per_ingredient: 2
+nesting: true
+
+shell_types:
+  shulker:
+    enabled: true
+    recipe:
+      ingredients:
+        - spyglass
+      size_ingredient: gold_ingot
+      initial_size: 4
+      size_per_ingredient: 2
+  chest:
+    enabled: true
+    recipe:
+      ingredients:
+        - spyglass
+      size_ingredient: diamond
+      initial_size: 4
+      size_per_ingredient: 1

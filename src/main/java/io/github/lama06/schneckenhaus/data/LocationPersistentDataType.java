@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.util;
+package io.github.lama06.schneckenhaus.data;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import org.bukkit.Bukkit;
@@ -9,9 +9,6 @@ import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-/**
- * Stores a {@link Location} including its world (if present), yaw and pitch
- */
 public final class LocationPersistentDataType implements PersistentDataType<PersistentDataContainer, Location> {
     public static final LocationPersistentDataType INSTANCE = new LocationPersistentDataType();
 

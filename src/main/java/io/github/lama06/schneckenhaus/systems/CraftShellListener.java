@@ -3,7 +3,7 @@ package io.github.lama06.schneckenhaus.systems;
 import io.github.lama06.schneckenhaus.Permissions;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.recipe.RegisteredShellRecipe;
-import io.github.lama06.schneckenhaus.snell.Shell;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Keyed;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

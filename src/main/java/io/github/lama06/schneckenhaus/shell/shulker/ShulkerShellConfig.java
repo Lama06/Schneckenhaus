@@ -1,8 +1,8 @@
-package io.github.lama06.schneckenhaus.snell.shulker;
+package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.data.Attribute;
 import io.github.lama06.schneckenhaus.data.EnumPersistentDataType;
-import io.github.lama06.schneckenhaus.snell.ShellConfig;
+import io.github.lama06.schneckenhaus.shell.ShellConfig;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.DyeColor;

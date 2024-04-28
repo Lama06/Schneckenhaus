@@ -3,7 +3,7 @@ package io.github.lama06.schneckenhaus.command;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
-import io.github.lama06.schneckenhaus.snell.Shell;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.CommandSender;

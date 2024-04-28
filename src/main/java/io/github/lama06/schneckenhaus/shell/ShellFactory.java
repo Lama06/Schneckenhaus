@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.snell;
+package io.github.lama06.schneckenhaus.shell;
 
 import io.github.lama06.schneckenhaus.command.Require;
 import io.github.lama06.schneckenhaus.position.GridPosition;

@@ -1,10 +1,10 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.snell.Shell;
-import io.github.lama06.schneckenhaus.snell.ShellConfig;
-import io.github.lama06.schneckenhaus.snell.ShellFactories;
-import io.github.lama06.schneckenhaus.snell.ShellFactory;
+import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.ShellConfig;
+import io.github.lama06.schneckenhaus.shell.ShellFactories;
+import io.github.lama06.schneckenhaus.shell.ShellFactory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.command.CommandSender;

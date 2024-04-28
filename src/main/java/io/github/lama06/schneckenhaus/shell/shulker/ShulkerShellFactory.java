@@ -1,9 +1,9 @@
-package io.github.lama06.schneckenhaus.snell.shulker;
+package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.snell.Shell;
-import io.github.lama06.schneckenhaus.snell.ShellFactory;
-import io.github.lama06.schneckenhaus.snell.ShellRecipe;
+import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.ShellFactory;
+import io.github.lama06.schneckenhaus.shell.ShellRecipe;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;

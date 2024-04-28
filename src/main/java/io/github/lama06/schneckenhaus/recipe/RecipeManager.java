@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.recipe;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.snell.*;
+import io.github.lama06.schneckenhaus.shell.*;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;

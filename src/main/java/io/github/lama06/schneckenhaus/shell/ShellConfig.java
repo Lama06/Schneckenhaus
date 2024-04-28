@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.snell;
+package io.github.lama06.schneckenhaus.shell;
 
 import io.github.lama06.schneckenhaus.data.Attribute;
 import net.md_5.bungee.api.ChatColor;

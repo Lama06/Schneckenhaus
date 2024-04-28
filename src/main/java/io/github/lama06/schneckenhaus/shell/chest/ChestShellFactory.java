@@ -1,9 +1,9 @@
-package io.github.lama06.schneckenhaus.snell.chest;
+package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.snell.Shell;
-import io.github.lama06.schneckenhaus.snell.ShellFactory;
-import io.github.lama06.schneckenhaus.snell.ShellRecipe;
+import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.ShellFactory;
+import io.github.lama06.schneckenhaus.shell.ShellRecipe;
 import org.bukkit.Material;
 
 import java.util.Set;

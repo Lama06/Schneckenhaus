@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.SchneckenWorld;
-import io.github.lama06.schneckenhaus.snell.Shell;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;

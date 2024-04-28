@@ -1,7 +1,7 @@
-package io.github.lama06.schneckenhaus.snell.chest;
+package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.snell.Shell;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.World;

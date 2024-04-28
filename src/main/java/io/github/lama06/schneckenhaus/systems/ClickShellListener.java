@@ -4,7 +4,7 @@ import io.github.lama06.schneckenhaus.Permissions;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
-import io.github.lama06.schneckenhaus.snell.Shell;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;

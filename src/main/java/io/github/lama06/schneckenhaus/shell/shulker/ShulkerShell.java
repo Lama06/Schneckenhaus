@@ -1,8 +1,8 @@
-package io.github.lama06.schneckenhaus.snell.shulker;
+package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.command.InfoCommand;
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.snell.Shell;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;

@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.snell;
+package io.github.lama06.schneckenhaus.shell;
 
 import org.bukkit.Material;
 

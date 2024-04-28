@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.snell.Shell;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.event.EventHandler;

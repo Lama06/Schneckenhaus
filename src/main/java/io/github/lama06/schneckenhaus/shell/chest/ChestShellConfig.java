@@ -1,6 +1,6 @@
-package io.github.lama06.schneckenhaus.snell.chest;
+package io.github.lama06.schneckenhaus.shell.chest;
 
-import io.github.lama06.schneckenhaus.snell.ShellConfig;
+import io.github.lama06.schneckenhaus.shell.ShellConfig;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 

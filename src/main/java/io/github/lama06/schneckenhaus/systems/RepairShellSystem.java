@@ -4,7 +4,7 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.SchneckenWorld;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.snell.Shell;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

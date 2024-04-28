@@ -1,7 +1,7 @@
-package io.github.lama06.schneckenhaus.snell;
+package io.github.lama06.schneckenhaus.shell;
 
-import io.github.lama06.schneckenhaus.snell.chest.ChestShellFactory;
-import io.github.lama06.schneckenhaus.snell.shulker.ShulkerShellFactory;
+import io.github.lama06.schneckenhaus.shell.chest.ChestShellFactory;
+import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellFactory;
 
 import java.util.Collection;
 import java.util.HashMap;

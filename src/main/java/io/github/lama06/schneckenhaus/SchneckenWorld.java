@@ -3,7 +3,7 @@ package io.github.lama06.schneckenhaus;
 import io.github.lama06.schneckenhaus.data.Attribute;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
-import io.github.lama06.schneckenhaus.snell.*;
+import io.github.lama06.schneckenhaus.shell.*;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
 import org.bukkit.*;
 import org.bukkit.persistence.PersistentDataContainer;

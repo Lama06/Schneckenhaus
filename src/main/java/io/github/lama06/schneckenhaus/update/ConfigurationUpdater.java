@@ -34,18 +34,18 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
         );
     }
 
+    /*
+    Config in 1.0.1:
+
+    recipe:
+      required_ingredients:
+        - minecraft:spyglass
+      size_ingredient: minecraft:gold_ingot
+      initial_size: 3
+      size_per_ingredient: 2
+     */
+
     private void updateTo1_1_0() {
-        /*
-        Config in 1.0.1:
-
-        recipe:
-          required_ingredients:
-            - minecraft:spyglass
-          size_ingredient: minecraft:gold_ingot
-          initial_size: 3
-          size_per_ingredient: 2
-         */
-
         configuration.set("nesting", false);
 
         final ConfigurationSection recipe = configuration.getConfigurationSection("recipe");
@@ -63,7 +63,7 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
         shulkerRecipe.set("ingredients", requiredIngredients);
         shulkerRecipe.set("size_ingredient", sizeIngredient);
         shulkerRecipe.set("initial_size", initialSize);
-        shulkerRecipe.set("size_increase_per_ingredient", sizePerIngredient);
+        shulkerRecipe.set("size_per_ingredient", sizePerIngredient);
 
         final ConfigurationSection chest = shellTypes.createSection("chest");
         chest.set("enabled", true);
@@ -71,6 +71,31 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
         chestRecipe.set("ingredients", requiredIngredients);
         chestRecipe.set("size_ingredient", sizeIngredient);
         chestRecipe.set("initial_size", initialSize);
-        chestRecipe.set("size_increase_per_ingredient", sizePerIngredient);
+        chestRecipe.set("size_per_ingredient", sizePerIngredient);
     }
+
+    /*
+    Config in 1.1.0:
+    data_version: 1.0.1
+
+    nesting: true
+
+    shell_types:
+      shulker:
+        enabled: true
+        recipe:
+          ingredients:
+            - spyglass
+          size_ingredient: gold_ingot
+          initial_size: 4
+          size_per_ingredient: 2
+      chest:
+        enabled: true
+        recipe:
+          ingredients:
+            - spyglass
+          size_ingredient: diamond
+          initial_size: 4
+          size_per_ingredient: 1
+     */
 }

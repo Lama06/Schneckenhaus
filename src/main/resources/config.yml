@@ -7,7 +7,7 @@
 
 # Please report issues, give feedback or request features on GitHub: https://github.com/Lama06/Schneckenhaus
 
-data_version: 1.0.1
+data_version: ${project.version}
 
 nesting: true
 

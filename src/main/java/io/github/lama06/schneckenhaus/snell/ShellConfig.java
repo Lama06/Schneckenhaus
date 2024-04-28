@@ -9,6 +9,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.List;
+
 public abstract class ShellConfig {
     public static final Attribute<Integer> SIZE = new Attribute<>("size", PersistentDataType.INTEGER);
 
@@ -28,6 +30,7 @@ public abstract class ShellConfig {
         final ItemStack item = new ItemStack(getItemMaterial());
         final ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(new ComponentBuilder("Snail Shell").color(getItemColor()).build().toLegacyText());
+        meta.setLore(List.of("%dx%d".formatted(size, size)));
         item.setItemMeta(meta);
         return item;
     }

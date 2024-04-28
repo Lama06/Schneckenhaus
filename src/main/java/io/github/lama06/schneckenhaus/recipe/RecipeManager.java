@@ -33,6 +33,10 @@ public final class RecipeManager {
     }
 
     private <C extends ShellConfig> void registerRecipes(final ShellFactory<C> factory) {
+        final ConfigurationSection config = getConfig(factory);
+        if (!config.getBoolean("enabled")) {
+            return;
+        }
         for (final ShellRecipe<C> recipe : factory.getRecipes()) {
             for (int size = 0; size <= getMaxSizeIngredientAmount(factory); size++) {
                 registerRecipe(
@@ -60,7 +64,7 @@ public final class RecipeManager {
     ) {
         final ConfigurationSection recipeConfig = getRecipeConfig(factory);
         final int rawSize = recipeConfig.getInt("initial_size") + sizeIngredientAmount * recipeConfig.getInt("size_per_ingredient");
-        final int size = Math.min(factory.getMinSize(), Math.max(factory.getMaxSize(), rawSize));
+        final int size = Math.min(factory.getMaxSize(), Math.max(factory.getMinSize(), rawSize));
 
         final C config = shellRecipe.getConfig(size);
         final ItemStack result = config.createItem();

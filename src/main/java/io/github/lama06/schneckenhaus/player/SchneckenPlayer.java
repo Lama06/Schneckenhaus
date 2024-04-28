@@ -1,10 +1,9 @@
 package io.github.lama06.schneckenhaus.player;
 
 import io.github.lama06.schneckenhaus.data.Attribute;
+import io.github.lama06.schneckenhaus.data.LocationPersistentDataType;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.data.LocationPersistentDataType;
-import io.github.lama06.schneckenhaus.util.PluginVersion;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataType;
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Objects;
 
 public final class SchneckenPlayer {
-    public static final Attribute<PluginVersion> DATA_VERSION = new Attribute<>("data_version", PluginVersion.DATA_TYPE);
     public static final Attribute<List<Location>> PREVIOUS_LOCATIONS = new Attribute<>(
             "previous_locations",
             PersistentDataType.LIST.listTypeFrom(LocationPersistentDataType.INSTANCE)

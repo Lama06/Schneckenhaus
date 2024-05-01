@@ -22,7 +22,7 @@ public final class RepairShellSystem {
             if (position == null) {
                 continue;
             }
-            final Shell shell = world.getShell(position);
+            final Shell<?> shell = world.getShell(position);
             if (shell == null) {
                 continue;
             }

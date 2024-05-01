@@ -1,11 +1,11 @@
 package io.github.lama06.schneckenhaus.shell.custom;
 
+import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.command.InfoCommand;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.configuration.ConfigurationSection;
@@ -28,7 +28,7 @@ public final class CustomShell extends Shell<CustomShellConfig> {
         final BlockPosition templateCorner = template.getLowerCorner();
         final Block targetCorner = getPosition().getCornerBlock();
         for (final BlockPosition templatePosition : template) {
-            final Block templateBlock = templatePosition.getBlock(Bukkit.getWorld("world"));
+            final Block templateBlock = templatePosition.getBlock(SchneckenPlugin.INSTANCE.getWorld().getBukkit());
             if (templateBlock.isEmpty()) {
                 continue;
             }

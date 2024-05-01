@@ -34,18 +34,14 @@ public final class RecipeManager {
 
     private <C extends ShellConfig> void registerRecipes(final ShellFactory<C> factory) {
         for (final ShellRecipe<C> recipe : factory.getRecipes()) {
-            registerRecipe(factory, recipe);
+            final ItemStack result = recipe.config().createItem();
+            final NamespacedKey key = new NamespacedKey(SchneckenPlugin.INSTANCE, factory.getName() + "_" + recipe.key());
+            final ShapelessRecipe bukkitRecipe = new ShapelessRecipe(key, result);
+            for (final Material ingredient : recipe.ingredients()) {
+                bukkitRecipe.addIngredient(ingredient);
+            }
+            recipes.put(key, new RegisteredShellRecipe<>(factory, recipe.config()));
+            Bukkit.addRecipe(bukkitRecipe);
         }
-    }
-
-    private <C extends ShellConfig> void registerRecipe(final ShellFactory<C> factory, final ShellRecipe<C> recipe) {
-        final ItemStack result = recipe.config().createItem();
-        final NamespacedKey key = new NamespacedKey(SchneckenPlugin.INSTANCE, factory.getName() + "_" + recipe.key());
-        final ShapelessRecipe bukkitRecipe = new ShapelessRecipe(key, result);
-        for (final Material ingredient : recipe.ingredients()) {
-            bukkitRecipe.addIngredient(ingredient);
-        }
-        recipes.put(key, new RegisteredShellRecipe<>(factory, recipe.config()));
-        Bukkit.addRecipe(bukkitRecipe);
     }
 }

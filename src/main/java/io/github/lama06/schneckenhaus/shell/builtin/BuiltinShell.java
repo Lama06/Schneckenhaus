@@ -19,6 +19,14 @@ public abstract class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C
         super(position, config);
     }
 
+    protected final Block getLowerDoorBlock() {
+        return position.getCornerBlock().getRelative(1, 1, 0);
+    }
+
+    protected final Block getUpperDoorBlock() {
+        return getLowerDoorBlock().getRelative(BlockFace.UP);
+    }
+
     protected final void addDoorBlocks(final Map<Block, BlockData> blocks) {
         final Door lowerDoorBlock = (Door) Material.SPRUCE_DOOR.createBlockData();
         lowerDoorBlock.setOpen(false);
@@ -30,8 +38,8 @@ public abstract class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C
         upperDoorBlock.setHalf(Bisected.Half.TOP);
         upperDoorBlock.setFacing(BlockFace.NORTH);
 
-        blocks.put(getPosition().getLowerDoorBlock(), lowerDoorBlock);
-        blocks.put(getPosition().getUpperDoorBlock(), upperDoorBlock);
+        blocks.put(getLowerDoorBlock(), lowerDoorBlock);
+        blocks.put(getUpperDoorBlock(), upperDoorBlock);
     }
 
     @Override

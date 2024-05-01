@@ -29,6 +29,7 @@ public final class SchneckenPlugin extends JavaPlugin {
         saveDefaultConfig();
         new ConfigurationUpdater().update();
         copyComments();
+        getConfig().options().copyDefaults(true);
 
         try {
             buildProperties = BuildProperties.load();

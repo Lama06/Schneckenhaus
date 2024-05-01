@@ -4,10 +4,9 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -15,7 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import java.util.Set;
+import java.util.function.Predicate;
 
 public final class ClickShellDoorListener implements Listener {
     @EventHandler
@@ -32,19 +31,26 @@ public final class ClickShellDoorListener implements Listener {
         if (!clickedBlock.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld().getBukkit())) {
             return;
         }
-        final GridPosition position = CoordinatesGridPosition.fromWorldPosition(clickedBlock.getLocation());
-        if (position == null) {
+        if (!Tag.DOORS.isTagged(clickedBlock.getType())) {
             return;
         }
-        if (!Set.of(position.getLowerDoorBlock(), position.getUpperDoorBlock()).contains(clickedBlock)) {
+        final GridPosition position = CoordinatesGridPosition.fromWorldPosition(clickedBlock.getLocation());
+        if (position == null) {
             return;
         }
         event.setCancelled(true);
         Location newLocation = schneckenPlayer.popPreviousLocation();
         if (newLocation == null) {
             World world = Bukkit.getWorld("world");
-            if (world == null) { // Some servers don't have this world
-                world = Bukkit.getWorlds().get(0);
+            // Some servers don't have this world
+            if (world == null) {
+                world = Bukkit.getWorlds().stream()
+                        .filter(Predicate.not(SchneckenPlugin.INSTANCE.getWorld().getBukkit()::equals))
+                        .findFirst().orElse(null);
+            }
+            if (world == null) {
+                final String error = "You can't be teleported back because no world was found.";
+                player.spigot().sendMessage(new ComponentBuilder(error).color(ChatColor.RED).build());
             }
             newLocation = world.getSpawnLocation();
         }

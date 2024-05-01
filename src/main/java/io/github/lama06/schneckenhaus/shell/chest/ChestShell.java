@@ -37,7 +37,7 @@ public final class ChestShell extends BuiltinShell<ChestShellConfig> {
     @Override
     public Map<Block, BlockData> getInitialBlocks() {
         final World world = getWorld().getBukkit();
-        final Block corner = getPosition().getCornerBlock();
+        final Block corner = position.getCornerBlock();
         final int size = getSize();
         final int y = corner.getY() + 1;
         final List<Block> blocks = List.of(
@@ -49,8 +49,7 @@ public final class ChestShell extends BuiltinShell<ChestShellConfig> {
         return blocks.stream().collect(Collectors.toMap(Function.identity(), position -> Material.TORCH.createBlockData()));
     }
 
-    private void addSideBlocks(final BlockFace side, final Map<Block, BlockData> blocks) {
-        final GridPosition position = getPosition();
+    private void addSideBlocks(final BlockFace side, final Map<Block, BlockData> blocks) {;
         final Block corner = position.getCornerBlock();
         final int size = getSize();
         final int staticCoordinate = switch (side) {
@@ -102,7 +101,7 @@ public final class ChestShell extends BuiltinShell<ChestShellConfig> {
                 };
                 final Block block = getWorld().getBukkit().getBlockAt(x, y, z);
                 final BlockData data;
-                if (block.equals(position.getLowerDoorBlock()) || block.equals(position.getUpperDoorBlock())) {
+                if (block.equals(getLowerDoorBlock()) || block.equals(getUpperDoorBlock())) {
                     continue;
                 } else if (firstCoordinate == firstCoordinateStart || firstCoordinate == firstCoordinateEnd) {
                     data = Material.OAK_LOG.createBlockData();

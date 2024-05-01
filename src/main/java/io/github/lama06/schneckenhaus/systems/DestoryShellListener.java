@@ -25,7 +25,7 @@ public final class DestoryShellListener implements Listener {
         if (position == null) {
             return;
         }
-        final Shell shell = world.getShell(position);
+        final Shell<?> shell = world.getShell(position);
         if (shell == null) {
             return;
         }

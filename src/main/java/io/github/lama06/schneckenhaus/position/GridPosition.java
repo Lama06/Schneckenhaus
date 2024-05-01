@@ -82,7 +82,7 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
     protected abstract boolean isAboveOrOnDiagonal();
 
     @Override
-    public boolean equals(final Object other) {
+    public final boolean equals(final Object other) {
         if (!(other instanceof final GridPosition otherPosition)) {
             return false;
         }
@@ -90,7 +90,7 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return getId();
     }
 
@@ -99,14 +99,6 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
      */
     public final Block getCornerBlock() {
         return SchneckenPlugin.INSTANCE.getWorld().getBukkit().getBlockAt(getX() * CELL_SIZE, 0, getZ() * CELL_SIZE);
-    }
-
-    public Block getLowerDoorBlock() {
-        return getCornerBlock().getRelative(1, 1, 0);
-    }
-
-    public Block getUpperDoorBlock() {
-        return getLowerDoorBlock().getRelative(BlockFace.UP);
     }
 
     public final Location getSpawnLocation() {

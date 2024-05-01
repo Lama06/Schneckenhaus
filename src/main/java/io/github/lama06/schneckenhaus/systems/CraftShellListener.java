@@ -27,7 +27,7 @@ public final class CraftShellListener implements Listener {
             event.setCancelled(false);
             return;
         }
-        final Shell shell = recipe.createShell(player);
+        final Shell<?> shell = recipe.createShell(player);
         final ItemStack item = shell.createItem();
         event.setCurrentItem(item);
     }

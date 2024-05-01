@@ -7,19 +7,23 @@
 
 # Please report issues, give feedback or request features on GitHub: https://github.com/Lama06/Schneckenhaus
 
-data_version: ${project.version}
-
 # Allows players to enter a snail shell when already inside another one
 nesting: true
 
-# Configuration for the shulker snail shell
+# Configuration for shulker snail shells
 shulker:
+  # Whether shulker snail shells can be crafted
   enabled: true
+  # Ingredients required to craft a shulker snail shell
   ingredients:
     - spyglass
+  # Can be used to increase the shulker snail shell's size
   size_ingredient: gold_ingot
+  # The size that will be applied if no size ingredient is used
   initial_size: 4
+  # Added to the initial size for every size ingredient used
   size_per_ingredient: 2
+# Configuration for chest snail shells (see shulker config)
 chest:
   enabled: true
   ingredients:
@@ -30,3 +34,6 @@ chest:
 # Configuration of custom snail shells
 # Be aware that deleting a snail shell from this list will make all its instances invalid
 custom: { }
+
+# Don't change this! Doing so will cause data corruption.
+data_version: ${project.version}

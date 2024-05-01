@@ -38,7 +38,7 @@ public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
 
     private void addFloorBlocks(final Map<Block, BlockData> blocks) {
         final BlockData terracotta = MaterialUtil.getColoredTerracotta(getColor()).createBlockData();
-        final Block cornerBlock = getPosition().getCornerBlock();
+        final Block cornerBlock = position.getCornerBlock();
         for (int x = cornerBlock.getX(); x <= cornerBlock.getX() + getSize() + 1; x++) {
             for (int z = cornerBlock.getZ(); z <= cornerBlock.getZ() + getSize() + 1; z++) {
                 blocks.put(getWorld().getBukkit().getBlockAt(x, cornerBlock.getY(), z), terracotta);
@@ -49,7 +49,7 @@ public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
     private void addWallBlocks(final Map<Block, BlockData> blocks, final BlockFace side) {
         final BlockData terracotta = MaterialUtil.getColoredTerracotta(getColor()).createBlockData();
         final BlockData concrete = MaterialUtil.getColoredConcrete(getColor()).createBlockData();
-        final Block cornerBlock = getPosition().getCornerBlock();
+        final Block cornerBlock = position.getCornerBlock();
         for (int y = cornerBlock.getY() + 1; y <= cornerBlock.getY() + getSize(); y++) {
             final int horizontalStart;
             if (side == BlockFace.EAST || side == BlockFace.WEST) {
@@ -73,7 +73,7 @@ public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
                             side == BlockFace.SOUTH ? cornerBlock.getZ() : cornerBlock.getZ() + getSize() + 1
                     );
                 }
-                if (block.equals(getPosition().getLowerDoorBlock()) || block.equals(getPosition().getUpperDoorBlock())) {
+                if (block.equals(getLowerDoorBlock()) || block.equals(getUpperDoorBlock())) {
                     continue;
                 }
                 final BlockData blockData = y <= cornerBlock.getY() + 1 ? terracotta : concrete;
@@ -90,7 +90,7 @@ public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
 
     private void addRoofBlocks(final Map<Block, BlockData> blocks) {
         final BlockData glass = MaterialUtil.getColoredGlass(getColor()).createBlockData();
-        final Block cornerBlock = getPosition().getCornerBlock();
+        final Block cornerBlock = position.getCornerBlock();
         final int y = cornerBlock.getY() + getSize() + 1;
         for (int x = cornerBlock.getX(); x <= cornerBlock.getX() + getSize() + 1; x++) {
             for (int z = cornerBlock.getZ(); z <= cornerBlock.getZ() + getSize() + 1; z++) {

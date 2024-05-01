@@ -36,9 +36,11 @@ public final class PlayerUpdater extends PersistentDataContainerUpdater {
     }
 
     private void updateTo1_1_0() {
-        final Location legacyPreviousLocation = new Attribute<>("previous_location", LocationPersistentDataType.INSTANCE).get(player);
+        final Attribute<Location> legacyPreviousLocationAttribute = new Attribute<>("previous_location", LocationPersistentDataType.INSTANCE);
+        final Location legacyPreviousLocation = legacyPreviousLocationAttribute.get(player);
         if (legacyPreviousLocation != null) {
             SchneckenPlayer.PREVIOUS_LOCATIONS.set(player, List.of(legacyPreviousLocation));
+            legacyPreviousLocationAttribute.remove(player);
         }
     }
 }

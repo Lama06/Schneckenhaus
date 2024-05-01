@@ -17,6 +17,8 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 
 public final class Require {
+    private Require() { }
+
     public static Player player(final CommandSender sender) {
         if (!(sender instanceof final Player player)) {
             sender.spigot().sendMessage(new ComponentBuilder().append("You are not a player").color(ChatColor.RED).build());

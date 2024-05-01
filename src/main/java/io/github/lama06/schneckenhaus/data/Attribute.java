@@ -49,6 +49,14 @@ public final class Attribute<T> {
         return data.has(key, type);
     }
 
+    public void remove(final PersistentDataContainer data) {
+        data.remove(getKey());
+    }
+
+    public void remove(final PersistentDataHolder holder) {
+        remove(holder.getPersistentDataContainer());
+    }
+
     public NamespacedKey getKey() {
         return key;
     }

@@ -1,13 +1,11 @@
 package io.github.lama06.schneckenhaus.command;
 
-import io.github.lama06.schneckenhaus.SchneckenWorld;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.hover.content.Text;
-import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -40,14 +38,11 @@ public final class InfoCommand extends Command {
 
         builder.append("> Teleport <\n").reset().color(ChatColor.LIGHT_PURPLE);
         builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to teleport")));
-        final Location spawnLocation = shell.getPosition().getSpawnLocation();
-        final String spawnLocationText = "%d %d %d".formatted(spawnLocation.getBlockX(), spawnLocation.getBlockY(), spawnLocation.getBlockZ());
-        final String tpCommand = "/execute in %s run tp %s".formatted(SchneckenWorld.NAME, spawnLocationText);
-        builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, tpCommand));
+        builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sh tp " + shell.getId()));
 
         builder.append("> Give Item <").reset().color(ChatColor.LIGHT_PURPLE);
         builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to get an item connected to this snail shell")));
-        builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sh giveItem " + shell.getPosition().getId()));
+        builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sh giveItem " + shell.getId()));
 
         sender.spigot().sendMessage(builder.build());
     }

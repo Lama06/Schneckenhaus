@@ -23,7 +23,7 @@ public final class GiveItemCommand extends Command {
         if (player == null) {
             return;
         }
-        final Shell shell = Require.shell(sender, args.length == 1 ? args[0] : null);
+        final Shell<?> shell = Require.shell(sender, args.length == 1 ? args[0] : null);
         if (shell == null) {
             return;
         }

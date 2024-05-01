@@ -28,7 +28,7 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
     public static final Attribute<Integer> ITEM_ID = new Attribute<>("id", PersistentDataType.INTEGER);
     public static final Attribute<Integer> BLOCK_ID = new Attribute<>("id", PersistentDataType.INTEGER);
 
-    private final GridPosition position;
+    protected final GridPosition position;
     protected final C config;
 
     protected Shell(final GridPosition position, final C config) {

@@ -53,7 +53,7 @@ public final class CreateCommand extends Command {
         if (config == null) {
             return;
         }
-        final Shell shell = SchneckenPlugin.INSTANCE.getWorld().createShell(factory, player, config);
+        final Shell<C> shell = SchneckenPlugin.INSTANCE.getWorld().createShell(factory, player, config);
         player.teleport(shell.getPosition().getSpawnLocation());
         if (!player.getInventory().addItem(shell.createItem()).isEmpty()) {
             player.spigot().sendMessage(new ComponentBuilder("Your inventory is full").color(ChatColor.RED).build());

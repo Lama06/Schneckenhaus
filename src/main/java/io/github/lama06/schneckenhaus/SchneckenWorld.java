@@ -61,7 +61,7 @@ public final class SchneckenWorld implements PersistentDataHolder {
         return position.getCornerBlock().getChunk().getPersistentDataContainer();
     }
 
-    private <C extends ShellConfig> Shell getShell(
+    private <C extends ShellConfig> Shell<C> getShell(
             final GridPosition position,
             final PersistentDataContainer data,
             final ShellFactory<C> factory
@@ -70,7 +70,7 @@ public final class SchneckenWorld implements PersistentDataHolder {
         return factory.instantiate(position, config);
     }
 
-    public Shell getShell(final GridPosition position) {
+    public Shell<?> getShell(final GridPosition position) {
         if (position.getId() >= NEXT_ID.get(world)) {
             return null;
         }
@@ -86,7 +86,7 @@ public final class SchneckenWorld implements PersistentDataHolder {
         return null;
     }
 
-    public <C extends ShellConfig> Shell createShell(final ShellFactory<C> factory, final OfflinePlayer creator, final C config) {
+    public <C extends ShellConfig> Shell<C> createShell(final ShellFactory<C> factory, final OfflinePlayer creator, final C config) {
         final int id = getAndIncrementNextShellId();
         final GridPosition position = new IdGridPosition(id);
         final PersistentDataContainer data = getShellData(position);
@@ -94,7 +94,7 @@ public final class SchneckenWorld implements PersistentDataHolder {
         Shell.CREATOR.set(data, creator.getUniqueId());
         ShellUpdater.DATA_VERSION.set(data, PluginVersion.current());
         config.store(data);
-        final Shell shell = factory.instantiate(position, config);
+        final Shell<C> shell = factory.instantiate(position, config);
         shell.placeInitially();
         return shell;
     }

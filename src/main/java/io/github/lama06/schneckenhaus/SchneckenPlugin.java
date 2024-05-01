@@ -2,10 +2,12 @@ package io.github.lama06.schneckenhaus;
 
 import io.github.lama06.schneckenhaus.command.SchneckenCommand;
 import io.github.lama06.schneckenhaus.recipe.RecipeManager;
+import io.github.lama06.schneckenhaus.shell.ShellRecipe;
+import io.github.lama06.schneckenhaus.shell.custom.CustomShellConfig;
+import io.github.lama06.schneckenhaus.shell.custom.CustomShellFactory;
 import io.github.lama06.schneckenhaus.systems.Systems;
 import io.github.lama06.schneckenhaus.update.ConfigurationUpdater;
 import io.github.lama06.schneckenhaus.util.BuildProperties;
-import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -26,7 +28,6 @@ public final class SchneckenPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
-        getConfig().setDefaults(new MemoryConfiguration());
         new ConfigurationUpdater().update();
 
         try {
@@ -35,12 +36,17 @@ public final class SchneckenPlugin extends JavaPlugin {
             getLogger().log(Level.WARNING, "Failed to load build information", e);
             buildProperties = BuildProperties.FALLBACK;
         }
+
         world = new SchneckenWorld();
         recipeManager = new RecipeManager();
         recipeManager.registerRecipes();
         command = new SchneckenCommand();
 
         Systems.start();
+
+        for (final ShellRecipe<CustomShellConfig> recipe : CustomShellFactory.INSTANCE.getRecipes()) {
+            System.out.println(recipe.ingredients());
+        }
     }
 
     @Override

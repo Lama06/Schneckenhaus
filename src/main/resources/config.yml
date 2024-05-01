@@ -11,20 +11,19 @@ data_version: ${project.version}
 
 nesting: true
 
-shell_types:
-  shulker:
-    enabled: true
-    recipe:
-      ingredients:
-        - spyglass
-      size_ingredient: gold_ingot
-      initial_size: 4
-      size_per_ingredient: 2
-  chest:
-    enabled: true
-    recipe:
-      ingredients:
-        - spyglass
-      size_ingredient: diamond
-      initial_size: 4
-      size_per_ingredient: 1
+
+shulker:
+  enabled: true
+  ingredients:
+    - spyglass
+  size_ingredient: gold_ingot
+  initial_size: 4
+  size_per_ingredient: 2
+chest:
+  enabled: true
+  ingredients:
+    - spyglass
+  size_ingredient: diamond
+  initial_size: 4
+  size_per_ingredient: 1
+custom: { }

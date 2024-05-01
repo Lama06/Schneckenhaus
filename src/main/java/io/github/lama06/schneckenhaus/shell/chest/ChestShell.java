@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShell;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public final class ChestShell extends Shell {
+public final class ChestShell extends BuiltinShell<ChestShellConfig> {
     public ChestShell(final GridPosition position, final ChestShellConfig config) {
         super(position, config);
     }

@@ -4,10 +4,17 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.util.BlockArea;
+import io.github.lama06.schneckenhaus.util.BlockPosition;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.bukkit.Keyed;
+import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.util.Arrays;
 
 public final class Require {
     public static Player player(final CommandSender sender) {
@@ -41,7 +48,56 @@ public final class Require {
         return integer(sender, arg, null, null);
     }
 
-    public static Shell shell(final CommandSender sender, final String arg) {
+    public static BlockPosition blockPosition(final CommandSender sender, final String[] args) {
+        if (args.length < 3) {
+            sender.spigot().sendMessage(new ComponentBuilder("Not enough arguments").color(ChatColor.RED).build());
+            return null;
+        }
+        final Integer x = integer(sender, args[0]);
+        if (x == null) {
+            return null;
+        }
+        final Integer y = integer(sender, args[1]);
+        if (y == null) {
+            return null;
+        }
+        final Integer z = integer(sender, args[2]);
+        if (z == null) {
+            return null;
+        }
+        return new BlockPosition(x, y, z);
+    }
+
+    public static BlockArea blockArea(final CommandSender sender, final String[] args) {
+        if (args.length < 6) {
+            sender.spigot().sendMessage(new ComponentBuilder("Not enough arguments").color(ChatColor.RED).build());
+            return null;
+        }
+        final BlockPosition first = blockPosition(sender, args);
+        if (first == null) {
+            return null;
+        }
+        final BlockPosition second = blockPosition(sender, Arrays.copyOfRange(args, 3, args.length));
+        if (second == null) {
+            return null;
+        }
+        return new BlockArea(first, second);
+    }
+
+    public static <T extends Keyed> T keyed(final Registry<T> registry, final CommandSender sender, final String arg) {
+        final T keyed = registry.match(arg);
+        if (keyed == null) {
+            sender.spigot().sendMessage(new ComponentBuilder("Unknown key: " + arg).color(ChatColor.RED).build());
+            return null;
+        }
+        return keyed;
+    }
+
+    public static Material material(final CommandSender sender, final String arg) {
+        return keyed(Registry.MATERIAL, sender, arg);
+    }
+
+    public static Shell<?> shell(final CommandSender sender, final String arg) {
         final int id;
         if (arg == null) {
             final Player player = player(sender);
@@ -61,7 +117,7 @@ public final class Require {
             }
             id = parsedId;
         }
-        final Shell shell = SchneckenPlugin.INSTANCE.getWorld().getShell(new IdGridPosition(id));
+        final Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(new IdGridPosition(id));
         if (shell == null) {
             sender.spigot().sendMessage(new ComponentBuilder("This snail shell doesn't exist").color(ChatColor.RED).build());
             return null;

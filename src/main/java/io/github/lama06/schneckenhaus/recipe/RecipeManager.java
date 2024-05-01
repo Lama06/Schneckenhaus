@@ -1,9 +1,13 @@
 package io.github.lama06.schneckenhaus.recipe;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.shell.*;
-import org.bukkit.*;
-import org.bukkit.configuration.ConfigurationSection;
+import io.github.lama06.schneckenhaus.shell.ShellConfig;
+import io.github.lama06.schneckenhaus.shell.ShellFactories;
+import io.github.lama06.schneckenhaus.shell.ShellFactory;
+import io.github.lama06.schneckenhaus.shell.ShellRecipe;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 
@@ -19,67 +23,29 @@ public final class RecipeManager {
     }
 
     public void registerRecipes() {
+        for (final NamespacedKey key : recipes.keySet()) {
+            Bukkit.removeRecipe(key);
+        }
+        recipes.clear();
         for (final ShellFactory<?> factory : ShellFactories.getFactories()) {
             registerRecipes(factory);
         }
     }
 
-    private ConfigurationSection getConfig(final ShellFactory<?> factory) {
-        return SchneckenPlugin.INSTANCE.getConfig().getConfigurationSection("shell_types").getConfigurationSection(factory.getPluginConfigName());
-    }
-
-    private ConfigurationSection getRecipeConfig(final ShellFactory<?> factory) {
-        return getConfig(factory).getConfigurationSection("recipe");
-    }
-
     private <C extends ShellConfig> void registerRecipes(final ShellFactory<C> factory) {
-        final ConfigurationSection config = getConfig(factory);
-        if (!config.getBoolean("enabled")) {
-            return;
-        }
         for (final ShellRecipe<C> recipe : factory.getRecipes()) {
-            for (int size = 0; size <= getMaxSizeIngredientAmount(factory); size++) {
-                registerRecipe(
-                        "snail_shell_%s_%s_%d".formatted(factory.getName(), recipe.getId(), size),
-                        factory,
-                        recipe,
-                        size
-                );
-            }
+            registerRecipe(factory, recipe);
         }
     }
 
-    private int getMaxSizeIngredientAmount(final ShellFactory<?> factory) {
-        final ConfigurationSection recipeConfig = getRecipeConfig(factory);
-        // ShapelessRecipe only allows up to nine ingredients.
-        // Minus one because of the shell specific material (e.g. shulker box).
-        return 9 - 1 - recipeConfig.getStringList("ingredients").size();
-    }
-
-    private <C extends ShellConfig> void registerRecipe(
-            final String key,
-            final ShellFactory<C> factory,
-            final ShellRecipe<C> shellRecipe,
-            final int sizeIngredientAmount
-    ) {
-        final ConfigurationSection recipeConfig = getRecipeConfig(factory);
-        final int rawSize = recipeConfig.getInt("initial_size") + sizeIngredientAmount * recipeConfig.getInt("size_per_ingredient");
-        final int size = Math.min(factory.getMaxSize(), Math.max(factory.getMinSize(), rawSize));
-
-        final C config = shellRecipe.getConfig(size);
-        final ItemStack result = config.createItem();
-
-        final ShapelessRecipe recipe = new ShapelessRecipe(new NamespacedKey(SchneckenPlugin.INSTANCE, key), result);
-        recipe.addIngredient(shellRecipe.getMaterial());
-        for (final String ingredientName : recipeConfig.getStringList("ingredients")) {
-            final Material ingredient = Registry.MATERIAL.get(NamespacedKey.fromString(ingredientName));
-            recipe.addIngredient(ingredient);
+    private <C extends ShellConfig> void registerRecipe(final ShellFactory<C> factory, final ShellRecipe<C> recipe) {
+        final ItemStack result = recipe.config().createItem();
+        final NamespacedKey key = new NamespacedKey(SchneckenPlugin.INSTANCE, factory.getName() + "_" + recipe.key());
+        final ShapelessRecipe bukkitRecipe = new ShapelessRecipe(key, result);
+        for (final Material ingredient : recipe.ingredients()) {
+            bukkitRecipe.addIngredient(ingredient);
         }
-        final Material sizeIngredient = Registry.MATERIAL.get(NamespacedKey.fromString(recipeConfig.getString("size_ingredient")));
-        recipe.addIngredient(sizeIngredientAmount, sizeIngredient);
-
-        Bukkit.addRecipe(recipe);
-        recipes.put(recipe.getKey(), new RegisteredShellRecipe<>(factory, config));
+        recipes.put(key, new RegisteredShellRecipe<>(factory, recipe.config()));
+        Bukkit.addRecipe(bukkitRecipe);
     }
-
 }

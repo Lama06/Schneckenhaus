@@ -1,5 +1,7 @@
 package io.github.lama06.schneckenhaus.command;
 
+import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.command.custom.CustomShellCommand;
 import io.github.lama06.schneckenhaus.command.debug.DebugCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -19,7 +21,10 @@ public final class SchneckenCommand extends MultiplexerCommand {
         addSubCommand("info", new InfoCommand());
         addSubCommand("giveItem", new GiveItemCommand());
         addSubCommand("count", new CountCommand());
-        addSubCommand("debug", new DebugCommand());
+        addSubCommand("custom", new CustomShellCommand());
+        if (SchneckenPlugin.INSTANCE.getBuildProperties().debug()) {
+            addSubCommand("debug", new DebugCommand());
+        }
 
         final Executor executor = new Executor();
         final PluginCommand command = Bukkit.getPluginCommand(NAME);

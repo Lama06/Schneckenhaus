@@ -38,6 +38,7 @@ public class MultiplexerCommand extends Command {
         if (args.length == 0) {
             if (defaultSubCommand == null) {
                 sender.spigot().sendMessage(new ComponentBuilder("Not enough arguments").color(ChatColor.RED).build());
+                return;
             }
             defaultSubCommand.execute(sender, args);
             return;
@@ -53,10 +54,10 @@ public class MultiplexerCommand extends Command {
     @Override
     public List<String> tabComplete(final CommandSender sender, final String[] args) {
         if (args.length == 0 || args.length == 1) {
-            return new ArrayList<>(subCommands.keySet());
+            return subCommands.entrySet().stream().filter(entry -> !entry.getValue().isHidden()).map(Map.Entry::getKey).toList();
         }
         final Command subCommand = subCommands.get(args[0]);
-        if (subCommand == null) {
+        if (subCommand == null || subCommand.isHidden()) {
             return List.of();
         }
         return subCommand.tabComplete(sender, Arrays.copyOfRange(args, 1, args.length));

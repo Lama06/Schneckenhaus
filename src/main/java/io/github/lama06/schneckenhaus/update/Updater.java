@@ -9,6 +9,8 @@ import java.util.TreeMap;
 public abstract class Updater<T> {
     protected abstract T getData();
 
+    protected void applyChanges() { }
+
     protected abstract PluginVersion getDataVersion();
 
     protected abstract void setDataVersion(final PluginVersion version);
@@ -25,5 +27,6 @@ public abstract class Updater<T> {
             updates.get(pluginVersion).run();
         }
         setDataVersion(PluginVersion.current());
+        applyChanges();
     }
 }

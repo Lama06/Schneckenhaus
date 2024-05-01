@@ -2,22 +2,6 @@ package io.github.lama06.schneckenhaus.shell;
 
 import org.bukkit.Material;
 
-public abstract class ShellRecipe<C extends ShellConfig> {
-    private final String id;
-    private final Material material;
+import java.util.List;
 
-    protected ShellRecipe(final String id, final Material material) {
-        this.id = id;
-        this.material = material;
-    }
-
-    public abstract C getConfig(final int size);
-
-    public String getId() {
-        return id;
-    }
-
-    public Material getMaterial() {
-        return material;
-    }
-}
+public record ShellRecipe<C extends ShellConfig>(String key, List<Material> ingredients, C config) { }

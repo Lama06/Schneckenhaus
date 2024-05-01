@@ -1,14 +1,13 @@
 package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.shell.Shell;
-import io.github.lama06.schneckenhaus.shell.ShellFactory;
-import io.github.lama06.schneckenhaus.shell.ShellRecipe;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellRecipe;
 import org.bukkit.Material;
 
-import java.util.Set;
+import java.util.List;
 
-public final class ChestShellFactory extends ShellFactory<ChestShellConfig> {
+public final class ChestShellFactory extends BuiltinShellFactory<ChestShellConfig> {
     public static final ChestShellFactory INSTANCE = new ChestShellFactory();
 
     private ChestShellFactory() { }
@@ -19,13 +18,8 @@ public final class ChestShellFactory extends ShellFactory<ChestShellConfig> {
     }
 
     @Override
-    public String getPluginConfigName() {
-        return "chest";
-    }
-
-    @Override
-    public Set<ShellRecipe<ChestShellConfig>> getRecipes() {
-        return Set.of(new ShellRecipe<>("default", Material.CHEST) {
+    protected List<BuiltinShellRecipe<ChestShellConfig>> getBuiltinRecipes() {
+        return List.of(new BuiltinShellRecipe<>("default", Material.CHEST) {
             @Override
             public ChestShellConfig getConfig(final int size) {
                 return new ChestShellConfig(size);
@@ -34,7 +28,7 @@ public final class ChestShellFactory extends ShellFactory<ChestShellConfig> {
     }
 
     @Override
-    public Shell instantiate(final GridPosition position, final ChestShellConfig config) {
+    public ChestShell instantiate(final GridPosition position, final ChestShellConfig config) {
         return new ChestShell(position, config);
     }
 

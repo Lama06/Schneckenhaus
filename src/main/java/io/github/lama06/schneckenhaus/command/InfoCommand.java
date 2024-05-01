@@ -23,7 +23,7 @@ public final class InfoCommand extends Command {
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
-        final Shell shell = Require.shell(sender, args.length == 1 ? args[0] : null);
+        final Shell<?> shell = Require.shell(sender, args.length == 1 ? args[0] : null);
         if (shell == null) {
             return;
         }

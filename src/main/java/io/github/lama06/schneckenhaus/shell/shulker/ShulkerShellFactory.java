@@ -1,9 +1,8 @@
 package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.shell.Shell;
-import io.github.lama06.schneckenhaus.shell.ShellFactory;
-import io.github.lama06.schneckenhaus.shell.ShellRecipe;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellRecipe;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -12,25 +11,19 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.persistence.PersistentDataContainer;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.random.RandomGenerator;
 
-public final class ShulkerShellFactory extends ShellFactory<ShulkerShellConfig> {
+public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellConfig> {
     public static final ShulkerShellFactory INSTANCE = new ShulkerShellFactory();
 
     private ShulkerShellFactory() { }
 
     @Override
     public String getName() {
-        return "shulker";
-    }
-
-    @Override
-    public String getPluginConfigName() {
         return "shulker";
     }
 
@@ -45,27 +38,27 @@ public final class ShulkerShellFactory extends ShellFactory<ShulkerShellConfig> 
     }
 
     @Override
-    public Shell instantiate(final GridPosition position, final ShulkerShellConfig config) {
+    public ShulkerShell instantiate(final GridPosition position, final ShulkerShellConfig config) {
         return new ShulkerShell(position, config);
     }
 
     @Override
-    public Set<ShellRecipe<ShulkerShellConfig>> getRecipes() {
-        final Set<ShellRecipe<ShulkerShellConfig>> recipes = new HashSet<>();
+    protected List<BuiltinShellRecipe<ShulkerShellConfig>> getBuiltinRecipes() {
+        final List<BuiltinShellRecipe<ShulkerShellConfig>> recipes = new ArrayList<>();
+        recipes.add(new BuiltinShellRecipe<>("default", Material.SHULKER_BOX) {
+            @Override
+            public ShulkerShellConfig getConfig(final int size) {
+                return new ShulkerShellConfig(size, DyeColor.PINK);
+            }
+        });
         for (final DyeColor color : DyeColor.values()) {
-            recipes.add(new ShellRecipe<>(color.name(), MaterialUtil.getColoredShulkerBox(color)) {
+            recipes.add(new BuiltinShellRecipe<>(color.toString(), MaterialUtil.getColoredShulkerBox(color)) {
                 @Override
                 public ShulkerShellConfig getConfig(final int size) {
                     return new ShulkerShellConfig(size, color);
                 }
             });
         }
-        recipes.add(new ShellRecipe<>("uncolored", Material.SHULKER_BOX) {
-            @Override
-            public ShulkerShellConfig getConfig(final int size) {
-                return new ShulkerShellConfig(size, DyeColor.PURPLE);
-            }
-        });
         return recipes;
     }
 

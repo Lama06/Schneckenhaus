@@ -1,6 +1,7 @@
 package io.github.lama06.schneckenhaus.shell;
 
 import io.github.lama06.schneckenhaus.shell.chest.ChestShellFactory;
+import io.github.lama06.schneckenhaus.shell.custom.CustomShellFactory;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellFactory;
 
 import java.util.Collection;
@@ -13,6 +14,7 @@ public final class ShellFactories {
     static {
         registerFactory(ShulkerShellFactory.INSTANCE);
         registerFactory(ChestShellFactory.INSTANCE);
+        registerFactory(CustomShellFactory.INSTANCE);
     }
 
     public static ShellFactory<?> getByName(final String name) {

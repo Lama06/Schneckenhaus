@@ -4,16 +4,35 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public final class ConfigurationUpdater extends Updater<Configuration> {
-    private final Configuration configuration = SchneckenPlugin.INSTANCE.getConfig();
+    private final File configFile;
+    private final YamlConfiguration configuration;
+
+    public ConfigurationUpdater() {
+        configFile = new File(SchneckenPlugin.INSTANCE.getDataFolder(), "config.yml");
+        configuration = YamlConfiguration.loadConfiguration(configFile);
+    }
 
     @Override
     protected Configuration getData() {
         return configuration;
+    }
+
+    @Override
+    protected void applyChanges() {
+        try {
+            configuration.save(configFile);
+        } catch (IOException e) {
+            SchneckenPlugin.INSTANCE.getLogger().log(Level.SEVERE, "Failed to save config file after update.");
+        }
     }
 
     @Override

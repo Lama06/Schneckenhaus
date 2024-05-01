@@ -9,6 +9,10 @@ public abstract class Command {
         return List.of();
     }
 
+    public boolean isHidden() {
+        return false;
+    }
+
     public abstract void execute(final CommandSender sender, final String[] args);
 
     public List<String> tabComplete(final CommandSender sender, final String[] args) {

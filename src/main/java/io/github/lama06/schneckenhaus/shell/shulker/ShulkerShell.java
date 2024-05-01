@@ -2,7 +2,7 @@ package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.command.InfoCommand;
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShell;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
@@ -14,12 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public final class ShulkerShell extends Shell {
-    private final ShulkerShellConfig config;
-
+public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
     public ShulkerShell(final GridPosition position, final ShulkerShellConfig config) {
         super(position, config);
-        this.config = config;
     }
 
     @Override

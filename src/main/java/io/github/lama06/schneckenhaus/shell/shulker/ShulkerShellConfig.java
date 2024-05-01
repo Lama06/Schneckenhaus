@@ -14,9 +14,7 @@ import java.awt.*;
 public final class ShulkerShellConfig extends BuiltinShellConfig {
     public static final Attribute<DyeColor> COLOR = new Attribute<>("color", EnumPersistentDataType.DYE_COLOR);
 
-    private DyeColor color;
-
-    public ShulkerShellConfig() { }
+    private final DyeColor color;
 
     public ShulkerShellConfig(final int size, final DyeColor color) {
         super(size);
@@ -41,9 +39,5 @@ public final class ShulkerShellConfig extends BuiltinShellConfig {
 
     public DyeColor getColor() {
         return color;
-    }
-
-    public void setColor(final DyeColor color) {
-        this.color = color;
     }
 }

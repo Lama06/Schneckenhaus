@@ -8,9 +8,7 @@ import org.bukkit.persistence.PersistentDataType;
 public abstract class BuiltinShellConfig extends ShellConfig {
     public static final Attribute<Integer> SIZE = new Attribute<>("size", PersistentDataType.INTEGER);
 
-    private int size;
-
-    protected BuiltinShellConfig() { }
+    private final int size;
 
     protected BuiltinShellConfig(final int size) {
         this.size = size;
@@ -28,9 +26,5 @@ public abstract class BuiltinShellConfig extends ShellConfig {
 
     public final int getSize() {
         return size;
-    }
-
-    public final void setSize(final int size) {
-        this.size = size;
     }
 }

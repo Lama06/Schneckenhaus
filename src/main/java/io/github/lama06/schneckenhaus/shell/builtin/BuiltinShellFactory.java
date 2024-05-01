@@ -53,20 +53,15 @@ public abstract class BuiltinShellFactory<C extends BuiltinShellConfig> extends 
         return recipes;
     }
 
-    protected void loadAdditionalConfig(final C config, final PersistentDataContainer data) { }
-
-    protected abstract C instantiateConfig();
+    protected abstract C loadBuiltinConfig(final int size, final PersistentDataContainer data);
 
     @Override
     public final C loadConfig(final PersistentDataContainer data) {
         final int size = BuiltinShellConfig.SIZE.get(data);
-        final C config = instantiateConfig();
-        config.setSize(size);
-        loadAdditionalConfig(config, data);
-        return config;
+        return loadBuiltinConfig(size, data);
     }
 
-    protected List<String> tabCompleteAdditionalConfig(final CommandSender sender, final String[] args) {
+    protected List<String> tabCompleteBuiltinConfig(final CommandSender sender, final String[] args) {
         return List.of();
     }
 
@@ -75,16 +70,13 @@ public abstract class BuiltinShellFactory<C extends BuiltinShellConfig> extends 
         if (args.length == 0 || args.length == 1) {
             return IntStream.range(getMinSize(), getMaxSize() + 1).mapToObj(Integer::toString).toList();
         }
-        return tabCompleteAdditionalConfig(sender, Arrays.copyOfRange(args, 1, args.length));
+        return tabCompleteBuiltinConfig(sender, Arrays.copyOfRange(args, 1, args.length));
     }
 
-    protected boolean parseAdditionalConfig(final C config, final CommandSender sender, final String[] args) {
-        return true;
-    }
+    protected abstract C parseBuiltinConfig(final int size, final CommandSender sender, final String[] args);
 
     @Override
     public final C parseConfig(final CommandSender sender, final String[] args) {
-        final C config = instantiateConfig();
         final RandomGenerator rnd = ThreadLocalRandom.current();
         final int size;
         final String[] remainingArgs;
@@ -99,21 +91,17 @@ public abstract class BuiltinShellFactory<C extends BuiltinShellConfig> extends 
             size = getMinSize() + rnd.nextInt(getMaxSize() - getMinSize() + 1);
             remainingArgs = args;
         }
-        config.setSize(size);
-        if (!parseAdditionalConfig(config, sender, remainingArgs)) {
-            return null;
-        }
-        return config;
+        return parseBuiltinConfig(size, sender, remainingArgs);
     }
 
-    protected List<String> getAdditionalConfigCommandTemplates() {
+    protected List<String> getBuiltinConfigCommandTemplates() {
         return List.of("");
     }
 
     @Override
     public final List<String> getConfigCommandTemplates() {
         final List<String> templates = new ArrayList<>();
-        final List<String> additionalTemplates = getAdditionalConfigCommandTemplates();
+        final List<String> additionalTemplates = getBuiltinConfigCommandTemplates();
         if (additionalTemplates.contains("")) {
             templates.add("");
         }

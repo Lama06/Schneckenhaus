@@ -7,7 +7,7 @@ import io.github.lama06.schneckenhaus.shell.ShellFactory;
 import org.bukkit.OfflinePlayer;
 
 public record RegisteredShellRecipe<C extends ShellConfig>(ShellFactory<C> factory, C config) {
-    public Shell createShell(final OfflinePlayer creator) {
+    public Shell<C> createShell(final OfflinePlayer creator) {
         return SchneckenPlugin.INSTANCE.getWorld().createShell(factory, creator, config);
     }
 }

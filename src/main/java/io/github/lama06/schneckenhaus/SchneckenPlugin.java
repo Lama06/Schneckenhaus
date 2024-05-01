@@ -2,12 +2,11 @@ package io.github.lama06.schneckenhaus;
 
 import io.github.lama06.schneckenhaus.command.SchneckenCommand;
 import io.github.lama06.schneckenhaus.recipe.RecipeManager;
-import io.github.lama06.schneckenhaus.shell.ShellRecipe;
-import io.github.lama06.schneckenhaus.shell.custom.CustomShellConfig;
-import io.github.lama06.schneckenhaus.shell.custom.CustomShellFactory;
 import io.github.lama06.schneckenhaus.systems.Systems;
 import io.github.lama06.schneckenhaus.update.ConfigurationUpdater;
 import io.github.lama06.schneckenhaus.util.BuildProperties;
+import org.bstats.bukkit.Metrics;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -29,6 +28,7 @@ public final class SchneckenPlugin extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         new ConfigurationUpdater().update();
+        copyComments();
 
         try {
             buildProperties = BuildProperties.load();
@@ -44,14 +44,27 @@ public final class SchneckenPlugin extends JavaPlugin {
 
         Systems.start();
 
-        for (final ShellRecipe<CustomShellConfig> recipe : CustomShellFactory.INSTANCE.getRecipes()) {
-            System.out.println(recipe.ingredients());
+        try {
+            new Metrics(this, 21674);
+        } catch (final RuntimeException e) {
+            getLogger().warning("Failed to start bStats");
         }
     }
 
     @Override
     public void onDisable() {
         saveConfig();
+    }
+
+    private void copyComments() {
+        final FileConfiguration config = getConfig();
+        final FileConfiguration defaults = (FileConfiguration) config.getDefaults();
+        config.options().setHeader(defaults.options().getHeader());
+        config.options().setFooter(defaults.options().getFooter());
+        for (final String path : defaults.getKeys(true)) {
+            config.setComments(path, defaults.getComments(path));
+            config.setInlineComments(path, defaults.getInlineComments(path));
+        }
     }
 
     public BuildProperties getBuildProperties() {

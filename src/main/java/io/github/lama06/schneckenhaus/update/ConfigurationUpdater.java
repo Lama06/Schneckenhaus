@@ -54,7 +54,7 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
     }
 
     /*
-    Config in 1.0.1:
+    Config in 1.1.0:
 
     recipe:
       required_ingredients:
@@ -74,47 +74,40 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
         final int sizePerIngredient = recipe.getInt("size_per_ingredient");
         configuration.set("recipe", null);
 
-        final ConfigurationSection shellTypes = configuration.createSection("shell_types");
-
-        final ConfigurationSection shulker = shellTypes.createSection("shulker");
+        final ConfigurationSection shulker = configuration.createSection("shulker");
         shulker.set("enabled", true);
-        final ConfigurationSection shulkerRecipe = shulker.createSection("recipe");
-        shulkerRecipe.set("ingredients", requiredIngredients);
-        shulkerRecipe.set("size_ingredient", sizeIngredient);
-        shulkerRecipe.set("initial_size", initialSize);
-        shulkerRecipe.set("size_per_ingredient", sizePerIngredient);
+        shulker.set("ingredients", requiredIngredients);
+        shulker.set("size_ingredient", sizeIngredient);
+        shulker.set("initial_size", initialSize);
+        shulker.set("size_per_ingredient", sizePerIngredient);
 
-        final ConfigurationSection chest = shellTypes.createSection("chest");
+        final ConfigurationSection chest = configuration.createSection("chest");
         chest.set("enabled", true);
-        final ConfigurationSection chestRecipe = chest.createSection("recipe");
-        chestRecipe.set("ingredients", requiredIngredients);
-        chestRecipe.set("size_ingredient", sizeIngredient);
-        chestRecipe.set("initial_size", initialSize);
-        chestRecipe.set("size_per_ingredient", sizePerIngredient);
+        chest.set("ingredients", requiredIngredients);
+        chest.set("size_ingredient", sizeIngredient);
+        chest.set("initial_size", initialSize);
+        chest.set("size_per_ingredient", sizePerIngredient);
     }
 
     /*
     Config in 1.1.0:
-    data_version: 1.0.1
 
     nesting: true
 
-    shell_types:
-      shulker:
-        enabled: true
-        recipe:
-          ingredients:
-            - spyglass
-          size_ingredient: gold_ingot
-          initial_size: 4
-          size_per_ingredient: 2
-      chest:
-        enabled: true
-        recipe:
-          ingredients:
-            - spyglass
-          size_ingredient: diamond
-          initial_size: 4
-          size_per_ingredient: 1
+    shulker:
+      enabled: true
+      ingredients:
+        - spyglass
+      size_ingredient: gold_ingot
+      initial_size: 4
+      size_per_ingredient: 2
+    chest:
+      enabled: true
+      ingredients:
+        - spyglass
+      size_ingredient: diamond
+      initial_size: 4
+      size_per_ingredient: 1
+    custom: { }
      */
 }

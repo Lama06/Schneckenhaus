@@ -5,8 +5,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Material;
 
 public final class ChestShellConfig extends BuiltinShellConfig {
-    public ChestShellConfig() { }
-
     public ChestShellConfig(final int size) {
         super(size);
     }

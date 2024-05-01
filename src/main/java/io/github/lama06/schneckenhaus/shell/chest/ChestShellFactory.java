@@ -4,6 +4,8 @@ import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellRecipe;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.List;
 
@@ -15,6 +17,16 @@ public final class ChestShellFactory extends BuiltinShellFactory<ChestShellConfi
     @Override
     public String getName() {
         return "chest";
+    }
+
+    @Override
+    public int getMinSize() {
+        return 4;
+    }
+
+    @Override
+    public int getMaxSize() {
+        return 32 - 2;
     }
 
     @Override
@@ -33,17 +45,12 @@ public final class ChestShellFactory extends BuiltinShellFactory<ChestShellConfi
     }
 
     @Override
-    public int getMinSize() {
-        return 4;
+    protected ChestShellConfig loadBuiltinConfig(final int size, final PersistentDataContainer data) {
+        return new ChestShellConfig(size);
     }
 
     @Override
-    public int getMaxSize() {
-        return 32 - 2;
-    }
-
-    @Override
-    protected ChestShellConfig instantiateConfig() {
-        return new ChestShellConfig();
+    protected ChestShellConfig parseBuiltinConfig(final int size, final CommandSender sender, final String[] args) {
+        return new ChestShellConfig(size);
     }
 }

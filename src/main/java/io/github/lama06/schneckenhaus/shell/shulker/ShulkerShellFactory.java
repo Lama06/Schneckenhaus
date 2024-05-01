@@ -63,17 +63,12 @@ public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellC
     }
 
     @Override
-    protected ShulkerShellConfig instantiateConfig() {
-        return new ShulkerShellConfig();
+    protected ShulkerShellConfig loadBuiltinConfig(final int size, final PersistentDataContainer data) {
+        return new ShulkerShellConfig(size, ShulkerShellConfig.COLOR.get(data));
     }
 
     @Override
-    protected void loadAdditionalConfig(final ShulkerShellConfig config, final PersistentDataContainer data) {
-        config.setColor(ShulkerShellConfig.COLOR.get(data));
-    }
-
-    @Override
-    protected List<String> tabCompleteAdditionalConfig(final CommandSender sender, final String[] args) {
+    protected List<String> tabCompleteBuiltinConfig(final CommandSender sender, final String[] args) {
         if (args.length != 0 && args.length != 1) {
             return List.of();
         }
@@ -81,25 +76,24 @@ public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellC
     }
 
     @Override
-    protected boolean parseAdditionalConfig(final ShulkerShellConfig config, final CommandSender sender, final String[] args) {
+    protected ShulkerShellConfig parseBuiltinConfig(final int size, final CommandSender sender, final String[] args) {
         final RandomGenerator rnd = ThreadLocalRandom.current();
         final DyeColor color;
         if (args.length == 1) {
             color = Arrays.stream(DyeColor.values()).filter(c -> c.name().equalsIgnoreCase(args[0])).findAny().orElse(null);
             if (color == null) {
                 sender.spigot().sendMessage(new ComponentBuilder("Invalid color: " + args[1]).color(ChatColor.RED).build());
-                return false;
+                return null;
             }
         } else {
             final DyeColor[] dyeColors = DyeColor.values();
             color = dyeColors[rnd.nextInt(dyeColors.length)];
         }
-        config.setColor(color);
-        return true;
+        return new ShulkerShellConfig(size, color);
     }
 
     @Override
-    protected List<String> getAdditionalConfigCommandTemplates() {
+    protected List<String> getBuiltinConfigCommandTemplates() {
         return List.of("", "<color>");
     }
 }

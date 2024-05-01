@@ -9,9 +9,10 @@
 
 data_version: ${project.version}
 
+# Allows players to enter a snail shell when already inside another one
 nesting: true
 
-
+# Configuration for the shulker snail shell
 shulker:
   enabled: true
   ingredients:
@@ -26,4 +27,6 @@ chest:
   size_ingredient: diamond
   initial_size: 4
   size_per_ingredient: 1
+# Configuration of custom snail shells
+# Be aware that deleting a snail shell from this list will make all its instances invalid
 custom: { }

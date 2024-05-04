@@ -54,10 +54,10 @@ public class MultiplexerCommand extends Command {
     @Override
     public List<String> tabComplete(final CommandSender sender, final String[] args) {
         if (args.length == 0 || args.length == 1) {
-            return subCommands.entrySet().stream().filter(entry -> !entry.getValue().isHidden()).map(Map.Entry::getKey).toList();
+            return new ArrayList<>(subCommands.keySet());
         }
         final Command subCommand = subCommands.get(args[0]);
-        if (subCommand == null || subCommand.isHidden()) {
+        if (subCommand == null) {
             return List.of();
         }
         return subCommand.tabComplete(sender, Arrays.copyOfRange(args, 1, args.length));

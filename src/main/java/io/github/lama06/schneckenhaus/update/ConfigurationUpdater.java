@@ -1,18 +1,18 @@
 package io.github.lama06.schneckenhaus.update;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public final class ConfigurationUpdater extends Updater<Configuration> {
     private final Configuration configuration;
 
-    public ConfigurationUpdater() {
-        configuration = SchneckenPlugin.INSTANCE.getConfig();
+    public ConfigurationUpdater(final Configuration configuration) {
+        this.configuration = Objects.requireNonNull(configuration);
     }
 
     @Override
@@ -51,6 +51,7 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
 
     private void updateTo1_1_0() {
         configuration.set("nesting", false);
+        configuration.createSection("custom");
 
         final ConfigurationSection recipe = configuration.getConfigurationSection("recipe");
         final List<String> requiredIngredients = recipe.getStringList("required_ingredients");

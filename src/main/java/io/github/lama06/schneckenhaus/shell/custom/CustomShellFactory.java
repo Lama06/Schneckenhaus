@@ -7,13 +7,12 @@ import io.github.lama06.schneckenhaus.shell.ShellRecipe;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Material;
-import org.bukkit.Registry;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
@@ -29,15 +28,14 @@ public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
     @Override
     public List<ShellRecipe<CustomShellConfig>> getRecipes() {
         final List<ShellRecipe<CustomShellConfig>> recipes = new ArrayList<>();
-        final ConfigurationSection config = getGlobalConfig();
-        for (final String templateName : config.getKeys(false)) {
-            final ConfigurationSection templateConfig = config.getConfigurationSection(templateName);
-            if (!templateConfig.getBoolean("enabled")) {
+        final Map<String, CustomShellGlobalConfig> config = SchneckenPlugin.INSTANCE.getSchneckenConfig().custom;
+        for (final String templateName : config.keySet()) {
+            final CustomShellGlobalConfig templateConfig = config.get(templateName);
+            if (!templateConfig.enabled) {
                 continue;
             }
-            final List<Material> ingredients = new ArrayList<>();
+            final List<Material> ingredients = new ArrayList<>(templateConfig.ingredients);
             ingredients.add(Material.CHEST);
-            templateConfig.getStringList("ingredients").stream().map(Registry.MATERIAL::match).forEach(ingredients::add);
             recipes.add(new ShellRecipe<>(templateName, ingredients, new CustomShellConfig(templateName)));
         }
         return recipes;
@@ -56,7 +54,7 @@ public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
 
     @Override
     public List<String> tabCompleteConfig(final CommandSender sender, final String[] args) {
-        final Set<String> names = SchneckenPlugin.INSTANCE.getConfig().getConfigurationSection("custom").getKeys(false);
+        final Set<String> names = SchneckenPlugin.INSTANCE.getSchneckenConfig().custom.keySet();
         return new ArrayList<>(names);
     }
 
@@ -73,9 +71,5 @@ public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
     @Override
     public List<String> getConfigCommandTemplates() {
         return List.of("<name>");
-    }
-
-    private ConfigurationSection getGlobalConfig() {
-        return SchneckenPlugin.INSTANCE.getConfig().getConfigurationSection("custom");
     }
 }

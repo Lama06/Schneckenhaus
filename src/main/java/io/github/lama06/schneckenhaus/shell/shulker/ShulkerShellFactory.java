@@ -1,7 +1,9 @@
 package io.github.lama06.schneckenhaus.shell.shulker;
 
+import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellGlobalConfig;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellRecipe;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.md_5.bungee.api.ChatColor;
@@ -35,6 +37,11 @@ public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellC
     @Override
     public int getMaxSize() {
         return 32 - 2; // Minus two because of the walls on each side
+    }
+
+    @Override
+    protected BuiltinShellGlobalConfig getGlobalConfig() {
+        return SchneckenPlugin.INSTANCE.getSchneckenConfig().shulker;
     }
 
     @Override

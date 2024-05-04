@@ -6,6 +6,7 @@ import io.github.lama06.schneckenhaus.position.IdGridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
+import io.github.lama06.schneckenhaus.util.Range;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.Keyed;
@@ -27,7 +28,7 @@ public final class Require {
         return player;
     }
 
-    public static Integer integer(final CommandSender sender, final String arg, final Integer minInclusive, final Integer maxInclusive) {
+    public static Integer integer(final CommandSender sender, final String arg, final Range range) {
         final int integer;
         try {
             integer = Integer.parseInt(arg);
@@ -35,19 +36,15 @@ public final class Require {
             sender.spigot().sendMessage(new ComponentBuilder("Invalid integer: " + arg).color(ChatColor.RED).build());
             return null;
         }
-        if (minInclusive != null && integer < minInclusive) {
-            sender.spigot().sendMessage(new ComponentBuilder("Integer must be >= " + minInclusive).color(ChatColor.RED).build());
-            return null;
-        }
-        if (maxInclusive != null && integer > maxInclusive) {
-            sender.spigot().sendMessage(new ComponentBuilder("Integer must be <= " + maxInclusive).color(ChatColor.RED).build());
+        if (!range.contains(integer)) {
+            sender.spigot().sendMessage(new ComponentBuilder("Invalid integer: %d. Must be %s.".formatted(integer, range)).color(ChatColor.RED).build());
             return null;
         }
         return integer;
     }
 
     public static Integer integer(final CommandSender sender, final String arg) {
-        return integer(sender, arg, null, null);
+        return integer(sender, arg, Range.ALL);
     }
 
     public static BlockPosition blockPosition(final CommandSender sender, final String[] args) {
@@ -113,7 +110,7 @@ public final class Require {
             }
             id = position.getId();
         } else {
-            final Integer parsedId = integer(sender, arg, 1, null);
+            final Integer parsedId = integer(sender, arg, new Range(1, null));
             if (parsedId == null) {
                 return null;
             }

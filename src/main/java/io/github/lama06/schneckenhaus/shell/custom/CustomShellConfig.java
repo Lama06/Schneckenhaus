@@ -4,7 +4,6 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.data.Attribute;
 import io.github.lama06.schneckenhaus.shell.ShellConfig;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -31,7 +30,7 @@ public final class CustomShellConfig extends ShellConfig {
         return name;
     }
 
-    public ConfigurationSection getGlobalConfig() {
-        return SchneckenPlugin.INSTANCE.getConfig().getConfigurationSection("custom").getConfigurationSection(name);
+    public CustomShellGlobalConfig getGlobalConfig() {
+        return SchneckenPlugin.INSTANCE.getSchneckenConfig().custom.get(name);
     }
 }

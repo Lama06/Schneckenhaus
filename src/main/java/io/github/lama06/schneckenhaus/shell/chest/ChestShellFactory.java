@@ -1,7 +1,9 @@
 package io.github.lama06.schneckenhaus.shell.chest;
 
+import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellGlobalConfig;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellRecipe;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -27,6 +29,11 @@ public final class ChestShellFactory extends BuiltinShellFactory<ChestShellConfi
     @Override
     public int getMaxSize() {
         return 32 - 2;
+    }
+
+    @Override
+    protected BuiltinShellGlobalConfig getGlobalConfig() {
+        return SchneckenPlugin.INSTANCE.getSchneckenConfig().chest;
     }
 
     @Override

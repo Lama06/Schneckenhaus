@@ -40,11 +40,11 @@ public final class ClickShellListener implements Listener {
         if (!player.hasPermission(Permissions.ENTER)) {
             return;
         }
-        if (player.getWorld().equals(plugin.getWorld().getBukkit()) && !plugin.getConfig().getBoolean("nesting")) {
+        if (player.getWorld().equals(plugin.getWorld().getBukkit()) && !plugin.getSchneckenConfig().nesting) {
             return;
         }
         final IdGridPosition position = new IdGridPosition(id);
-        final Shell shell = plugin.getWorld().getShell(position);
+        final Shell<?> shell = plugin.getWorld().getShell(position);
         if (shell == null) {
             return;
         }

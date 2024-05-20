@@ -7,8 +7,9 @@ import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 
-public final class RepairShellSystem {
+public final class RepairShellSystem implements Listener {
     private final int DELAY = 5;
 
     public RepairShellSystem() {

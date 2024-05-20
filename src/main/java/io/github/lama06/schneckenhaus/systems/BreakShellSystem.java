@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 
-public final class BreakShellListener implements Listener {
+public final class BreakShellSystem implements Listener {
     @EventHandler
     private void preserveShellIdWhenBroken(final BlockDropItemEvent event) {
         if (!(event.getBlockState() instanceof final TileState tileState)) {

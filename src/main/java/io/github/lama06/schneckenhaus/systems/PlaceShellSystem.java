@@ -9,7 +9,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 
-public final class PlaceShellListener implements Listener {
+public final class PlaceShellSystem implements Listener {
     @EventHandler
     private void preserveShellIdWhenPlaced(final BlockPlaceEvent event) {
         final ItemStack itemInHand = event.getItemInHand();

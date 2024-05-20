@@ -13,7 +13,7 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-public final class DestoryShellListener implements Listener {
+public final class DestroyShellSystem implements Listener {
     @EventHandler
     private void preventBreakSnailShell(final BlockBreakEvent event) {
         final Player player = event.getPlayer();

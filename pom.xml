@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <groupId>io.github.lama06</groupId>
     <artifactId>schneckenhaus</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <modelVersion>4.0.0</modelVersion>
     <name>Schneckenhaus-Plugin</name>
     <url>https://github.com/Lama06/Schneckenhaus</url>

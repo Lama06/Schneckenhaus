@@ -16,7 +16,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.function.Predicate;
 
-public final class ClickShellDoorListener implements Listener {
+public final class PlayerLeaveShellSystem implements Listener {
+    public PlayerLeaveShellSystem() {
+        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::detectPlayerLeaveSnailShellUnexpectedly, 0, 1);
+    }
+
     @EventHandler
     private void teleportBack(final PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
@@ -56,5 +60,21 @@ public final class ClickShellDoorListener implements Listener {
         }
         player.teleport(newLocation);
         player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
+    }
+
+    /**
+     * Detect when a player leaves a snail shell without clicking on the door,
+     * e.g. because he or she dies, executes a command etc.
+     * This is necessary to clear the previous location history.
+     * Otherwise, the player can't enter a snail shell again which is stored as a previous location.
+     */
+    private void detectPlayerLeaveSnailShellUnexpectedly() {
+        for (final Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld().getBukkit())) {
+                continue;
+            }
+            new SchneckenPlayer(player); // Upgrade data
+            SchneckenPlayer.PREVIOUS_LOCATIONS.remove(player);
+        }
     }
 }

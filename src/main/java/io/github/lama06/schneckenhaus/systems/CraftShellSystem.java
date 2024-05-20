@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-public final class CraftShellListener implements Listener {
+public final class CraftShellSystem implements Listener {
     @EventHandler
     private void assignNewIdToCraftedShell(final CraftItemEvent event) {
         if (!(event.getRecipe() instanceof final Keyed keyedRecipe)) {

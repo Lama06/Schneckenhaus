@@ -15,7 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public final class ClickShellListener implements Listener {
+public final class ClickShellSystem implements Listener {
     @EventHandler
     private void teleportToShell(final PlayerInteractEvent event) {
         final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;

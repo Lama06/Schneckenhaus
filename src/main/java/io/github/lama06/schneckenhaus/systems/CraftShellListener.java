@@ -23,8 +23,8 @@ public final class CraftShellListener implements Listener {
             return;
         }
         final Player player = (Player) event.getWhoClicked();
-        if (!player.hasPermission(Permissions.CRAFT)) {
-            event.setCancelled(false);
+        if (!Permissions.require(player, Permissions.CRAFT)) {
+            event.setCancelled(true);
             return;
         }
         final Shell<?> shell = recipe.createShell(player);

@@ -96,6 +96,9 @@ public final class SchneckenPlugin extends JavaPlugin {
         return true;
     }
 
+    /**
+     * Converts a configuration object like a configuration section to a map by recursively traversing it.
+     */
     private Object extractConfigurationData(final Object value) {
         if (value instanceof final ConfigurationSection section) {
             return extractConfigurationSectionData(section);
@@ -121,6 +124,22 @@ public final class SchneckenPlugin extends JavaPlugin {
         return values;
     }
 
+    private void putConfigurationData(final ConfigurationSection section, final String key, final Object data) {
+        // We can't just set the maps directly but need to create manually configuration sections.
+        // Otherwise, no comments can be attached to the map's entries.
+        if (data instanceof final Map<?, ?> map) {
+            final ConfigurationSection subSection = section.createSection(key);
+            for (final Object subKey : map.keySet()) {
+                if (!(subKey instanceof final String subKeyString)) {
+                    continue;
+                }
+                putConfigurationData(subSection, subKeyString, map.get(subKey));
+            }
+            return;
+        }
+        section.set(key, data);
+    }
+
     private void saveSchneckenConfig() {
         if (schneckenConfig == null) {
             return;
@@ -130,7 +149,7 @@ public final class SchneckenPlugin extends JavaPlugin {
 
         final Map<String, Object> serializedConfig = schneckenConfig.store();
         for (final String key : serializedConfig.keySet()) {
-            configuration.set(key, serializedConfig.get(key));
+            putConfigurationData(configuration, key, serializedConfig.get(key));
         }
 
         configuration.set("data_version", PluginVersion.current().toString());

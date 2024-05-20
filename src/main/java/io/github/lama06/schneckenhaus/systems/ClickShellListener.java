@@ -37,7 +37,7 @@ public final class ClickShellListener implements Listener {
         event.setCancelled(true);
         final Player player = event.getPlayer();
         final SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
-        if (!player.hasPermission(Permissions.ENTER)) {
+        if (!Permissions.require(player, Permissions.ENTER)) {
             return;
         }
         if (player.getWorld().equals(plugin.getWorld().getBukkit()) && !plugin.getSchneckenConfig().nesting) {

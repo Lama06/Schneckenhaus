@@ -32,7 +32,6 @@ public final class ConfigAttribute<T> {
         }
         try {
             final T newValue = type.parse(data);
-            type.verify(newValue);
             setter.accept(newValue);
         } catch (final ConfigException exception) {
             exception.getPath().addPrefix(new ConfigPath.Name(name));

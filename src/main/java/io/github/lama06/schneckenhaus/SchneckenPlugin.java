@@ -88,6 +88,7 @@ public final class SchneckenPlugin extends JavaPlugin {
         final SchneckenConfig schneckenConfig = new SchneckenConfig();
         try {
             schneckenConfig.load(extractConfigurationSectionData(configuration));
+            schneckenConfig.verify();
         } catch (final ConfigException exception) {
             getLogger().log(Level.SEVERE, "Invalid configuration at %s".formatted(exception.getPath()), exception);
             return false;

@@ -1,6 +1,7 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,6 +40,9 @@ public final class TeleportCommand extends Command {
         if (shell == null) {
             return;
         }
+        final Location previousLocation = player.getLocation();
         player.teleport(shell.getPosition().getSpawnLocation());
+        final SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
+        schneckenPlayer.pushPreviousLocation(previousLocation);
     }
 }

@@ -41,7 +41,7 @@ public final class SchneckenPlayer {
     }
 
     public Location popPreviousLocation() {
-        final List<Location> previousLocations = new ArrayList<>(PREVIOUS_LOCATIONS.get(player));
+        final List<Location> previousLocations = new ArrayList<>(PREVIOUS_LOCATIONS.getOrDefault(player, List.of()));
         if (previousLocations.isEmpty()) {
             return null;
         }

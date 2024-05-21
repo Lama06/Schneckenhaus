@@ -4,6 +4,7 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
+import io.github.lama06.schneckenhaus.shell.Shell;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import org.bukkit.*;
@@ -16,8 +17,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.function.Predicate;
 
-public final class PlayerLeaveShellSystem implements Listener {
-    public PlayerLeaveShellSystem() {
+public final class LeaveShellSystem implements Listener {
+    public LeaveShellSystem() {
         Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::detectPlayerLeaveSnailShellUnexpectedly, 0, 1);
     }
 
@@ -40,6 +41,13 @@ public final class PlayerLeaveShellSystem implements Listener {
         }
         final GridPosition position = CoordinatesGridPosition.fromWorldPosition(clickedBlock.getLocation());
         if (position == null) {
+            return;
+        }
+        final Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(position);
+        if (shell == null) {
+            return;
+        }
+        if (!shell.getBlocks().containsKey(event.getClickedBlock())) { // don't handle doors placed by the player
             return;
         }
         event.setCancelled(true);

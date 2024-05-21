@@ -7,7 +7,7 @@ import org.bukkit.event.Listener;
 public final class Systems {
     private static final Listener[] SYSTEMS = {
             new BreakShellSystem(),
-            new PlayerLeaveShellSystem(),
+            new LeaveShellSystem(),
             new ClickShellSystem(),
             new CraftShellSystem(),
             new DestroyShellSystem(),

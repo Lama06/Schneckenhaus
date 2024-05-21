@@ -1,12 +1,14 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.shell.ShellConfig;
 import io.github.lama06.schneckenhaus.shell.ShellFactories;
 import io.github.lama06.schneckenhaus.shell.ShellFactory;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ComponentBuilder;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -54,7 +56,10 @@ public final class CreateCommand extends Command {
             return;
         }
         final Shell<C> shell = SchneckenPlugin.INSTANCE.getWorld().createShell(factory, player, config);
+        final Location previousLocation = player.getLocation();
         player.teleport(shell.getPosition().getSpawnLocation());
+        final SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
+        schneckenPlayer.pushPreviousLocation(previousLocation);
         if (!player.getInventory().addItem(shell.createItem()).isEmpty()) {
             player.spigot().sendMessage(new ComponentBuilder("Your inventory is full").color(ChatColor.RED).build());
         }

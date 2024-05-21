@@ -8,9 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.persistence.PersistentDataContainer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.random.RandomGenerator;
 import java.util.stream.IntStream;
@@ -31,7 +29,10 @@ public abstract class BuiltinShellFactory<C extends BuiltinShellConfig> extends 
             return List.of();
         }
 
-        final List<ShellRecipe<C>> recipes = new ArrayList<>();
+        final Map<Integer, ShellRecipe<C>> recipes = new HashMap<>();
+        // We use a map here to avoid returning multiple recipes with the same key
+        // Otherwise, this could happen because the snail shells size, which the recipe key contains,
+        // is clipped.
         for (final BuiltinShellRecipe<C> builtinRecipe : getBuiltinRecipes()) {
             for (int sizeIngredientAmount = 0; sizeIngredientAmount < getMaxSizeIngredientAmount(); sizeIngredientAmount++) {
                 final int rawSize = config.initialSize + sizeIngredientAmount * config.sizePerIngredient;
@@ -42,10 +43,10 @@ public abstract class BuiltinShellFactory<C extends BuiltinShellConfig> extends 
                 for (int i = 0; i < sizeIngredientAmount; i++) {
                     ingredients.add(config.sizeIngredient);
                 }
-                recipes.add(new ShellRecipe<>(key, ingredients, builtinRecipe.getConfig(size)));
+                recipes.put(size, new ShellRecipe<>(key, ingredients, builtinRecipe.getConfig(size)));
             }
         }
-        return recipes;
+        return List.copyOf(recipes.values());
     }
 
     protected abstract C loadBuiltinConfig(final int size, final PersistentDataContainer data);

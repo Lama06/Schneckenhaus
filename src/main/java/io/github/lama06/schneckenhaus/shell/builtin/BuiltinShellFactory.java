@@ -29,24 +29,22 @@ public abstract class BuiltinShellFactory<C extends BuiltinShellConfig> extends 
             return List.of();
         }
 
-        final Map<Integer, ShellRecipe<C>> recipes = new HashMap<>();
-        // We use a map here to avoid returning multiple recipes with the same key
-        // Otherwise, this could happen because the snail shells size, which the recipe key contains,
-        // is clipped.
+        final List<ShellRecipe<C>> recipes = new ArrayList<>();
         for (final BuiltinShellRecipe<C> builtinRecipe : getBuiltinRecipes()) {
-            for (int sizeIngredientAmount = 0; sizeIngredientAmount < getMaxSizeIngredientAmount(); sizeIngredientAmount++) {
+            for (int sizeIngredientAmount = 0; sizeIngredientAmount <= getMaxSizeIngredientAmount(); sizeIngredientAmount++) {
                 final int rawSize = config.initialSize + sizeIngredientAmount * config.sizePerIngredient;
                 final int size = Math.min(getMaxSize(), Math.max(getMinSize(), rawSize));
-                final String key = builtinRecipe.getKey() + "_" + size;
+                // Use the size ingredient amount instead of the actual size for the key because it is unique.
+                final String key = builtinRecipe.getKey() + "_" + sizeIngredientAmount;
                 final List<Material> ingredients = new ArrayList<>(config.ingredients);
                 ingredients.add(builtinRecipe.getIngredient());
                 for (int i = 0; i < sizeIngredientAmount; i++) {
                     ingredients.add(config.sizeIngredient);
                 }
-                recipes.put(size, new ShellRecipe<>(key, ingredients, builtinRecipe.getConfig(size)));
+                recipes.add(new ShellRecipe<>(key, ingredients, builtinRecipe.getConfig(size)));
             }
         }
-        return List.copyOf(recipes.values());
+        return recipes;
     }
 
     protected abstract C loadBuiltinConfig(final int size, final PersistentDataContainer data);

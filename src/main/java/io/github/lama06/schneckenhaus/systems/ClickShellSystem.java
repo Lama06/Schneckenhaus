@@ -5,6 +5,7 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -46,6 +47,8 @@ public final class ClickShellSystem implements Listener {
         final IdGridPosition position = new IdGridPosition(id);
         final Shell<?> shell = plugin.getWorld().getShell(position);
         if (shell == null) {
+            // This snail shell was deleted, also remove it from the world
+            event.getClickedBlock().setType(Material.AIR);
             return;
         }
         if (schneckenPlayer.isInside(position)) {

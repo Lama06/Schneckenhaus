@@ -72,10 +72,13 @@ public final class SchneckenWorld implements PersistentDataHolder {
 
     public Shell<?> getShell(final GridPosition position) {
         if (position.getId() >= NEXT_ID.get(world)) {
-            return null;
+            return null; // This snail shell hasn't been created yet.
         }
         new ShellUpdater(position).update();
         final PersistentDataContainer data = getShellData(position);
+        if (Shell.DELETED.getOrDefault(data, false)) {
+            return null;
+        }
         final String typeName = Shell.TYPE.get(data);
         for (final ShellFactory<?> factory : ShellFactories.getFactories()) {
             if (!factory.getName().equals(typeName)) {
@@ -86,7 +89,7 @@ public final class SchneckenWorld implements PersistentDataHolder {
         return null;
     }
 
-    public <C extends ShellConfig> Shell<C> createShell(final ShellFactory<C> factory, final OfflinePlayer creator, final C config) {
+    public <C extends ShellConfig> Shell <C> createShell(final ShellFactory<C> factory, final OfflinePlayer creator, final C config) {
         final int id = getAndIncrementNextShellId();
         final GridPosition position = new IdGridPosition(id);
         final PersistentDataContainer data = getShellData(position);

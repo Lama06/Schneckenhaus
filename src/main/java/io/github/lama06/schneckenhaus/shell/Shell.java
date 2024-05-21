@@ -5,25 +5,26 @@ import io.github.lama06.schneckenhaus.SchneckenWorld;
 import io.github.lama06.schneckenhaus.command.InfoCommand;
 import io.github.lama06.schneckenhaus.data.Attribute;
 import io.github.lama06.schneckenhaus.data.UuidPersistentDataType;
+import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
+import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
+import io.github.lama06.schneckenhaus.util.BlockPosition;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class Shell<C extends ShellConfig> implements PersistentDataHolder {
     public static final Attribute<String> TYPE = new Attribute<>("type", PersistentDataType.STRING);
     public static final Attribute<UUID> CREATOR = new Attribute<>("creator", UuidPersistentDataType.INSTANCE);
+    public static final Attribute<Boolean> DELETED = new Attribute<>("deleted", PersistentDataType.BOOLEAN);
 
     public static final Attribute<Integer> ITEM_ID = new Attribute<>("id", PersistentDataType.INTEGER);
     public static final Attribute<Integer> BLOCK_ID = new Attribute<>("id", PersistentDataType.INTEGER);
@@ -79,6 +80,21 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
         ITEM_ID.set(data, position.getId());
         item.setItemMeta(meta);
         return item;
+    }
+
+    public final void delete() {
+        for (final Player player : SchneckenPlugin.INSTANCE.getWorld().getBukkit().getPlayers()) {
+            final CoordinatesGridPosition playerPosition = CoordinatesGridPosition.fromWorldPosition(player.getLocation());
+            if (playerPosition == null || !playerPosition.equals(getPosition())) {
+                continue;
+            }
+            new SchneckenPlayer(player).teleportBack();
+        }
+        final World world = getWorld().getBukkit();
+        for (final BlockPosition blockPosition : getPosition().getArea()) {
+            blockPosition.getBlock(world).setType(Material.AIR);
+        }
+        DELETED.set(this, true);
     }
 
     @Override

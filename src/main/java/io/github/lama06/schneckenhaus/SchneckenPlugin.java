@@ -8,6 +8,7 @@ import io.github.lama06.schneckenhaus.update.ConfigurationUpdater;
 import io.github.lama06.schneckenhaus.util.BuildProperties;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -57,7 +58,8 @@ public final class SchneckenPlugin extends JavaPlugin {
         Systems.start();
 
         try {
-            new Metrics(this, BSTATS_ID);
+            final Metrics metrics = new Metrics(this, BSTATS_ID);
+            metrics.addCustomChart(new SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
         } catch (final RuntimeException exception) {
             getLogger().log(Level.WARNING, "Failed to start bStats", exception);
         }

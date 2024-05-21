@@ -5,17 +5,15 @@ import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Sound;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-
-import java.util.function.Predicate;
 
 public final class LeaveShellSystem implements Listener {
     public LeaveShellSystem() {
@@ -51,22 +49,7 @@ public final class LeaveShellSystem implements Listener {
             return;
         }
         event.setCancelled(true);
-        Location newLocation = schneckenPlayer.popPreviousLocation();
-        if (newLocation == null) {
-            World world = Bukkit.getWorld("world");
-            // Some servers don't have this world
-            if (world == null) {
-                world = Bukkit.getWorlds().stream()
-                        .filter(Predicate.not(SchneckenPlugin.INSTANCE.getWorld().getBukkit()::equals))
-                        .findFirst().orElse(null);
-            }
-            if (world == null) {
-                final String error = "You can't be teleported back because no world was found.";
-                player.spigot().sendMessage(new ComponentBuilder(error).color(ChatColor.RED).build());
-            }
-            newLocation = world.getSpawnLocation();
-        }
-        player.teleport(newLocation);
+        schneckenPlayer.teleportBack();
         player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
     }
 

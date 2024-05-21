@@ -1,7 +1,10 @@
 package io.github.lama06.schneckenhaus.position;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.util.BlockArea;
+import io.github.lama06.schneckenhaus.util.BlockPosition;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
@@ -103,5 +106,13 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
 
     public final Location getSpawnLocation() {
         return getCornerBlock().getLocation().add(2, 1, 2).setDirection(BlockFace.SOUTH.getDirection());
+    }
+
+    public final BlockArea getArea() {
+        final World world = SchneckenPlugin.INSTANCE.getWorld().getBukkit();
+        return new BlockArea(
+                new BlockPosition(getX() * CELL_SIZE, world.getMinHeight(), getZ() * CELL_SIZE),
+                new BlockPosition((getX() + 1) * CELL_SIZE - 1, world.getMaxHeight(), (getZ() + 1) * CELL_SIZE - 1)
+        );
     }
 }

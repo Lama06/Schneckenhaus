@@ -13,8 +13,8 @@ import java.util.Map;
 
 public final class SchneckenConfig extends CompoundConfig {
     public boolean nesting;
-    public BuiltinShellGlobalConfig chest;
     public BuiltinShellGlobalConfig shulker;
+    public BuiltinShellGlobalConfig chest;
     public Map<String, CustomShellGlobalConfig> custom;
 
     @Override
@@ -27,16 +27,16 @@ public final class SchneckenConfig extends CompoundConfig {
                         nesting -> this.nesting = nesting
                 ),
                 new ConfigAttribute<>(
-                        "chest",
-                        new CompoundConfigType<>(BuiltinShellGlobalConfig::new),
-                        () -> chest,
-                        chest -> this.chest = chest
-                ),
-                new ConfigAttribute<>(
                         "shulker",
                         new CompoundConfigType<>(BuiltinShellGlobalConfig::new),
                         () -> shulker,
                         shulker -> this.shulker = shulker
+                ),
+                new ConfigAttribute<>(
+                        "chest",
+                        new CompoundConfigType<>(BuiltinShellGlobalConfig::new),
+                        () -> chest,
+                        chest -> this.chest = chest
                 ),
                 new ConfigAttribute<>(
                         "custom",

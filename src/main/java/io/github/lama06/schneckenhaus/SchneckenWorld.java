@@ -57,6 +57,10 @@ public final class SchneckenWorld implements PersistentDataHolder {
         return nextId;
     }
 
+    public int getNumberOfShells() {
+        return NEXT_ID.get(world) - 1;
+    }
+
     public PersistentDataContainer getShellData(final GridPosition position) {
         return position.getCornerBlock().getChunk().getPersistentDataContainer();
     }

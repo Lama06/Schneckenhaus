@@ -64,6 +64,7 @@ public final class NewShellTypeCommand extends Command {
         customConfig.put(name, newShell);
 
         SchneckenPlugin.INSTANCE.getRecipeManager().registerRecipes();
+        SchneckenPlugin.INSTANCE.saveSchneckenConfig();
 
         final ComponentBuilder builder = new ComponentBuilder();
         builder.append("Successfully added shell!").color(ChatColor.GREEN);

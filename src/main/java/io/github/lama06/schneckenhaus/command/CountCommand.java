@@ -1,7 +1,6 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.SchneckenWorld;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -19,8 +18,7 @@ public final class CountCommand extends Command {
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
-        final SchneckenWorld world = SchneckenPlugin.INSTANCE.getWorld();
-        final int count = SchneckenWorld.NEXT_ID.get(world) - 1;
+        final int count = SchneckenPlugin.INSTANCE.getWorld().getNumberOfShells();
         final ComponentBuilder builder = new ComponentBuilder();
         builder.append("There are ");
         builder.append(Integer.toString(count)).color(ChatColor.AQUA);

@@ -9,6 +9,7 @@ import io.github.lama06.schneckenhaus.util.BuildProperties;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -17,7 +18,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 public final class SchneckenPlugin extends JavaPlugin {
@@ -49,6 +53,7 @@ public final class SchneckenPlugin extends JavaPlugin {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+        saveSchneckenConfig(); // Apply updates, clean up comments etc.
 
         world = new SchneckenWorld();
         recipeManager = new RecipeManager();
@@ -58,16 +63,10 @@ public final class SchneckenPlugin extends JavaPlugin {
         Systems.start();
 
         try {
-            final Metrics metrics = new Metrics(this, BSTATS_ID);
-            metrics.addCustomChart(new SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
+            startBstats();
         } catch (final RuntimeException exception) {
             getLogger().log(Level.WARNING, "Failed to start bStats", exception);
         }
-    }
-
-    @Override
-    public void onDisable() {
-        saveSchneckenConfig();
     }
 
     private File getConfigFile() {
@@ -87,7 +86,7 @@ public final class SchneckenPlugin extends JavaPlugin {
         }
         final ConfigurationUpdater updater = new ConfigurationUpdater(configuration);
         updater.update();
-        final SchneckenConfig schneckenConfig = new SchneckenConfig();
+        schneckenConfig = new SchneckenConfig();
         try {
             schneckenConfig.load(extractConfigurationSectionData(configuration));
             schneckenConfig.verify();
@@ -95,7 +94,6 @@ public final class SchneckenPlugin extends JavaPlugin {
             getLogger().log(Level.SEVERE, "Invalid configuration at %s".formatted(exception.getPath()), exception);
             return false;
         }
-        this.schneckenConfig = schneckenConfig;
         return true;
     }
 
@@ -143,11 +141,7 @@ public final class SchneckenPlugin extends JavaPlugin {
         section.set(key, data);
     }
 
-    private void saveSchneckenConfig() {
-        if (schneckenConfig == null) {
-            return;
-        }
-
+    public void saveSchneckenConfig() {
         final YamlConfiguration configuration = new YamlConfiguration();
 
         final Map<String, Object> serializedConfig = schneckenConfig.store();
@@ -169,6 +163,15 @@ public final class SchneckenPlugin extends JavaPlugin {
         } catch (final IOException exception) {
             getLogger().log(Level.SEVERE, "Failed to save the configuration file", exception);
         }
+    }
+
+    private void startBstats() {
+        if (getBuildProperties().debug()) {
+            return;
+        }
+        final Metrics metrics = new Metrics(this, BSTATS_ID);
+        metrics.addCustomChart(new SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
+        metrics.addCustomChart(new SingleLineChart("shells", world::getNumberOfShells));
     }
 
     public SchneckenConfig getSchneckenConfig() {

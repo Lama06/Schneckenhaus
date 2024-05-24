@@ -4,6 +4,7 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.command.InfoCommand;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -41,6 +42,16 @@ public final class CustomShell extends Shell<CustomShellConfig> {
             blocks.put(targetBlock, templateBlock.getBlockData());
         }
         return blocks;
+    }
+
+    @Override
+    public BlockArea getFloor() {
+        final BlockArea template = config.getGlobalConfig().template;
+        final Block cornerBlock = position.getCornerBlock();
+        return new BlockArea(
+                new BlockPosition(cornerBlock.getRelative(1, 0, 1)),
+                new BlockPosition(cornerBlock.getRelative(template.getWidthX() - 2, 0, template.getWidthZ() - 2))
+        );
     }
 
     @Override

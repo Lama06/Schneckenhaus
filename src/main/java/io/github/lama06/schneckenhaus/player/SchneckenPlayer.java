@@ -40,10 +40,17 @@ public final class SchneckenPlayer {
         return previousLocations.stream().map(CoordinatesGridPosition::fromWorldPosition).anyMatch(position::equals);
     }
 
-    public void pushPreviousLocation(final Location location) {
+    public void pushPreviousLocation(final Location location, final boolean nesting) {
         final List<Location> previousLocations = new ArrayList<>(PREVIOUS_LOCATIONS.getOrDefault(player, List.of()));
+        if (!nesting && !previousLocations.isEmpty()) {
+            return;
+        }
         previousLocations.add(location);
         PREVIOUS_LOCATIONS.set(player, previousLocations);
+    }
+
+    public void pushPreviousLocation(final Location location) {
+        pushPreviousLocation(location, true);
     }
 
     public Location popPreviousLocation() {

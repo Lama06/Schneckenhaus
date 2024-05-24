@@ -41,8 +41,8 @@ public final class TeleportCommand extends Command {
             return;
         }
         final Location previousLocation = player.getLocation();
-        player.teleport(shell.getPosition().getSpawnLocation());
+        player.teleport(shell.getSpawnLocation());
         final SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
-        schneckenPlayer.pushPreviousLocation(previousLocation);
+        schneckenPlayer.pushPreviousLocation(previousLocation, false);
     }
 }

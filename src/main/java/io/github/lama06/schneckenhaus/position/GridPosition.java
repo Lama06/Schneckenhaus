@@ -3,10 +3,8 @@ package io.github.lama06.schneckenhaus.position;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 
 /**
  * Represents the position of a cell in the grid of snail shells.
@@ -102,10 +100,6 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
      */
     public final Block getCornerBlock() {
         return SchneckenPlugin.INSTANCE.getWorld().getBukkit().getBlockAt(getX() * CELL_SIZE, 0, getZ() * CELL_SIZE);
-    }
-
-    public final Location getSpawnLocation() {
-        return getCornerBlock().getLocation().add(2, 1, 2).setDirection(BlockFace.SOUTH.getDirection());
     }
 
     public final BlockArea getArea() {

@@ -8,9 +8,11 @@ import io.github.lama06.schneckenhaus.data.UuidPersistentDataType;
 import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
+import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,6 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.util.Vector;
 
 import java.util.*;
 
@@ -42,6 +45,8 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
     public Map<Block, BlockData> getInitialBlocks() {
         return Map.of();
     }
+
+    public abstract BlockArea getFloor();
 
     public final void place() {
         final Map<Block, BlockData> blocks = getBlocks();
@@ -95,6 +100,32 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
             blockPosition.getBlock(world).setType(Material.AIR);
         }
         DELETED.set(this, true);
+    }
+
+    public final Location getSpawnLocation() {
+        final Vector direction = BlockFace.SOUTH_EAST.getDirection();
+        floorBlocks:
+        for (final BlockPosition floorBlockPos : getFloor()) {
+            final Block floorBlock = floorBlockPos.getBlock(getWorld().getBukkit());
+            if (!floorBlock.getType().isSolid()) {
+                continue;
+            }
+            for (int y = 1; y <= 2; y++) {
+                if (floorBlock.getRelative(0, y, 0).getType().isSolid()) {
+                    continue floorBlocks;
+                }
+            }
+            return floorBlock.getLocation().add(0.5, 1, 0.5).setDirection(direction);
+        }
+        final Block floorCorner = getFloor().getLowerCorner().getBlock(getWorld().getBukkit());
+        if (!floorCorner.getType().isSolid()) {
+            floorCorner.setType(Material.STONE);
+        }
+        for (int y = 1; y <= 2; y++) {
+            final Block obstructedBlock = floorCorner.getRelative(0, y, 0);
+            obstructedBlock.setType(Material.AIR);
+        }
+        return floorCorner.getLocation().add(0.5, 1, 0.5).setDirection(direction);
     }
 
     @Override

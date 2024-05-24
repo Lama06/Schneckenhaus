@@ -55,7 +55,7 @@ public final class ClickShellSystem implements Listener {
             return;
         }
         schneckenPlayer.pushPreviousLocation(player.getLocation());
-        player.teleport(shell.getPosition().getSpawnLocation());
+        player.teleport(shell.getSpawnLocation());
         player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_OPEN, 1, 1);
     }
 }

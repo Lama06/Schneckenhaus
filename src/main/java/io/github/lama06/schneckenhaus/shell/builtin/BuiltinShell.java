@@ -3,6 +3,8 @@ package io.github.lama06.schneckenhaus.shell.builtin;
 import io.github.lama06.schneckenhaus.command.InfoCommand;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.util.BlockArea;
+import io.github.lama06.schneckenhaus.util.BlockPosition;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -48,6 +50,14 @@ public abstract class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C
         final int size = getSize();
         entries.add(new InfoCommand.Entry("Size", "%dx%d".formatted(size, size)));
         return entries;
+    }
+
+    @Override
+    public final BlockArea getFloor() {
+        return new BlockArea(
+                new BlockPosition(position.getCornerBlock().getRelative(1, 0, 1)),
+                new BlockPosition(position.getCornerBlock().getRelative(getSize(), 0, getSize()))
+        );
     }
 
     public final int getSize() {

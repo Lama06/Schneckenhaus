@@ -7,13 +7,19 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 
 public final class PlaceShellSystem implements Listener {
     @EventHandler
     private void preserveShellIdWhenPlaced(final BlockPlaceEvent event) {
         final ItemStack itemInHand = event.getItemInHand();
-        final PersistentDataContainer itemData = itemInHand.getItemMeta().getPersistentDataContainer();
+        final ItemMeta meta = itemInHand.getItemMeta();
+        if (meta == null) {
+            // An user reported an exception which was throws because the item meta was null
+            return;
+        }
+        final PersistentDataContainer itemData = meta.getPersistentDataContainer();
         final Integer id = Shell.ITEM_ID.get(itemData);
         if (id == null) {
             return;

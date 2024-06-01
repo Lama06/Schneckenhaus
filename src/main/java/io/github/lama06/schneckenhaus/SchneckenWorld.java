@@ -99,6 +99,7 @@ public final class SchneckenWorld implements PersistentDataHolder {
         final PersistentDataContainer data = getShellData(position);
         Shell.TYPE.set(data, factory.getName());
         Shell.CREATOR.set(data, creator.getUniqueId());
+        Shell.LOCKED.set(data, false);
         ShellUpdater.DATA_VERSION.set(data, PluginVersion.current());
         config.store(data);
         final Shell<C> shell = factory.instantiate(position, config);

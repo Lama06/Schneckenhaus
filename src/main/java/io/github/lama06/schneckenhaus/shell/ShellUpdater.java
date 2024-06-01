@@ -29,12 +29,18 @@ public final class ShellUpdater extends PersistentDataContainerUpdater {
     @Override
     protected Map<PluginVersion, Runnable> getUpdates() {
         return Map.ofEntries(
-                Map.entry(new PluginVersion(1, 1, 0), this::updateTo1_1_0)
+                Map.entry(new PluginVersion(1, 1, 0), this::updateTo1_1_0),
+                Map.entry(new PluginVersion(1, 4, 0), this::updateTo1_4_0)
         );
     }
 
     private void updateTo1_1_0() {
         final PersistentDataContainer data = getData();
         Shell.TYPE.set(data, ShulkerShellFactory.INSTANCE.getName());
+    }
+
+    private void updateTo1_4_0() {
+        final PersistentDataContainer data = getData();
+        Shell.LOCKED.set(data, false);
     }
 }

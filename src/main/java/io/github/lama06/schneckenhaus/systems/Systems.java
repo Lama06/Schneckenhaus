@@ -12,7 +12,8 @@ public final class Systems {
             new CraftShellSystem(),
             new DestroyShellSystem(),
             new PlaceShellSystem(),
-            new RepairShellSystem()
+            new RepairShellSystem(),
+            new LockShellSystem()
     };
 
     public static void start() {

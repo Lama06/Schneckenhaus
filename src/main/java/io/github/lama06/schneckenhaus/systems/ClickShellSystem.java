@@ -5,6 +5,7 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -52,6 +53,10 @@ public final class ClickShellSystem implements Listener {
             return;
         }
         if (schneckenPlayer.isInside(position)) {
+            return;
+        }
+        if (shell.isLocked() && !player.equals(shell.getCreator().getPlayer())) {
+            player.sendMessage(ChatColor.RED + "This snail shell is locked");
             return;
         }
         schneckenPlayer.pushPreviousLocation(player.getLocation());

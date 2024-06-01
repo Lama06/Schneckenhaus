@@ -10,6 +10,7 @@ import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -27,6 +28,7 @@ import java.util.*;
 public abstract class Shell<C extends ShellConfig> implements PersistentDataHolder {
     public static final Attribute<String> TYPE = new Attribute<>("type", PersistentDataType.STRING);
     public static final Attribute<UUID> CREATOR = new Attribute<>("creator", UuidPersistentDataType.INSTANCE);
+    public static final Attribute<Boolean> LOCKED = new Attribute<>("locked", PersistentDataType.BOOLEAN);
     public static final Attribute<Boolean> DELETED = new Attribute<>("deleted", PersistentDataType.BOOLEAN);
 
     public static final Attribute<Integer> ITEM_ID = new Attribute<>("id", PersistentDataType.INTEGER);
@@ -74,7 +76,8 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
                 new InfoCommand.Entry("Id", Integer.toString(position.getId())),
                 new InfoCommand.Entry("Grid Position", "X: %d, Z: %d".formatted(position.getX(), position.getZ())),
                 new InfoCommand.Entry("World Position", "X: %d, Z: %d".formatted(cornerBlock.getX(), cornerBlock.getZ())),
-                new InfoCommand.Entry("Creator", creatorName == null ? "Unknown" : creatorName)
+                new InfoCommand.Entry("Creator", creatorName == null ? "Unknown" : creatorName),
+                new InfoCommand.Entry("Locked", isLocked() ? "Yes" : "No", isLocked() ? ChatColor.GREEN : ChatColor.RED)
         );
     }
 
@@ -147,5 +150,13 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
 
     public final OfflinePlayer getCreator() {
         return Bukkit.getOfflinePlayer(CREATOR.get(this));
+    }
+
+    public final boolean isLocked() {
+        return LOCKED.get(this);
+    }
+
+    public final void setLocked(final boolean locked) {
+        LOCKED.set(this, locked);
     }
 }

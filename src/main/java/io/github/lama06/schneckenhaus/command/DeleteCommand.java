@@ -1,11 +1,11 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.shell.Shell;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -25,18 +25,35 @@ public final class DeleteCommand extends Command {
             return;
         }
         if (!confirm) {
-            final ComponentBuilder builder = new ComponentBuilder();
-            builder.append("Confirmation to delete Snail Shell\n").underlined(true).color(ChatColor.YELLOW);
-            builder.append("Id: ").reset().append(Integer.toString(shell.getId())).color(ChatColor.AQUA).append("\n");
-            builder.append("Owner: ").reset().append(shell.getCreator().getName()).color(ChatColor.AQUA).append("\n");
-            builder.append("This is ").reset().color(ChatColor.YELLOW).append("cannot").bold(true).append(" be undone!\n").bold(false);
-            builder.append("> Permanently delete this snail shell <").color(ChatColor.RED).bold(true);
-            builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("This is an irreversible action!")));
-            builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sh delete %d confirm".formatted(shell.getId())));
-            sender.spigot().sendMessage(builder.build());
+            Component message = Component.text()
+              .append(
+                Component.text("Confirmation to delete Snail Shell\n")
+                  .color(NamedTextColor.YELLOW)
+                  .decorate(TextDecoration.UNDERLINED)
+              )
+              .append(Component.text("Id: ").color(NamedTextColor.WHITE))
+              .append(Component.text(shell.getId()).color(NamedTextColor.AQUA))
+              .appendNewline()
+              .append(Component.text("Owner: ").color(NamedTextColor.WHITE))
+              .append(Component.text(shell.getCreator().getName()).color(NamedTextColor.AQUA))
+              .appendNewline()
+              .append(Component.text("This is ").color(NamedTextColor.YELLOW))
+              .append(Component.text("cannot").decorate(TextDecoration.BOLD))
+              .append(Component.text(" be undone!\n").color(NamedTextColor.YELLOW))
+              .append(
+                Component.text("> Permanently delete this snail shell <")
+                  .color(NamedTextColor.RED)
+                  .decorate(TextDecoration.BOLD)
+                  .hoverEvent(HoverEvent.showText(
+                    Component.text("This is an irreversible action!")
+                  ))
+                  .clickEvent(ClickEvent.runCommand("/sh delete %d confirm".formatted(shell.getId())))
+              )
+              .build();
+            sender.sendMessage(message);
             return;
         }
         shell.delete();
-        sender.spigot().sendMessage(new ComponentBuilder("Deletion successful").color(ChatColor.GREEN).build());
+        sender.sendMessage(Component.text("Deletion successful", NamedTextColor.GREEN));
     }
 }

@@ -1,8 +1,8 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.shell.Shell;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -28,7 +28,7 @@ public final class GiveItemCommand extends Command {
             return;
         }
         if (!player.getInventory().addItem(shell.createItem()).isEmpty()) {
-            player.spigot().sendMessage(new ComponentBuilder("Your inventory is full").color(ChatColor.RED).build());
+            player.sendMessage(Component.text("Your inventory is full", NamedTextColor.RED));
         }
     }
 }

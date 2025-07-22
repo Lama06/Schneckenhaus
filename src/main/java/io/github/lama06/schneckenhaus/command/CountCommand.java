@@ -1,11 +1,11 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -19,17 +19,25 @@ public final class CountCommand extends Command {
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         final int count = SchneckenPlugin.INSTANCE.getWorld().getNumberOfShells();
-        final ComponentBuilder builder = new ComponentBuilder();
-        builder.append("There are ");
-        builder.append(Integer.toString(count)).color(ChatColor.AQUA);
-        builder.event(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, Integer.toString(count)));
-        builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to copy")));
-        builder.append(" snail shells on this server.").reset();
+
+        TextComponent.Builder builder = Component.text()
+          .append(Component.text("There are "))
+          .append(
+            Component.text(count, NamedTextColor.AQUA)
+              .clickEvent(ClickEvent.copyToClipboard(Integer.toString(count)))
+              .hoverEvent(HoverEvent.showText(Component.text("Click to copy")))
+          )
+          .append(Component.text(" snail shells on this server."));
+
         if (count > 0) {
-            builder.append("\n> View most recently created <").color(ChatColor.LIGHT_PURPLE);
-            builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sh info " + count));
-            builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click here")));
+            builder.appendNewline();
+            builder.append(
+              Component.text("> View most recently created <", NamedTextColor.LIGHT_PURPLE)
+                .clickEvent(ClickEvent.runCommand("/sh info " + count))
+                .hoverEvent(HoverEvent.showText(Component.text("Click here")))
+            );
         }
-        sender.spigot().sendMessage(builder.build());
+
+        sender.sendMessage(builder);
     }
 }

@@ -7,9 +7,11 @@ import io.github.lama06.schneckenhaus.systems.Systems;
 import io.github.lama06.schneckenhaus.update.ConfigurationUpdater;
 import io.github.lama06.schneckenhaus.util.BuildProperties;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
-import org.bstats.bukkit.Metrics;
-import org.bstats.charts.SimplePie;
-import org.bstats.charts.SingleLineChart;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -38,6 +40,16 @@ public final class SchneckenPlugin extends JavaPlugin {
 
     public SchneckenPlugin() {
         INSTANCE = this;
+    }
+
+    @Override
+    public void onLoad() {
+        System.out.println(GsonComponentSerializer.gson().serialize(
+                Component.text()
+                        .content("Hallo, ").decorate(TextDecoration.BOLD).color(NamedTextColor.AQUA)
+                        .append(Component.text("Das ist ").color(NamedTextColor.RED))
+                        .append(Component.text("rot")).build()
+        ));
     }
 
     @Override
@@ -170,8 +182,8 @@ public final class SchneckenPlugin extends JavaPlugin {
             return;
         }
         final Metrics metrics = new Metrics(this, BSTATS_ID);
-        metrics.addCustomChart(new SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
-        metrics.addCustomChart(new SingleLineChart("shells", world::getNumberOfShells));
+        metrics.addCustomChart(new Metrics.SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
+        metrics.addCustomChart(new Metrics.SingleLineChart("shells", world::getNumberOfShells));
     }
 
     public SchneckenConfig getSchneckenConfig() {

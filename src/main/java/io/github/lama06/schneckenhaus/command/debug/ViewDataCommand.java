@@ -2,8 +2,9 @@ package io.github.lama06.schneckenhaus.command.debug;
 
 import io.github.lama06.schneckenhaus.command.Command;
 import io.github.lama06.schneckenhaus.command.Require;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -40,20 +41,20 @@ public final class ViewDataCommand extends Command {
         if (data == null) {
             return;
         }
-        final ComponentBuilder builder = new ComponentBuilder();
+        final TextComponent.Builder builder = Component.text();
         keys:
         for (final NamespacedKey key : data.getKeys()) {
-            builder.append("\n").reset();
-            builder.append(key.toString()).color(ChatColor.YELLOW).append(": ");
+            builder.appendNewline();
+            builder.append(Component.text(key + ": ", NamedTextColor.YELLOW));
             for (final PersistentDataType<?, ?> type : PERSISTENT_DATA_TYPES) {
                 try {
-                    builder.append(data.get(key, type).toString());
+                    builder.append(Component.text(data.get(key, type).toString()));
                     continue keys;
                 } catch (final IllegalArgumentException ignored) { }
             }
-            builder.append("Unknown Type").color(ChatColor.RED);
+            builder.append(Component.text("Unknown Type", NamedTextColor.RED));
         }
-        sender.spigot().sendMessage(builder.build());
+        sender.sendMessage(builder);
     }
 
     @Override

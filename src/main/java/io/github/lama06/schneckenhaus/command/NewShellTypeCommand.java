@@ -4,8 +4,8 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.config.ConfigException;
 import io.github.lama06.schneckenhaus.shell.custom.CustomShellGlobalConfig;
 import io.github.lama06.schneckenhaus.util.BlockArea;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,7 +24,7 @@ public final class NewShellTypeCommand extends Command {
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         if (args.length < 8) {
-            sender.spigot().sendMessage(new ComponentBuilder("Not enough arguments").color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Not enough arguments", NamedTextColor.RED));
             return;
         }
         final Player player = Require.player(sender);
@@ -32,13 +32,13 @@ public final class NewShellTypeCommand extends Command {
             return;
         }
         if (!player.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld().getBukkit())) {
-            sender.spigot().sendMessage(new ComponentBuilder("Templates need to be in the snail shell world").color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Templates need to be in the snail shell world", NamedTextColor.RED));
             return;
         }
         final Map<String, CustomShellGlobalConfig> customConfig = SchneckenPlugin.INSTANCE.getSchneckenConfig().custom;
         final String name = args[0];
         if (customConfig.containsKey(name)) {
-            sender.spigot().sendMessage(new ComponentBuilder("This name is already taken: " + name).color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("This name is already taken: " + name, NamedTextColor.RED));
             return;
         }
         final BlockArea template = Require.blockArea(sender, Arrays.copyOfRange(args, 1, 7));
@@ -58,7 +58,7 @@ public final class NewShellTypeCommand extends Command {
         try {
             newShell.verify();
         } catch (final ConfigException e) {
-            sender.spigot().sendMessage(new ComponentBuilder(e.getMessage()).color(ChatColor.RED).build());
+            sender.sendMessage(Component.text(e.getMessage(), NamedTextColor.RED));
             return;
         }
         customConfig.put(name, newShell);
@@ -66,11 +66,14 @@ public final class NewShellTypeCommand extends Command {
         SchneckenPlugin.INSTANCE.getRecipeManager().registerRecipes();
         SchneckenPlugin.INSTANCE.saveSchneckenConfig();
 
-        final ComponentBuilder builder = new ComponentBuilder();
-        builder.append("Successfully added shell!").color(ChatColor.GREEN);
-        builder.append("\nYou can edit it in the config.").reset();
-        builder.append(" Remember that you need a chest besides the specified ingredients to craft it.");
-        sender.spigot().sendMessage(builder.build());
+
+        Component message = Component.text()
+          .append(Component.text("Successfully added shell!").color(NamedTextColor.GREEN))
+          .append(
+            Component.text("\nYou can edit it in the config. Remember that you need a chest besides the specified ingredients to craft it.")
+          )
+          .build();
+        sender.sendMessage(message);
     }
 
     @Override

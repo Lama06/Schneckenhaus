@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Schneckenhaus Plugin" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="060c9cc2-f339-4a4d-bcfd-5d054c7fa3f7" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/Schneckenhaus_Plugin.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/io_papermc_paper_api.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/Metrics.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/discord.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jarRepositories.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/Test_Server.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/runConfigurations/Test_Server.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Schneckenhaus.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Schneckenhaus.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/SchneckenPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/SchneckenPlugin.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/CountCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/CountCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/DeleteCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/DeleteCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/GiveItemCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/GiveItemCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/HelpCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/HelpCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/InfoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/InfoCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/NewShellTypeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/NewShellTypeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/Require.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/Require.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/io/github/lama06/schneckenhaus/position/GridPositionTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/io/github/lama06/schneckenhaus/util/BlockAreaTest.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="jar://$USER_HOME$/.jdks/openjdk-24.0.1/lib/src.zip!/java.base/java/util/TreeMap.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="30FGE8UHBcinqj4ShLpfrEzybcy" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Downloaded.Files.Path.Enabled": "false",
+    "JAR Application.Test Server.executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "true",
+    "Repository.Attach.Sources": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "editor.preferences.import"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="060c9cc2-f339-4a4d-bcfd-5d054c7fa3f7" name="Changes" comment="" />
+      <created>1753215793074</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1753215793074</updated>
+    </task>
+    <servers />
+  </component>
+</project>

@@ -1,11 +1,12 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.shell.Shell;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 
 import java.util.List;
@@ -26,28 +27,34 @@ public final class InfoCommand extends Command {
             return;
         }
 
-        final ComponentBuilder builder = new ComponentBuilder();
-        builder.append("Snail Shell\n").color(ChatColor.YELLOW).bold(true);
+        TextComponent.Builder builder = Component.text()
+          .append(Component.text("Snail Shell\n", NamedTextColor.YELLOW, TextDecoration.BOLD));
+
         for (final Entry entry : shell.getInformation()) {
-            builder.append(entry.key() + ": ").reset().color(ChatColor.AQUA);
-            builder.append(entry.value() + "\n").reset();
-            if (entry.color() != null) {
-                builder.color(entry.color());
-            }
+            builder.append(
+              Component.text(entry.key() + ": ", NamedTextColor.AQUA)
+            );
+            builder.append(
+              Component.text(entry.value() + "\n", entry.color() != null ? entry.color() : NamedTextColor.WHITE)
+            );
         }
 
-        builder.append("> Teleport <\n").reset().color(ChatColor.LIGHT_PURPLE);
-        builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to teleport")));
-        builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sh tp " + shell.getId()));
+        builder.append(
+          Component.text("> Teleport <\n", NamedTextColor.LIGHT_PURPLE)
+            .hoverEvent(HoverEvent.showText(Component.text("Click to teleport")))
+            .clickEvent(ClickEvent.runCommand("/sh tp " + shell.getId()))
+        );
 
-        builder.append("> Give Item <").reset().color(ChatColor.LIGHT_PURPLE);
-        builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click to get an item connected to this snail shell")));
-        builder.event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/sh giveItem " + shell.getId()));
+        builder.append(
+          Component.text("> Give Item <", NamedTextColor.LIGHT_PURPLE)
+            .hoverEvent(HoverEvent.showText(Component.text("Click to get an item connected to this snail shell")))
+            .clickEvent(ClickEvent.runCommand("/sh giveItem " + shell.getId()))
+        );
 
-        sender.spigot().sendMessage(builder.build());
+        sender.sendMessage(builder.build());
     }
 
-    public record Entry(String key, String value, ChatColor color) {
+    public record Entry(String key, String value, NamedTextColor color) {
         public Entry(String key, String value) {
             this(key, value, null);
         }

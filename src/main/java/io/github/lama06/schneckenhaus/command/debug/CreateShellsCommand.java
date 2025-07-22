@@ -5,8 +5,8 @@ import io.github.lama06.schneckenhaus.command.Command;
 import io.github.lama06.schneckenhaus.command.Require;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellConfig;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellFactory;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.command.CommandSender;
@@ -32,7 +32,7 @@ public final class CreateShellsCommand extends Command {
                 final DyeColor[] dyeColors = DyeColor.values();
                 final DyeColor color = dyeColors[rnd.nextInt(dyeColors.length)];
                 SchneckenPlugin.INSTANCE.getWorld().createShell(factory, player, new ShulkerShellConfig(size, color));
-                player.spigot().sendMessage(new ComponentBuilder(Integer.toString(finalI + 1)).color(ChatColor.GREEN).build());
+                player.sendMessage(Component.text(finalI + 1, NamedTextColor.GREEN));
             }, i);
         }
     }

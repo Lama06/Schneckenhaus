@@ -6,8 +6,8 @@ import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.shell.ShellConfig;
 import io.github.lama06.schneckenhaus.shell.ShellFactories;
 import io.github.lama06.schneckenhaus.shell.ShellFactory;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -39,12 +39,12 @@ public final class CreateCommand extends Command {
         }
         if (args.length == 0) {
             final String shellTypes = ShellFactories.getFactories().stream().map(ShellFactory::getName).collect(Collectors.joining(", "));
-            sender.spigot().sendMessage(new ComponentBuilder("Specify a snell type: " + shellTypes).color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Specify a snell type: " + shellTypes, NamedTextColor.RED));
             return;
         }
         final ShellFactory<?> factory = ShellFactories.getByName(args[0]);
         if (factory == null) {
-            sender.spigot().sendMessage(new ComponentBuilder("Invalid shell type: " + args[0]).color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Invalid shell type: " + args[0], NamedTextColor.RED));
             return;
         }
         execute(player, args, factory);
@@ -61,7 +61,7 @@ public final class CreateCommand extends Command {
         final SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
         schneckenPlayer.pushPreviousLocation(previousLocation, false);
         if (!player.getInventory().addItem(shell.createItem()).isEmpty()) {
-            player.spigot().sendMessage(new ComponentBuilder("Your inventory is full").color(ChatColor.RED).build());
+            player.sendMessage(Component.text("Your inventory is full", NamedTextColor.RED));
         }
     }
 

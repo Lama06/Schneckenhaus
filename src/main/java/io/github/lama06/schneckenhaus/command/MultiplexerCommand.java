@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.command;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
@@ -37,7 +37,7 @@ public class MultiplexerCommand extends Command {
     public void execute(final CommandSender sender, final String[] args) {
         if (args.length == 0) {
             if (defaultSubCommand == null) {
-                sender.spigot().sendMessage(new ComponentBuilder("Not enough arguments").color(ChatColor.RED).build());
+                sender.sendMessage(Component.text("Not enough arguments", NamedTextColor.RED));
                 return;
             }
             defaultSubCommand.execute(sender, args);
@@ -45,7 +45,7 @@ public class MultiplexerCommand extends Command {
         }
         final Command subCommand = subCommands.get(args[0]);
         if (subCommand == null) {
-            sender.spigot().sendMessage(new ComponentBuilder("Invalid sub-command: " + args[0]).color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Invalid sub-command: " + args[0], NamedTextColor.RED));
             return;
         }
         subCommand.execute(sender, Arrays.copyOfRange(args, 1, args.length));

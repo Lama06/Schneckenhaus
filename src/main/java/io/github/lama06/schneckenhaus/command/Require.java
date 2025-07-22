@@ -7,10 +7,11 @@ import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import io.github.lama06.schneckenhaus.util.Range;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -22,7 +23,7 @@ public final class Require {
 
     public static Player player(final CommandSender sender) {
         if (!(sender instanceof final Player player)) {
-            sender.spigot().sendMessage(new ComponentBuilder().append("You are not a player").color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("You are not a player", NamedTextColor.RED));
             return null;
         }
         return player;
@@ -33,11 +34,11 @@ public final class Require {
         try {
             integer = Integer.parseInt(arg);
         } catch (final NumberFormatException e) {
-            sender.spigot().sendMessage(new ComponentBuilder("Invalid integer: " + arg).color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Invalid integer: " + arg, NamedTextColor.RED));
             return null;
         }
         if (!range.contains(integer)) {
-            sender.spigot().sendMessage(new ComponentBuilder("Invalid integer: %d. Must be %s.".formatted(integer, range)).color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Invalid integer: %d. Must be %s.".formatted(integer, range), NamedTextColor.RED));
             return null;
         }
         return integer;
@@ -49,7 +50,7 @@ public final class Require {
 
     public static BlockPosition blockPosition(final CommandSender sender, final String[] args) {
         if (args.length < 3) {
-            sender.spigot().sendMessage(new ComponentBuilder("Not enough arguments").color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Not enough arguments", NamedTextColor.RED));
             return null;
         }
         final Integer x = integer(sender, args[0]);
@@ -69,7 +70,7 @@ public final class Require {
 
     public static BlockArea blockArea(final CommandSender sender, final String[] args) {
         if (args.length < 6) {
-            sender.spigot().sendMessage(new ComponentBuilder("Not enough arguments").color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Not enough arguments", NamedTextColor.RED));
             return null;
         }
         final BlockPosition first = blockPosition(sender, args);
@@ -84,9 +85,9 @@ public final class Require {
     }
 
     public static <T extends Keyed> T keyed(final Registry<T> registry, final CommandSender sender, final String arg) {
-        final T keyed = registry.match(arg);
+        final T keyed = registry.get(NamespacedKey.fromString(arg));
         if (keyed == null) {
-            sender.spigot().sendMessage(new ComponentBuilder("Unknown key: " + arg).color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Unknown key: " + arg, NamedTextColor.RED));
             return null;
         }
         return keyed;
@@ -105,7 +106,7 @@ public final class Require {
             }
             final CoordinatesGridPosition position = CoordinatesGridPosition.fromWorldPosition(player.getLocation());
             if (position == null) {
-                sender.spigot().sendMessage(new ComponentBuilder("Move to a snail shell or enter an id").color(ChatColor.RED).build());
+                sender.sendMessage(Component.text("Move to a snail shell or enter an id", NamedTextColor.RED));
                 return null;
             }
             id = position.getId();
@@ -118,7 +119,7 @@ public final class Require {
         }
         final Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(new IdGridPosition(id));
         if (shell == null) {
-            sender.spigot().sendMessage(new ComponentBuilder("This snail shell doesn't exist").color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("This snail shell doesn't exist", NamedTextColor.RED));
             return null;
         }
         return shell;

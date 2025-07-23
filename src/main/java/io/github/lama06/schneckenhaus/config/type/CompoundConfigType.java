@@ -23,7 +23,7 @@ public final class CompoundConfigType<T extends CompoundConfig> implements Confi
         final Map<String, Object> stringMap = new HashMap<>();
         for (final Object key : map.keySet()) {
             if (!(key instanceof final String keyString)) {
-                continue;
+                throw new ConfigException("Invalid key");
             }
             stringMap.put(keyString, map.get(key));
         }

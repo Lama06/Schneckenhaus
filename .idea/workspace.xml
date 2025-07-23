@@ -10,36 +10,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="060c9cc2-f339-4a4d-bcfd-5d054c7fa3f7" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/HomeCommand.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/HomeShellConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/HomeShellSystem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/buid.properties.prod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/artifacts/Schneckenhaus_Plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/Schneckenhaus_Plugin.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/Permissions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/Permissions.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/SchneckenConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/SchneckenConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/SchneckenPlugin.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/SchneckenPlugin.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/InfoCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/InfoCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/SchneckenCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/SchneckenCommand.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/ConfigPath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/ConfigPath.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/RegistryConfigType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/RegistryConfigType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/player/SchneckenPlayer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/player/SchneckenPlayer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/Shell.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/Shell.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/ShellConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/ShellConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/chest/ChestShellConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/chest/ChestShellConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/custom/CustomShellFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/custom/CustomShellFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/shulker/ShulkerShellConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/shulker/ShulkerShellConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/shulker/ShulkerShellFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/shulker/ShulkerShellFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/BreakShellSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/BreakShellSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/ClickShellSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/ClickShellSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/LockShellSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/LockShellSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/Systems.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/systems/Systems.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/util/BuildProperties.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/util/BuildProperties.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/util/PluginVersion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/util/PluginVersion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/build.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/build.properties.debug" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/HomeCommand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/command/HomeCommand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/BlockAreaConfigType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/BlockAreaConfigType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/CompoundConfigType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/CompoundConfigType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/ForwardingConfigType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/MapConfigType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/config/type/MapConfigType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/custom/CustomShellGlobalConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/shell/custom/CustomShellGlobalConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/update/ConfigurationUpdater.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/io/github/lama06/schneckenhaus/update/ConfigurationUpdater.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/plugin.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,31 +62,31 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Scratch.executor": "Run",
-    "Downloaded.Files.Path.Enabled": "false",
-    "JAR Application.Test Server.executor": "Run",
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Repository.Attach.Annotations": "false",
-    "Repository.Attach.JavaDocs": "true",
-    "Repository.Attach.Sources": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
-    "ignore.virus.scanning.warn.message": "true",
-    "project.structure.last.edited": "Artifacts",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Scratch.executor&quot;: &quot;Run&quot;,
+    &quot;Downloaded.Files.Path.Enabled&quot;: &quot;false&quot;,
+    &quot;JAR Application.Test Server.executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Annotations&quot;: &quot;false&quot;,
+    &quot;Repository.Attach.JavaDocs&quot;: &quot;true&quot;,
+    &quot;Repository.Attach.Sources&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   },
-  "keyToStringList": {
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "JAVA"
+  &quot;keyToStringList&quot;: {
+    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
+      &quot;JAVA&quot;
     ]
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Andreas\Desktop\Schneckenhaus\src\main\java\io\github\lama06\schneckenhaus" />

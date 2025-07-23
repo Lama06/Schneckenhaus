@@ -16,12 +16,12 @@ public final class MapConfigType<T> implements ConfigType<Map<String, T>> {
     @Override
     public Map<String, T> parse(final Object data) throws ConfigException {
         if (!(data instanceof final Map<?, ?> map)) {
-            throw new ConfigException("");
+            throw new ConfigException("Expected key value pairs");
         }
         final Map<String, T> result = new LinkedHashMap<>();
         for (final Object key : map.keySet()) {
             if (!(key instanceof final String keyString)) {
-                continue;
+                throw new ConfigException("Invalid key: " + key);
             }
             final T value;
             try {

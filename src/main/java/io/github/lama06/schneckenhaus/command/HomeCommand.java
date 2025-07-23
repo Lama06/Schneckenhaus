@@ -13,13 +13,14 @@ import org.bukkit.entity.Player;
 public class HomeCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
+        SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
         Player player = Require.player(sender);
         if (player == null) {
             return;
         }
         SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
 
-        SchneckenConfig config = SchneckenPlugin.INSTANCE.getSchneckenConfig();
+        SchneckenConfig config = plugin.getSchneckenConfig();
         if (!config.home.command) {
             player.sendMessage(Component.text("This feature is disabled in the configuration file", NamedTextColor.RED));
             return;
@@ -32,7 +33,7 @@ public class HomeCommand extends Command {
         }
 
         IdGridPosition position = new IdGridPosition(homeId);
-        Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(position);
+        Shell<?> shell = plugin.getWorld().getShell(position);
         if (shell == null) {
             player.sendMessage(Component.text("Your home was not found", NamedTextColor.RED));
             SchneckenPlayer.HOME.remove(player);
@@ -42,6 +43,12 @@ public class HomeCommand extends Command {
         if (schneckenPlayer.isInside(position)) {
             return;
         }
+        if (player.getWorld().equals(plugin.getWorld().getBukkit()) && !plugin.getSchneckenConfig().nesting) {
+            player.sendMessage(Component.text("You are already in another snail shell. " +
+                    "The nesting feature was disabled by the server owner.", NamedTextColor.RED));
+            return;
+        }
+
         schneckenPlayer.pushPreviousLocation(player.getLocation());
         player.teleport(shell.getSpawnLocation());
     }

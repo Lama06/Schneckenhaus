@@ -5,7 +5,12 @@
 #   ____) | (__| | | | | | |  __/ (__|   <  __/ | | | | | | (_| | |_| \__ \
 #  |_____/ \___|_| |_|_| |_|\___|\___|_|\_\___|_| |_|_| |_|\__,_|\__,_|___/
 
-# Please report issues, give feedback or request features on GitHub: https://github.com/Lama06/Schneckenhaus
+# Spigot page: https://www.spigotmc.org/resources/schneckenhaus.116315/
+# Source code available on GitHub: https://github.com/Lama06/Schneckenhaus
+# Contact the author (bugs, feature requests etc.): andreasprues36@gmail.com
+# If you enjoy the plugin, consider making a donation on PayPal
+# If you agree, your donation will be mentioned on the plugin's websites
+# Edit the configuration while the server is turned off
 
 # Allows players to enter a snail shell when already inside another one
 nesting: true
@@ -48,4 +53,4 @@ chest:
 custom: { }
 
 # Don't change this! Doing so will cause data corruption.
-data_version: 2.0.0 // TODO
+data_version: placeholder

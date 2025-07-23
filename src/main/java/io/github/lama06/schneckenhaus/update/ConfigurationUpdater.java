@@ -34,7 +34,8 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
     @Override
     protected Map<PluginVersion, Runnable> getUpdates() {
         return Map.ofEntries(
-                Map.entry(new PluginVersion(1, 1, 0), this::updateTo1_1_0)
+                Map.entry(new PluginVersion(1, 1, 0), this::updateTo1_1_0),
+                Map.entry(new PluginVersion(2, 0, 0), this::updateTo2_0_0)
         );
     }
 
@@ -96,4 +97,14 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
       size_per_ingredient: 1
     custom: { }
      */
+
+    private void updateTo2_0_0() {
+        configuration.set("theft_prevention", false);
+
+        ConfigurationSection homeShell = configuration.createSection("home_shell");
+        homeShell.set("enabled", false);
+        homeShell.set("size", 16);
+        homeShell.set("command", true);
+        homeShell.set("prevent_homelessness", true);
+    }
 }

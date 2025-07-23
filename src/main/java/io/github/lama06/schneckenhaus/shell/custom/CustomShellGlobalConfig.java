@@ -25,7 +25,8 @@ public final class CustomShellGlobalConfig extends CompoundConfig {
         this.template = template;
     }
 
-    public CustomShellGlobalConfig() { }
+    public CustomShellGlobalConfig() {
+    }
 
     @Override
     public List<ConfigAttribute<?>> getAttributes() {
@@ -44,7 +45,7 @@ public final class CustomShellGlobalConfig extends CompoundConfig {
                 ),
                 new ConfigAttribute<>(
                         "template",
-                        new ForwardingConfigType<>(new BlockAreaConfigType(new Range(1, GridPosition.CELL_SIZE))) {
+                        new BlockAreaConfigType(new Range(1, GridPosition.CELL_SIZE)) {
                             @Override
                             public void verify(final BlockArea data) throws ConfigException {
                                 super.verify(data);

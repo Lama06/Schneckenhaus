@@ -6,7 +6,7 @@ import io.github.lama06.schneckenhaus.util.Range;
 
 import java.util.Objects;
 
-public final class BlockAreaConfigType implements ConfigType<BlockArea> {
+public class BlockAreaConfigType implements ConfigType<BlockArea> {
     public static final BlockAreaConfigType INSTANCE = new BlockAreaConfigType(Range.ALL);
 
     private final Range widthRange;

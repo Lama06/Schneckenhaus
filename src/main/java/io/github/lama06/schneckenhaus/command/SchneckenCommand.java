@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.command;
 
+import io.github.lama06.schneckenhaus.Permissions;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.command.debug.DebugCommand;
 import org.bukkit.Bukkit;
@@ -51,6 +52,10 @@ public final class SchneckenCommand extends MultiplexerCommand {
                 final String label,
                 final String[] args
         ) {
+            if (!(args.length >= 1 && args[0].equalsIgnoreCase("home")) && !Permissions.require(sender, Permissions.COMMAND)) {
+                return true;
+            }
+
             execute(sender, args);
             return true;
         }
@@ -62,6 +67,14 @@ public final class SchneckenCommand extends MultiplexerCommand {
                 final String label,
                 final String[] args
         ) {
+            if (!sender.hasPermission(Permissions.COMMAND)) {
+                if (SchneckenPlugin.INSTANCE.getSchneckenConfig().home.command) {
+                    return List.of("home");
+                } else {
+                    return List.of();
+                }
+            }
+
             return tabComplete(sender, args);
         }
     }

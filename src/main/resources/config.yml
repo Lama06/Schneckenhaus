@@ -16,7 +16,7 @@
 nesting: true
 
 # Prevents players from breaking other players' snail shells
-theft_prevention: true
+theft_prevention: false
 
 home_shell:
   # If enabled, every player will automatically receive a new snail shell on first spawn.

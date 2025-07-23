@@ -65,6 +65,10 @@ public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
             return null;
         }
         final String template = args[0];
+        if (!SchneckenPlugin.INSTANCE.getSchneckenConfig().custom.containsKey(template)) {
+            sender.sendMessage(Component.text("Invalid template name: " + template, NamedTextColor.RED));
+            return null;
+        }
         return new CustomShellConfig(template);
     }
 

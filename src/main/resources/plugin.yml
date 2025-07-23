@@ -10,7 +10,6 @@ commands:
     description: The main command of the Schneckenhaus plugin.
     usage: /sh help
     aliases: sh
-    permission: schneckenhaus.command
 permissions:
   schneckenhaus.*:
     default: op

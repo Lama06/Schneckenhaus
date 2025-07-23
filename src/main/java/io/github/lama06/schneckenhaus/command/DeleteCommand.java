@@ -37,7 +37,7 @@ public final class DeleteCommand extends Command {
               .append(Component.text("Owner: ").color(NamedTextColor.WHITE))
               .append(Component.text(shell.getCreator().getName()).color(NamedTextColor.AQUA))
               .appendNewline()
-              .append(Component.text("This is ").color(NamedTextColor.YELLOW))
+              .append(Component.text("This ").color(NamedTextColor.YELLOW))
               .append(Component.text("cannot").decorate(TextDecoration.BOLD))
               .append(Component.text(" be undone!\n").color(NamedTextColor.YELLOW))
               .append(

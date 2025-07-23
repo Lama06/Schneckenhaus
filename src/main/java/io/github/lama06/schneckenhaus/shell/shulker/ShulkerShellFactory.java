@@ -6,8 +6,8 @@ import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellGlobalConfig;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellRecipe;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
@@ -89,7 +89,7 @@ public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellC
         if (args.length == 1) {
             color = Arrays.stream(DyeColor.values()).filter(c -> c.name().equalsIgnoreCase(args[0])).findAny().orElse(null);
             if (color == null) {
-                sender.spigot().sendMessage(new ComponentBuilder("Invalid color: " + args[1]).color(ChatColor.RED).build());
+                sender.sendMessage(Component.text("Invalid color: " + args[1], NamedTextColor.RED));
                 return null;
             }
         } else {

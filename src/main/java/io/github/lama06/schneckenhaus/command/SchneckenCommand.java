@@ -23,6 +23,7 @@ public final class SchneckenCommand extends MultiplexerCommand {
         addSubCommand("newShellType", new NewShellTypeCommand());
         addSubCommand("tp", new TeleportCommand());
         addSubCommand("delete", new DeleteCommand());
+        addSubCommand("home", new HomeCommand());
         if (SchneckenPlugin.INSTANCE.getBuildProperties().debug()) {
             addSubCommand("debug", new DebugCommand());
         }

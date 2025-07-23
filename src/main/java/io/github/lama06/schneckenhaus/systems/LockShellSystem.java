@@ -3,8 +3,8 @@ package io.github.lama06.schneckenhaus.systems;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -39,24 +39,25 @@ public final class LockShellSystem implements Listener {
             return;
         }
         if (!shell.getCreator().equals(player)) {
-            final ComponentBuilder builder = new ComponentBuilder();
-            builder.append("You can't ").color(ChatColor.RED);
-            builder.append(shell.isLocked() ? "unlock" : "lock");
-            builder.append(" this snail shell because you don't own it.");
-            player.spigot().sendMessage(builder.build());
+            String text = "You can't " + (shell.isLocked() ? "unlock" : "lock") + " this snail shell because you don't own it";
+            player.sendMessage(Component.text(text, NamedTextColor.RED));
             return;
         }
         shell.setLocked(!shell.isLocked());
-        final ComponentBuilder builder = new ComponentBuilder();
-        builder.append("You successfully ").color(ChatColor.GREEN);
-        builder.append(shell.isLocked() ? "locked" : "unlocked");
-        builder.append(" this snail shell.\n");
-        if (shell.isLocked()) {
-            builder.append("Others except for you can no longer enter it.");
-        } else {
-            builder.append("Now everyone can enter it.");
-        }
-        builder.reset();
-        player.spigot().sendMessage(builder.build());
+
+        Component msg = Component.text()
+          .append(
+            Component.text("You successfully " + (shell.isLocked() ? "locked" : "unlocked") + " this snail shell.\n")
+              .color(NamedTextColor.GREEN)
+          )
+          .append(
+            Component.text(
+              shell.isLocked() ?
+                "Others except for you can no longer enter it." :
+                "Now everyone can enter it."
+            )
+          )
+          .build();
+        player.sendMessage(msg);
     }
 }

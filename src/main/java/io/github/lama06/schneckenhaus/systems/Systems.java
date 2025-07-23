@@ -6,14 +6,15 @@ import org.bukkit.event.Listener;
 
 public final class Systems {
     private static final Listener[] SYSTEMS = {
-            new BreakShellSystem(),
-            new LeaveShellSystem(),
-            new ClickShellSystem(),
-            new CraftShellSystem(),
-            new DestroyShellSystem(),
-            new PlaceShellSystem(),
-            new RepairShellSystem(),
-            new LockShellSystem()
+        new BreakShellSystem(),
+        new LeaveShellSystem(),
+        new ClickShellSystem(),
+        new CraftShellSystem(),
+        new DestroyShellSystem(),
+        new PlaceShellSystem(),
+        new RepairShellSystem(),
+        new LockShellSystem(),
+        new HomeShellSystem()
     };
 
     public static void start() {
@@ -22,5 +23,6 @@ public final class Systems {
         }
     }
 
-    private Systems() { }
+    private Systems() {
+    }
 }

@@ -7,6 +7,7 @@
         <element id="module-source" name="Schneckenhaus" />
       </element>
       <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/build.properties.debug" output-file-name="build.properties" />
     </root>
   </artifact>
 </component>

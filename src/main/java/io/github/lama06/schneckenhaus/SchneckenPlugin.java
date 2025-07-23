@@ -7,11 +7,6 @@ import io.github.lama06.schneckenhaus.systems.Systems;
 import io.github.lama06.schneckenhaus.update.ConfigurationUpdater;
 import io.github.lama06.schneckenhaus.util.BuildProperties;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -20,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,16 +36,6 @@ public final class SchneckenPlugin extends JavaPlugin {
 
     public SchneckenPlugin() {
         INSTANCE = this;
-    }
-
-    @Override
-    public void onLoad() {
-        System.out.println(GsonComponentSerializer.gson().serialize(
-                Component.text()
-                        .content("Hallo, ").decorate(TextDecoration.BOLD).color(NamedTextColor.AQUA)
-                        .append(Component.text("Das ist ").color(NamedTextColor.RED))
-                        .append(Component.text("rot")).build()
-        ));
     }
 
     @Override
@@ -88,16 +74,22 @@ public final class SchneckenPlugin extends JavaPlugin {
     private boolean loadSchneckenConfig() {
         embeddedConfig = YamlConfiguration.loadConfiguration(getTextResource("config.yml"));
 
-        saveDefaultConfig();
-        final YamlConfiguration configuration = new YamlConfiguration();
-        try {
-            configuration.load(getConfigFile());
-        } catch (final IOException | InvalidConfigurationException exception) {
-            getLogger().log(Level.SEVERE, "Failed to load the config file", exception);
-            return false;
+        final YamlConfiguration configuration;
+        if (Files.exists(getConfigFile().toPath())) {
+            configuration = new YamlConfiguration();
+            try {
+                configuration.load(getConfigFile());
+            } catch (final IOException | InvalidConfigurationException exception) {
+                getLogger().log(Level.SEVERE, "Failed to load the config file", exception);
+                return false;
+            }
+            final ConfigurationUpdater updater = new ConfigurationUpdater(configuration);
+            updater.update();
+        } else {
+            configuration = YamlConfiguration.loadConfiguration(getTextResource("config.yml"));
+            configuration.set("data_version", PluginVersion.current().toString());
         }
-        final ConfigurationUpdater updater = new ConfigurationUpdater(configuration);
-        updater.update();
+
         schneckenConfig = new SchneckenConfig();
         try {
             schneckenConfig.load(extractConfigurationSectionData(configuration));

@@ -5,8 +5,8 @@ import io.github.lama06.schneckenhaus.data.Attribute;
 import io.github.lama06.schneckenhaus.data.LocationPersistentDataType;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,6 +22,11 @@ public final class SchneckenPlayer {
     public static final Attribute<List<Location>> PREVIOUS_LOCATIONS = new Attribute<>(
             "previous_locations",
             PersistentDataType.LIST.listTypeFrom(LocationPersistentDataType.INSTANCE)
+    );
+
+    public static final Attribute<Integer> HOME = new Attribute<>(
+      "home",
+      PersistentDataType.INTEGER
     );
 
     private final Player player;
@@ -76,7 +81,7 @@ public final class SchneckenPlayer {
             }
             if (world == null) {
                 final String error = "You can't be teleported back because no world was found.";
-                player.spigot().sendMessage(new ComponentBuilder(error).color(ChatColor.RED).build());
+                player.sendMessage(Component.text(error, NamedTextColor.RED));
                 return;
             }
             newLocation = world.getSpawnLocation();

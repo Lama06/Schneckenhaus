@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus.config.type;
 import io.github.lama06.schneckenhaus.config.ConfigException;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 
 import java.util.Objects;
@@ -21,7 +22,7 @@ public final class RegistryConfigType<T extends Keyed> implements ConfigType<T> 
         if (!(data instanceof final String string)) {
             throw new ConfigException("Expected string: " + data);
         }
-        final T keyed = registry.match(string);
+        final T keyed = registry.get(NamespacedKey.fromString(string));
         if (keyed == null) {
             throw new ConfigException("Unknown identifier: " + string);
         }

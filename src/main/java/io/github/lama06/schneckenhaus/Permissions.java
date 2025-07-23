@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
@@ -14,9 +14,8 @@ public final class Permissions {
             if (!(permissible instanceof final CommandSender sender)) {
                 return false;
             }
-            sender.spigot().sendMessage(new ComponentBuilder(
-                    "You are not allowed to do this. Missing permission: " + permission
-            ).color(ChatColor.RED).build());
+
+            sender.sendMessage(Component.text("You are not allowed to do this. Missing permission: " + permission, NamedTextColor.RED));
             return false;
         }
         return true;

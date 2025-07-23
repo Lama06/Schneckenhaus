@@ -10,7 +10,7 @@ import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -23,7 +23,10 @@ import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public abstract class Shell<C extends ShellConfig> implements PersistentDataHolder {
     public static final Attribute<String> TYPE = new Attribute<>("type", PersistentDataType.STRING);
@@ -77,7 +80,7 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
                 new InfoCommand.Entry("Grid Position", "X: %d, Z: %d".formatted(position.getX(), position.getZ())),
                 new InfoCommand.Entry("World Position", "X: %d, Z: %d".formatted(cornerBlock.getX(), cornerBlock.getZ())),
                 new InfoCommand.Entry("Creator", creatorName == null ? "Unknown" : creatorName),
-                new InfoCommand.Entry("Locked", isLocked() ? "Yes" : "No", isLocked() ? ChatColor.GREEN : ChatColor.RED)
+                new InfoCommand.Entry("Locked", isLocked() ? "Yes" : "No", isLocked() ? NamedTextColor.GREEN : NamedTextColor.RED)
         );
     }
 

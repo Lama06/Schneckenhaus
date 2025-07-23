@@ -1,7 +1,8 @@
 package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellConfig;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 
 public final class ChestShellConfig extends BuiltinShellConfig {
@@ -15,7 +16,7 @@ public final class ChestShellConfig extends BuiltinShellConfig {
     }
 
     @Override
-    public ChatColor getItemColor() {
-        return ChatColor.WHITE;
+    public TextColor getItemColor() {
+        return NamedTextColor.WHITE;
     }
 }

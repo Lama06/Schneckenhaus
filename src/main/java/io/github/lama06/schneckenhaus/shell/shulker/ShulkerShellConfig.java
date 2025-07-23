@@ -4,12 +4,10 @@ import io.github.lama06.schneckenhaus.data.Attribute;
 import io.github.lama06.schneckenhaus.data.EnumPersistentDataType;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellConfig;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.persistence.PersistentDataContainer;
-
-import java.awt.*;
 
 public final class ShulkerShellConfig extends BuiltinShellConfig {
     public static final Attribute<DyeColor> COLOR = new Attribute<>("color", EnumPersistentDataType.DYE_COLOR);
@@ -27,8 +25,8 @@ public final class ShulkerShellConfig extends BuiltinShellConfig {
     }
 
     @Override
-    public ChatColor getItemColor() {
-        return ChatColor.of(new Color(getColor().getColor().asRGB()));
+    public TextColor getItemColor() {
+        return TextColor.color(getColor().getColor().asRGB());
     }
 
     @Override

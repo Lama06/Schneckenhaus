@@ -1,7 +1,8 @@
 package io.github.lama06.schneckenhaus.shell;
 
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,8 +13,8 @@ import java.util.List;
 public abstract class ShellConfig {
     protected abstract Material getItemMaterial();
 
-    protected ChatColor getItemColor() {
-        return ChatColor.WHITE;
+    protected TextColor getItemColor() {
+        return NamedTextColor.WHITE;
     }
 
     protected String getLore() {
@@ -23,10 +24,10 @@ public abstract class ShellConfig {
     public final ItemStack createItem() {
         final ItemStack item = new ItemStack(getItemMaterial());
         final ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(new ComponentBuilder("Snail Shell").color(getItemColor()).build().toLegacyText());
+        meta.displayName(Component.text("Snail shell", getItemColor()));
         final String lore = getLore();
         if (lore != null) {
-            meta.setLore(List.of(lore));
+            meta.lore(List.of(Component.text(lore)));
         }
         item.setItemMeta(meta);
         return item;

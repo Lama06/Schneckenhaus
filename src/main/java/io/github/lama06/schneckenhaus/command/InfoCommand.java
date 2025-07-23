@@ -6,6 +6,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.command.CommandSender;
 
@@ -54,7 +55,7 @@ public final class InfoCommand extends Command {
         sender.sendMessage(builder.build());
     }
 
-    public record Entry(String key, String value, NamedTextColor color) {
+    public record Entry(String key, String value, TextColor color) {
         public Entry(String key, String value) {
             this(key, value, null);
         }

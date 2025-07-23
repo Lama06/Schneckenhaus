@@ -10,6 +10,18 @@
 # Allows players to enter a snail shell when already inside another one
 nesting: true
 
+# Prevents players from breaking other players' snail shells
+theft_prevention: true
+
+home_shell:
+  # If enabled, every player will automatically receive a new snail shell on first spawn.
+  enabled: false
+  size: 16
+  # Allow players to access their home shell using /schneckenhaus home or /sh home
+  command: true
+  # If a player respawns, he will be given his home snail shell, given that he has los it.
+  prevent_homelessness: true
+
 # Configuration for shulker snail shells
 shulker:
   # Whether shulker snail shells can be crafted

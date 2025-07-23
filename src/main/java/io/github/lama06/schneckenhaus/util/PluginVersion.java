@@ -30,7 +30,7 @@ public record PluginVersion(int major, int minor, int patch) implements Comparab
     };
 
     public static PluginVersion current() {
-        return fromString(SchneckenPlugin.INSTANCE.getDescription().getVersion());
+        return fromString(SchneckenPlugin.INSTANCE.getPluginMeta().getVersion());
     }
 
     public static PluginVersion fromString(final String string) {

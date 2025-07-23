@@ -7,19 +7,18 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-public record BuildProperties(String time, boolean debug) {
+public record BuildProperties(boolean debug) {
     private static final String FILE = "build.properties";
 
-    public static final BuildProperties FALLBACK = new BuildProperties("Unknown", false);
+    public static final BuildProperties FALLBACK = new BuildProperties(false);
 
     public static BuildProperties load() throws IOException {
         final Map<String, String> properties = getProperties();
-        if (!properties.containsKey("time") || !properties.containsKey("debug")) {
+        if (!properties.containsKey("debug")) {
             throw new IOException("Missing properties");
         }
-        final String time = properties.get("time");
         final boolean debug = Boolean.parseBoolean(properties.get("debug"));
-        return new BuildProperties(time, debug);
+        return new BuildProperties(debug);
     }
 
     private static Map<String, String> getProperties() throws IOException {

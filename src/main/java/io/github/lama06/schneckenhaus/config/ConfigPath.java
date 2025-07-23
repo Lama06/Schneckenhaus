@@ -12,7 +12,7 @@ public final class ConfigPath {
     }
 
     public void addPrefix(final Component prefix) {
-        components.add(0, prefix);
+        components.addFirst(prefix);
     }
 
     public void addPrefix(final String prefix) {

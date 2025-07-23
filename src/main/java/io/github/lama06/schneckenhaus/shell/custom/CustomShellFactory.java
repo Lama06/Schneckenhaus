@@ -4,8 +4,8 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.ShellFactory;
 import io.github.lama06.schneckenhaus.shell.ShellRecipe;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -61,7 +61,7 @@ public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
     @Override
     public CustomShellConfig parseConfig(final CommandSender sender, final String[] args) {
         if (args.length == 0) {
-            sender.spigot().sendMessage(new ComponentBuilder("Missing template name").color(ChatColor.RED).build());
+            sender.sendMessage(Component.text("Missing template name", NamedTextColor.RED));
             return null;
         }
         final String template = args[0];

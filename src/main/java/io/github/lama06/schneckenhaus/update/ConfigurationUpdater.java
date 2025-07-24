@@ -35,7 +35,8 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
     protected Map<PluginVersion, Runnable> getUpdates() {
         return Map.ofEntries(
                 Map.entry(new PluginVersion(1, 1, 0), this::updateTo1_1_0),
-                Map.entry(new PluginVersion(2, 0, 0), this::updateTo2_0_0)
+                Map.entry(new PluginVersion(2, 0, 0), this::updateTo2_0_0),
+                Map.entry(new PluginVersion(2, 1, 0), this::updateTo2_1_0)
         );
     }
 
@@ -106,5 +107,9 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
         homeShell.set("size", 16);
         homeShell.set("command", true);
         homeShell.set("prevent_homelessness", true);
+    }
+
+    private void updateTo2_1_0() {
+        configuration.set("rainbow_mode_delay", 5);
     }
 }

@@ -5,9 +5,11 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class MultiplexerCommand extends Command {
     private final Map<String, Command> subCommands = new HashMap<>();
+    private final Set<String> hiddenCommands = new HashSet<>();
     private Command defaultSubCommand;
 
     public void addSubCommand(final String name, final Command subCommand, final boolean isDefault) {
@@ -19,6 +21,10 @@ public class MultiplexerCommand extends Command {
 
     public void addSubCommand(final String name, final Command subCommand) {
         addSubCommand(name, subCommand, false);
+    }
+
+    public void hideSubCommand(String name) {
+        hiddenCommands.add(name);
     }
 
     @Override
@@ -54,7 +60,10 @@ public class MultiplexerCommand extends Command {
     @Override
     public List<String> tabComplete(final CommandSender sender, final String[] args) {
         if (args.length == 0 || args.length == 1) {
-            return new ArrayList<>(subCommands.keySet());
+            return subCommands.keySet().stream()
+                .filter(Predicate.not(hiddenCommands::contains))
+                .sorted()
+                .toList();
         }
         final Command subCommand = subCommands.get(args[0]);
         if (subCommand == null) {

@@ -5,12 +5,12 @@ import io.github.lama06.schneckenhaus.config.ConfigException;
 import io.github.lama06.schneckenhaus.recipe.RecipeManager;
 import io.github.lama06.schneckenhaus.systems.Systems;
 import io.github.lama06.schneckenhaus.update.ConfigurationUpdater;
-import io.github.lama06.schneckenhaus.util.BuildProperties;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -22,14 +22,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-public final class SchneckenPlugin extends JavaPlugin {
+public final class SchneckenPlugin extends JavaPlugin implements Listener {
     private static final int BSTATS_ID = 21674;
     public static SchneckenPlugin INSTANCE;
 
     private YamlConfiguration embeddedConfig;
     private SchneckenConfig schneckenConfig;
 
-    private BuildProperties buildProperties;
     private SchneckenWorld world;
     private SchneckenCommand command;
     private RecipeManager recipeManager;
@@ -40,13 +39,6 @@ public final class SchneckenPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        try {
-            buildProperties = BuildProperties.load();
-        } catch (final IOException e) {
-            getLogger().log(Level.WARNING, "Failed to load build information", e);
-            buildProperties = BuildProperties.FALLBACK;
-        }
-
         if (!loadSchneckenConfig()) {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
@@ -65,6 +57,8 @@ public final class SchneckenPlugin extends JavaPlugin {
         } catch (final RuntimeException exception) {
             getLogger().log(Level.WARNING, "Failed to start bStats", exception);
         }
+
+        Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     private File getConfigFile() {
@@ -170,9 +164,6 @@ public final class SchneckenPlugin extends JavaPlugin {
     }
 
     private void startBstats() {
-        if (getBuildProperties().debug()) {
-            return;
-        }
         final Metrics metrics = new Metrics(this, BSTATS_ID);
         metrics.addCustomChart(new Metrics.SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
         metrics.addCustomChart(new Metrics.SingleLineChart("shells", world::getNumberOfShells));
@@ -180,10 +171,6 @@ public final class SchneckenPlugin extends JavaPlugin {
 
     public SchneckenConfig getSchneckenConfig() {
         return schneckenConfig;
-    }
-
-    public BuildProperties getBuildProperties() {
-        return buildProperties;
     }
 
     public SchneckenWorld getWorld() {

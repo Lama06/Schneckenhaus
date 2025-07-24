@@ -22,6 +22,10 @@ public final class MaterialUtil {
         return getColoredMaterial("stained_glass", color);
     }
 
+    public static Material getColoredGlassPane(final DyeColor color) {
+        return getColoredMaterial("stained_glass_pane", color);
+    }
+
     public static Material getColoredShulkerBox(final DyeColor color) {
         return getColoredMaterial("shulker_box", color);
     }

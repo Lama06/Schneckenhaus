@@ -4,13 +4,14 @@ import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.SchneckenWorld;
 import io.github.lama06.schneckenhaus.command.InfoCommand;
 import io.github.lama06.schneckenhaus.data.Attribute;
+import io.github.lama06.schneckenhaus.data.EnumPersistentDataType;
 import io.github.lama06.schneckenhaus.data.UuidPersistentDataType;
 import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -31,7 +32,11 @@ import java.util.UUID;
 public abstract class Shell<C extends ShellConfig> implements PersistentDataHolder {
     public static final Attribute<String> TYPE = new Attribute<>("type", PersistentDataType.STRING);
     public static final Attribute<UUID> CREATOR = new Attribute<>("creator", UuidPersistentDataType.INSTANCE);
-    public static final Attribute<Boolean> LOCKED = new Attribute<>("locked", PersistentDataType.BOOLEAN);
+    public static final Attribute<AccessMode> ACCESS_MODE = new Attribute<>("access_mode", new EnumPersistentDataType<>(AccessMode.class));
+    public static final Attribute<List<UUID>> WHITELIST =
+        new Attribute<>("whitelist", PersistentDataType.LIST.listTypeFrom(UuidPersistentDataType.INSTANCE));
+    public static final Attribute<List<UUID>> BLACKLIST =
+        new Attribute<>("blacklist", PersistentDataType.LIST.listTypeFrom(UuidPersistentDataType.INSTANCE));
     public static final Attribute<Boolean> DELETED = new Attribute<>("deleted", PersistentDataType.BOOLEAN);
 
     public static final Attribute<Integer> ITEM_ID = new Attribute<>("id", PersistentDataType.INTEGER);
@@ -76,11 +81,11 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
         final Block cornerBlock = position.getCornerBlock();
         final String creatorName = getCreator().getName();
         return List.of(
-                new InfoCommand.Entry("Id", Integer.toString(position.getId())),
-                new InfoCommand.Entry("Grid Position", "X: %d, Z: %d".formatted(position.getX(), position.getZ())),
-                new InfoCommand.Entry("World Position", "X: %d, Z: %d".formatted(cornerBlock.getX(), cornerBlock.getZ())),
-                new InfoCommand.Entry("Creator", creatorName == null ? "Unknown" : creatorName),
-                new InfoCommand.Entry("Locked", isLocked() ? "Yes" : "No", isLocked() ? NamedTextColor.GREEN : NamedTextColor.RED)
+            new InfoCommand.Entry("Id", Integer.toString(position.getId())),
+            new InfoCommand.Entry("Grid Position", "X: %d, Z: %d".formatted(position.getX(), position.getZ())),
+            new InfoCommand.Entry("World Position", "X: %d, Z: %d".formatted(cornerBlock.getX(), cornerBlock.getZ())),
+            new InfoCommand.Entry("Creator", creatorName == null ? "Unknown" : creatorName),
+            new InfoCommand.Entry("Access", PlainTextComponentSerializer.plainText().serialize(ACCESS_MODE.get(this).name))
         );
     }
 
@@ -134,6 +139,11 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
         return floorCorner.getLocation().add(0.5, 1, 0.5).setDirection(direction);
     }
 
+    public boolean isAllowedToEnter(Player player) {
+        AccessMode mode = ACCESS_MODE.getOrDefault(this, AccessMode.EVERYBODY);
+        return mode.check(this, player);
+    }
+
     @Override
     public final PersistentDataContainer getPersistentDataContainer() {
         return getWorld().getShellData(position);
@@ -153,13 +163,5 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
 
     public final OfflinePlayer getCreator() {
         return Bukkit.getOfflinePlayer(CREATOR.get(this));
-    }
-
-    public final boolean isLocked() {
-        return LOCKED.get(this);
-    }
-
-    public final void setLocked(final boolean locked) {
-        LOCKED.set(this, locked);
     }
 }

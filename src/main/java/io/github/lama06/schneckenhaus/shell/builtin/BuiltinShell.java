@@ -42,13 +42,22 @@ public abstract class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C
 
         blocks.put(getLowerDoorBlock(), lowerDoorBlock);
         blocks.put(getUpperDoorBlock(), upperDoorBlock);
+        blocks.put(position.getCornerBlock().getRelative(1, 0, 1), Material.CRAFTING_TABLE.createBlockData());
     }
 
     @Override
     public List<InfoCommand.Entry> getInformation() {
         final List<InfoCommand.Entry> entries = new ArrayList<>(super.getInformation());
+
         final int size = getSize();
         entries.add(new InfoCommand.Entry("Size", "%dx%d".formatted(size, size)));
+
+        BlockPosition pos1 = new BlockPosition(position.getCornerBlock().getRelative(1, 1, 1));
+        BlockPosition pos2 = new BlockPosition(position.getCornerBlock().getRelative(size, size, size));
+        entries.add(new InfoCommand.Entry("Position 1", pos1.toString()));
+        entries.add(new InfoCommand.Entry("Position 2", pos2.toString()));
+        entries.add(new InfoCommand.Entry("Area", pos1 + " " + pos2));
+
         return entries;
     }
 

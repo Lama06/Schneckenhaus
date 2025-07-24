@@ -1,6 +1,7 @@
 package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.command.InfoCommand;
+import io.github.lama06.schneckenhaus.data.Attribute;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShell;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
@@ -8,6 +9,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
+    public static final Attribute<Boolean> RAINBOW = new Attribute<>("rainbow", PersistentDataType.BOOLEAN);
+
     public ShulkerShell(final GridPosition position, final ShulkerShellConfig config) {
         super(position, config);
     }
@@ -99,7 +103,7 @@ public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
         }
     }
 
-    private DyeColor getColor() {
+    public DyeColor getColor() {
         return config.getColor();
     }
 }

@@ -24,7 +24,7 @@ public abstract class ShellConfig {
     public final ItemStack createItem() {
         final ItemStack item = new ItemStack(getItemMaterial());
         final ItemMeta meta = item.getItemMeta();
-        meta.displayName(Component.text("Snail shell", getItemColor()));
+        meta.displayName(Component.text("Snail Shell", getItemColor()));
         final String lore = getLore();
         if (lore != null) {
             meta.lore(List.of(Component.text(lore)));

@@ -13,8 +13,10 @@ public final class Systems {
         new DestroyShellSystem(),
         new PlaceShellSystem(),
         new RepairShellSystem(),
-        new LockShellSystem(),
-        new HomeShellSystem()
+        new HomeShellSystem(),
+        new ShellMenuSystem(),
+        new KickPlayersSystem(),
+        new RainbowSystem()
     };
 
     public static void start() {

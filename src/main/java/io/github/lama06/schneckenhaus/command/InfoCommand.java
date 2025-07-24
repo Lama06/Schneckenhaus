@@ -37,6 +37,8 @@ public final class InfoCommand extends Command {
             );
             builder.append(
               Component.text(entry.value() + "\n", entry.color() != null ? entry.color() : NamedTextColor.WHITE)
+                  .hoverEvent(HoverEvent.showText(Component.text("Click to copy")))
+                  .clickEvent(ClickEvent.copyToClipboard(entry.value()))
             );
         }
 

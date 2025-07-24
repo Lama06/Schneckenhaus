@@ -25,9 +25,8 @@ public final class SchneckenCommand extends MultiplexerCommand {
         addSubCommand("tp", new TeleportCommand());
         addSubCommand("delete", new DeleteCommand());
         addSubCommand("home", new HomeCommand());
-        if (SchneckenPlugin.INSTANCE.getBuildProperties().debug()) {
-            addSubCommand("debug", new DebugCommand());
-        }
+        addSubCommand("debug", new DebugCommand());
+        hideSubCommand("debug");
 
         final Executor executor = new Executor();
         final PluginCommand command = Bukkit.getPluginCommand(NAME);

@@ -21,36 +21,36 @@ public final class BuiltinShellGlobalConfig extends CompoundConfig {
     @Override
     public List<ConfigAttribute<?>> getAttributes() {
         return List.of(
-                new ConfigAttribute<>(
-                        "enabled",
-                        PrimitiveConfigType.BOOLEAN,
-                        () -> enabled,
-                        enabled -> this.enabled = enabled
-                ),
-                new ConfigAttribute<>(
-                        "ingredients",
-                        new ListConfigType<>(RegistryConfigType.MATERIAL, new Range(1, 8)),
-                        () -> ingredients,
-                        ingredients -> this.ingredients = ingredients
-                ),
-                new ConfigAttribute<>(
-                        "size_ingredient",
-                        RegistryConfigType.MATERIAL,
-                        () -> sizeIngredient,
-                        sizeIngredient -> this.sizeIngredient = sizeIngredient
-                ),
-                new ConfigAttribute<>(
-                        "initial_size",
-                        IntegerConfigType.POSITIVE,
-                        () -> initialSize,
-                        initialSize -> this.initialSize = initialSize
-                ),
-                new ConfigAttribute<>(
-                        "size_per_ingredient",
-                        IntegerConfigType.POSITIVE,
-                        () -> sizePerIngredient,
-                        sizePerIngredient -> this.sizePerIngredient = sizePerIngredient
-                )
+            new ConfigAttribute<>(
+                    "enabled",
+                    PrimitiveConfigType.BOOLEAN,
+                    () -> enabled,
+                    enabled -> this.enabled = enabled
+            ),
+            new ConfigAttribute<>(
+                    "ingredients",
+                    new ListConfigType<>(RegistryConfigType.MATERIAL, new Range(1, 8)),
+                    () -> ingredients,
+                    ingredients -> this.ingredients = ingredients
+            ),
+            new ConfigAttribute<>(
+                    "size_ingredient",
+                    RegistryConfigType.MATERIAL,
+                    () -> sizeIngredient,
+                    sizeIngredient -> this.sizeIngredient = sizeIngredient
+            ),
+            new ConfigAttribute<>(
+                    "initial_size",
+                    IntegerConfigType.POSITIVE,
+                    () -> initialSize,
+                    initialSize -> this.initialSize = initialSize
+            ),
+            new ConfigAttribute<>(
+                    "size_per_ingredient",
+                    IntegerConfigType.POSITIVE,
+                    () -> sizePerIngredient,
+                    sizePerIngredient -> this.sizePerIngredient = sizePerIngredient
+            )
         );
     }
 }

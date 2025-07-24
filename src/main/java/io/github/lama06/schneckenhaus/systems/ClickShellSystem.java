@@ -37,6 +37,7 @@ public final class ClickShellSystem implements Listener {
         if (id == null) {
             return;
         }
+
         event.setCancelled(true);
         final Player player = event.getPlayer();
         final SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
@@ -53,11 +54,13 @@ public final class ClickShellSystem implements Listener {
             event.getClickedBlock().setType(Material.AIR);
             return;
         }
-        if (schneckenPlayer.isInside(position)) {
+        if (!shell.isAllowedToEnter(player)) {
+            player.sendMessage(Component.text("You are not allowed to enter this snail shell", NamedTextColor.RED)
+                .appendNewline()
+                .append(Component.text("Tell the shell's owner to add you to the whitelist")));
             return;
         }
-        if (shell.isLocked() && !player.equals(shell.getCreator().getPlayer())) {
-            player.sendMessage(Component.text("This snail shell is locked", NamedTextColor.RED));
+        if (schneckenPlayer.isInside(position)) {
             return;
         }
         schneckenPlayer.pushPreviousLocation(player.getLocation());

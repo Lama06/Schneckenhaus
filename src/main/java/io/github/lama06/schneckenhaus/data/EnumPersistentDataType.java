@@ -11,7 +11,7 @@ public final class EnumPersistentDataType<T extends Enum<T>> implements Persiste
 
     private final Class<T> type;
 
-    private EnumPersistentDataType(final Class<T> type) {
+    public EnumPersistentDataType(final Class<T> type) {
         this.type = Objects.requireNonNull(type);
     }
 

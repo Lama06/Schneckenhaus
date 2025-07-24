@@ -27,6 +27,9 @@ home_shell:
   # If a player respawns, he will be given his home snail shell, given that he has los it.
   prevent_homelessness: true
 
+# Specifies how many seconds to wait between color changes in rainbow mode
+rainbow_mode_delay: 5
+
 # Configuration for shulker snail shells
 shulker:
   # Whether shulker snail shells can be crafted

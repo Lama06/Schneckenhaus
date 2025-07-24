@@ -10,6 +10,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.List;
+
 public final class SchneckenWorld implements PersistentDataHolder {
     public static final String NAME = "schneckenhaus";
     public static final Attribute<Integer> NEXT_ID = new Attribute<>("next_id", PersistentDataType.INTEGER);
@@ -99,7 +101,9 @@ public final class SchneckenWorld implements PersistentDataHolder {
         final PersistentDataContainer data = getShellData(position);
         Shell.TYPE.set(data, factory.getName());
         Shell.CREATOR.set(data, creator.getUniqueId());
-        Shell.LOCKED.set(data, false);
+        Shell.ACCESS_MODE.set(data, AccessMode.EVERYBODY);
+        Shell.BLACKLIST.set(data, List.of());
+        Shell.WHITELIST.set(data, List.of());
         ShellUpdater.DATA_VERSION.set(data, PluginVersion.current());
         config.store(data);
         final Shell<C> shell = factory.instantiate(position, config);

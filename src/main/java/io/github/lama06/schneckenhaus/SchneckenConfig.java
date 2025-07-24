@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus;
 import io.github.lama06.schneckenhaus.config.CompoundConfig;
 import io.github.lama06.schneckenhaus.config.ConfigAttribute;
 import io.github.lama06.schneckenhaus.config.type.CompoundConfigType;
+import io.github.lama06.schneckenhaus.config.type.IntegerConfigType;
 import io.github.lama06.schneckenhaus.config.type.MapConfigType;
 import io.github.lama06.schneckenhaus.config.type.PrimitiveConfigType;
 import io.github.lama06.schneckenhaus.shell.HomeShellConfig;
@@ -16,6 +17,7 @@ public final class SchneckenConfig extends CompoundConfig {
     public boolean nesting;
     public boolean theftPrevention;
     public HomeShellConfig home;
+    public int rainbowModeDelay;
     public BuiltinShellGlobalConfig shulker;
     public BuiltinShellGlobalConfig chest;
     public Map<String, CustomShellGlobalConfig> custom;
@@ -40,6 +42,12 @@ public final class SchneckenConfig extends CompoundConfig {
                   new CompoundConfigType<>(HomeShellConfig::new),
                   () -> home,
                   v -> home = v
+                ),
+                new ConfigAttribute<>(
+                    "rainbow_mode_delay",
+                    IntegerConfigType.POSITIVE,
+                    () -> rainbowModeDelay,
+                    v -> rainbowModeDelay = v
                 ),
                 new ConfigAttribute<>(
                         "shulker",

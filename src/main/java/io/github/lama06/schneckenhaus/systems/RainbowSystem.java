@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
+import io.github.lama06.schneckenhaus.SchneckenConfig;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.SchneckenWorld;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
@@ -14,10 +15,14 @@ import org.bukkit.event.Listener;
 
 public final class RainbowSystem implements Listener {
     public RainbowSystem() {
-        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::rainbow, 0, 20L * SchneckenPlugin.INSTANCE.getSchneckenConfig().rainbowModeDelay);
+        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::rainbow, 0, 20L * SchneckenPlugin.INSTANCE.getSchneckenConfig().rainbow.delay);
     }
 
     private void rainbow() {
+        if (!SchneckenPlugin.INSTANCE.getSchneckenConfig().rainbow.enabled) {
+            return;
+        }
+
         final SchneckenWorld world = SchneckenPlugin.INSTANCE.getWorld();
         for (final Player player : world.getBukkit().getPlayers()) {
             final GridPosition position = CoordinatesGridPosition.fromWorldPosition(player.getLocation());

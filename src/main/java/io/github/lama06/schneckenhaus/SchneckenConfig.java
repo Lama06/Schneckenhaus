@@ -17,7 +17,7 @@ public final class SchneckenConfig extends CompoundConfig {
     public boolean nesting;
     public boolean theftPrevention;
     public HomeShellConfig home;
-    public int rainbowModeDelay;
+    public RainbowModeConfig rainbow;
     public BuiltinShellGlobalConfig shulker;
     public BuiltinShellGlobalConfig chest;
     public Map<String, CustomShellGlobalConfig> custom;
@@ -44,10 +44,10 @@ public final class SchneckenConfig extends CompoundConfig {
                   v -> home = v
                 ),
                 new ConfigAttribute<>(
-                    "rainbow_mode_delay",
-                    IntegerConfigType.POSITIVE,
-                    () -> rainbowModeDelay,
-                    v -> rainbowModeDelay = v
+                    "rainbow_mode",
+                    new CompoundConfigType<>(RainbowModeConfig::new),
+                    () -> rainbow,
+                    v -> rainbow = v
                 ),
                 new ConfigAttribute<>(
                         "shulker",

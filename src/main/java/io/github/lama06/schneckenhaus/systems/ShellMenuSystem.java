@@ -14,37 +14,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public final class ShellMenuSystem implements Listener {
     @EventHandler
-    private void openMenuDoor(PlayerInteractEvent event) {
-        if (!event.getAction().isLeftClick()) {
-            return;
-        }
-        Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock == null) {
-            return;
-        }
-        CoordinatesGridPosition position = CoordinatesGridPosition.fromWorldPosition(clickedBlock.getLocation());
-        if (position == null) {
-            return;
-        }
-        Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(position);
-        if (shell == null) {
-            return;
-        }
-        if (!Tag.DOORS.isTagged(clickedBlock.getType())) {
-            return;
-        }
-        if (!shell.getBlocks().containsKey(clickedBlock)) {
-            return;
-        }
-        event.setCancelled(true);
-        if (!event.getPlayer().equals(shell.getCreator())) {
-            event.getPlayer().sendMessage(Component.text("You don't own this snail shell", NamedTextColor.RED));
-            return;
-        }
-        new ShellScreen(shell, event.getPlayer()).open();
-    }
-
-    @EventHandler
     private void openMenuDoorstep(PlayerInteractEvent event) {
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) {

@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.screen;
 
+import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShell;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellConfig;
 import io.github.lama06.schneckenhaus.util.EnumUtil;
@@ -61,22 +62,26 @@ public final class ChangeShellColorScreen extends Screen {
             });
         }
 
-        boolean rainbowEnabled = ShulkerShell.RAINBOW.getOrDefault(shell, false);
-        ItemStack rainbowToggle = new ItemStack(Material.CLOCK);
-        rainbowToggle.editMeta(meta -> {
-            TextComponent rainbowLabel = Component.text()
-                .append(MiniMessage.miniMessage().deserialize("<rainbow>Rainbow Mode: </rainbow>"))
-                .append(Component.text(rainbowEnabled ? "On" : "Off", rainbowEnabled ? NamedTextColor.GREEN : NamedTextColor.RED))
-                .build();
-            meta.displayName(rainbowLabel);
-            meta.lore(List.of(
-                Component.text("Make the color change automatically every 10 seconds"),
-                Component.text("Click to toggle on / off", NamedTextColor.YELLOW)
-            ));
-        });
-        setItem(colors.length, rainbowToggle, () -> {
-            ShulkerShell.RAINBOW.set(shell, !rainbowEnabled);
-            redraw();
-        });
+        if (SchneckenPlugin.INSTANCE.getSchneckenConfig().rainbow.enabled) {
+            boolean rainbowEnabled = ShulkerShell.RAINBOW.getOrDefault(shell, false);
+            ItemStack rainbowToggle = new ItemStack(Material.CLOCK);
+            rainbowToggle.editMeta(meta -> {
+                TextComponent rainbowLabel = Component.text()
+                    .append(MiniMessage.miniMessage().deserialize("<rainbow>Rainbow Mode: </rainbow>"))
+                    .append(Component.text(rainbowEnabled ? "On" : "Off", rainbowEnabled ? NamedTextColor.GREEN : NamedTextColor.RED))
+                    .build();
+                meta.displayName(rainbowLabel);
+                meta.lore(List.of(
+                    Component.text("Make the color change automatically every %d seconds".formatted(
+                        SchneckenPlugin.INSTANCE.getSchneckenConfig().rainbow.delay
+                    )),
+                    Component.text("Click to toggle on / off", NamedTextColor.YELLOW)
+                ));
+            });
+            setItem(colors.length, rainbowToggle, () -> {
+                ShulkerShell.RAINBOW.set(shell, !rainbowEnabled);
+                redraw();
+            });
+        }
     }
 }

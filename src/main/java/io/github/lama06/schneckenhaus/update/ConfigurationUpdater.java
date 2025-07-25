@@ -34,9 +34,10 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
     @Override
     protected Map<PluginVersion, Runnable> getUpdates() {
         return Map.ofEntries(
-                Map.entry(new PluginVersion(1, 1, 0), this::updateTo1_1_0),
-                Map.entry(new PluginVersion(2, 0, 0), this::updateTo2_0_0),
-                Map.entry(new PluginVersion(2, 1, 0), this::updateTo2_1_0)
+            Map.entry(new PluginVersion(1, 1, 0), this::updateTo1_1_0),
+            Map.entry(new PluginVersion(2, 0, 0), this::updateTo2_0_0),
+            Map.entry(new PluginVersion(2, 1, 0), this::updateTo2_1_0),
+            Map.entry(new PluginVersion(2, 2, 0), this::updateTo2_2_0)
         );
     }
 
@@ -111,5 +112,14 @@ public final class ConfigurationUpdater extends Updater<Configuration> {
 
     private void updateTo2_1_0() {
         configuration.set("rainbow_mode_delay", 5);
+    }
+
+    private void updateTo2_2_0() {
+        int rainbowModeDelay = configuration.getInt("rainbow_mode_delay", 5);
+        configuration.set("rainbow_mode_delay", null);
+
+        ConfigurationSection rainbow = configuration.createSection("rainbow_mode");
+        rainbow.set("enabled", true);
+        rainbow.set("delay", rainbowModeDelay);
     }
 }

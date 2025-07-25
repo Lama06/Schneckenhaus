@@ -17,7 +17,8 @@ public final class Systems {
         new ShellMenuSystem(),
         new KickPlayersSystem(),
         new RainbowSystem(),
-        new DispenseShellSystem()
+        new DispenseShellSystem(),
+        new LockShellSystem()
     };
 
     public static void start() {

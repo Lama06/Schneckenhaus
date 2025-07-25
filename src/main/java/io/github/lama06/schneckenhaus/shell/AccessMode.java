@@ -22,7 +22,7 @@ public enum AccessMode {
     },
     BLACKLIST(
         Component.text("Blacklist", NamedTextColor.RED),
-        Material.BLACK_STAINED_GLASS_PANE,
+        Material.WITHER_ROSE,
         List.of(
             Component.text("Everyone except blacklisted players can enter this snail shell"),
             Constants.OP_NOTE
@@ -36,7 +36,7 @@ public enum AccessMode {
     },
     WHITELIST(
         Component.text("Whitelist"),
-        Material.WHITE_STAINED_GLASS_PANE,
+        Material.WHITE_TULIP,
         List.of(
             Component.text("Besides its owner, only players listed here can enter this snail shell"),
             Constants.OP_NOTE

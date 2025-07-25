@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus.screen;
 import io.github.lama06.schneckenhaus.util.EventUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -91,7 +92,7 @@ public abstract class Screen implements Listener {
 
     protected final void setItem(int x, int y, ItemStack item, Consumer<ClickType> callback) {
         item.editMeta(meta -> {
-            TextComponent noItalic = Component.empty().decoration(TextDecoration.ITALIC, false);
+            TextComponent noItalic = Component.empty().decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE);
             if (meta.hasCustomName()) {
                 meta.customName(noItalic.append(meta.customName()));
             }

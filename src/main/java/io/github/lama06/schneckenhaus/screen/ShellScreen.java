@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShellScreen extends Screen {
@@ -46,7 +47,15 @@ public class ShellScreen extends Screen {
 
 
         // Shell
-        setItem(x++, 1, shell.createItem());
+        ItemStack shellItem = shell.createItem();
+        shellItem.editMeta(meta -> {
+            List<Component> lore = new ArrayList<>(meta.lore());
+            lore.add(Component.text("Click to add to your inventory", NamedTextColor.YELLOW));
+            meta.lore(lore);
+        });
+        setItem(x++, 1, shellItem, () -> {
+            player.give(shell.createItem());
+        });
 
 
         // Owner

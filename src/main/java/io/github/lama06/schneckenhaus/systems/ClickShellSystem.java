@@ -58,6 +58,11 @@ public final class ClickShellSystem implements Listener {
             player.sendMessage(Component.text("You are not allowed to enter this snail shell", NamedTextColor.RED)
                 .appendNewline()
                 .append(Component.text("Tell the shell's owner to add you to the whitelist")));
+            Player owner = shell.getCreator().getPlayer();
+            if (owner != null) {
+                owner.sendMessage(player.getName() + " wants to enter your snail shell, but it is locked");
+                owner.playSound(owner.getLocation(), Sound.BLOCK_BELL_USE, 1, 1);
+            }
             return;
         }
         if (schneckenPlayer.isInside(position)) {

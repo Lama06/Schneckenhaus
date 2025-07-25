@@ -39,6 +39,7 @@ public final class LockShellSystem implements Listener {
         if (!shell.getBlocks().containsKey(clickedBlock)) {
             return;
         }
+        event.setCancelled(true);
 
         boolean isLocked = Shell.ACCESS_MODE.get(shell) != AccessMode.EVERYBODY;
 

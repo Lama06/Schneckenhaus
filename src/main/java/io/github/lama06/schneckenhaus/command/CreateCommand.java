@@ -17,10 +17,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class CreateCommand extends Command {
     @Override
     public List<HelpCommand.Entry> getHelp() {
-        final String description = "Creates a new snail shell";
+        final String description = t("cmd_create_help");
         final List<HelpCommand.Entry> entries = new ArrayList<>();
         for (final ShellFactory<?> factory : ShellFactories.getFactories()) {
             for (final String configTemplate : factory.getConfigCommandTemplates()) {
@@ -39,12 +41,12 @@ public final class CreateCommand extends Command {
         }
         if (args.length == 0) {
             final String shellTypes = ShellFactories.getFactories().stream().map(ShellFactory::getName).collect(Collectors.joining(", "));
-            sender.sendMessage(Component.text("Specify a snell type: " + shellTypes, NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_create_missing_type", shellTypes), NamedTextColor.RED));
             return;
         }
         final ShellFactory<?> factory = ShellFactories.getByName(args[0]);
         if (factory == null) {
-            sender.sendMessage(Component.text("Invalid shell type: " + args[0], NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_create_invalid_type", args[0]), NamedTextColor.RED));
             return;
         }
         execute(player, args, factory);
@@ -61,7 +63,7 @@ public final class CreateCommand extends Command {
         final SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
         schneckenPlayer.pushPreviousLocation(previousLocation, false);
         if (!player.getInventory().addItem(shell.createItem()).isEmpty()) {
-            player.sendMessage(Component.text("Your inventory is full", NamedTextColor.RED));
+            player.sendMessage(Component.text(t("error_inventory_full"), NamedTextColor.RED));
         }
     }
 

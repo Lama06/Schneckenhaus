@@ -2,6 +2,7 @@ package io.github.lama06.schneckenhaus;
 
 import io.github.lama06.schneckenhaus.command.SchneckenCommand;
 import io.github.lama06.schneckenhaus.config.ConfigException;
+import io.github.lama06.schneckenhaus.language.Translator;
 import io.github.lama06.schneckenhaus.recipe.RecipeManager;
 import io.github.lama06.schneckenhaus.systems.Systems;
 import io.github.lama06.schneckenhaus.update.ConfigurationUpdater;
@@ -15,6 +16,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -32,6 +34,7 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
     private SchneckenWorld world;
     private SchneckenCommand command;
     private RecipeManager recipeManager;
+    private Translator translator;
 
     public SchneckenPlugin() {
         INSTANCE = this;
@@ -49,6 +52,8 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
         recipeManager = new RecipeManager();
         recipeManager.registerRecipes();
         command = new SchneckenCommand();
+        translator = new Translator();
+        translator.load();
 
         Systems.start();
 
@@ -169,6 +174,10 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
         metrics.addCustomChart(new Metrics.SingleLineChart("shells", world::getNumberOfShells));
     }
 
+    public Reader getTextResourcePublic(String path) {
+        return getTextResource(path);
+    }
+
     public SchneckenConfig getSchneckenConfig() {
         return schneckenConfig;
     }
@@ -183,5 +192,9 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
 
     public SchneckenCommand getCommand() {
         return command;
+    }
+
+    public Translator getTranslator() {
+        return translator;
     }
 }

@@ -11,10 +11,12 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class HelpCommand extends Command {
     @Override
     public List<Entry> getHelp() {
-        return List.of(new Entry("", "Shows this page"));
+        return List.of(new Entry("", t("cmd_help_help")));
     }
 
     @Override
@@ -24,30 +26,30 @@ public final class HelpCommand extends Command {
         builder.append(Component.text().content("-").decorate(TextDecoration.OBFUSCATED, TextDecoration.BOLD));
         builder.append(
           Component.text()
-            .content(" Schneckenhaus-Plugin ")
+            .content(" " + t("cmd_help_heading") + " ")
             .color(NamedTextColor.YELLOW)
             .decorate(TextDecoration.BOLD)
-            .hoverEvent(HoverEvent.showText(Component.text("Made with <3 by Lama06!")))
+            .hoverEvent(HoverEvent.showText(Component.text(t("cmd_help_heading_hover"))))
         );
         builder.append(
           Component.text()
-            .content("(Version %s) ".formatted(SchneckenPlugin.INSTANCE.getPluginMeta().getVersion()))
+            .content(t("cmd_help_version", SchneckenPlugin.INSTANCE.getPluginMeta().getVersion()))
             .color(NamedTextColor.YELLOW)
         );
         builder.append(Component.text("-").decorate(TextDecoration.OBFUSCATED, TextDecoration.BOLD));
 
         builder.appendNewline();
 
-        builder.append(Component.text("Website: ", NamedTextColor.AQUA));
+        builder.append(Component.text(t("cmd_help_website"), NamedTextColor.AQUA));
         builder.append(
           Component.text()
             .content("github.com/Lama06/Schneckenhaus")
             .decorate(TextDecoration.UNDERLINED)
-            .hoverEvent(HoverEvent.showText(Component.text("Click to open")))
+            .hoverEvent(HoverEvent.showText(Component.text(t("cmd_action_copy"))))
             .clickEvent(ClickEvent.openUrl("https://github.com/Lama06/Schneckenhaus"))
         );
         builder.appendNewline();
-        builder.append(Component.text("Contact: ", NamedTextColor.AQUA));
+        builder.append(Component.text(t("cmd_help_contact"), NamedTextColor.AQUA));
         String mailAddress = "andreasprues36[at]gmail.com".replace("[at]", "@");
         builder.append(
           Component.text()
@@ -59,8 +61,8 @@ public final class HelpCommand extends Command {
 
         builder.appendNewline();
 
-        builder.append(Component.text("Commands: ", NamedTextColor.YELLOW).decorate(TextDecoration.BOLD));
-        builder.append(Component.text(" (Hover for information)"));
+        builder.append(Component.text(t("cmd_help_commands"), NamedTextColor.YELLOW).decorate(TextDecoration.BOLD));
+        builder.append(Component.text(t("cmd_help_commands_hint_hover")));
 
         for (final Entry entry : SchneckenPlugin.INSTANCE.getCommand().getHelp()) {
             builder.appendNewline();

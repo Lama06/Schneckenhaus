@@ -12,12 +12,14 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class InfoCommand extends Command {
     @Override
     public List<HelpCommand.Entry> getHelp() {
         return List.of(
-                new HelpCommand.Entry("", "Provides information about the snail snell at your current location"),
-                new HelpCommand.Entry("<id>", "Provides information about the snail shell at the specified id")
+                new HelpCommand.Entry("", t("cmd_info_help")),
+                new HelpCommand.Entry("<id>", t("cmd_info_help_id"))
         );
     }
 
@@ -29,7 +31,8 @@ public final class InfoCommand extends Command {
         }
 
         TextComponent.Builder builder = Component.text()
-          .append(Component.text("Snail Shell\n", NamedTextColor.YELLOW, TextDecoration.BOLD));
+            .append(Component.text(t("cmd_info_heading"), NamedTextColor.YELLOW, TextDecoration.BOLD))
+            .appendNewline();
 
         for (final Entry entry : shell.getInformation()) {
             builder.append(
@@ -37,20 +40,20 @@ public final class InfoCommand extends Command {
             );
             builder.append(
               Component.text(entry.value() + "\n", entry.color() != null ? entry.color() : NamedTextColor.WHITE)
-                  .hoverEvent(HoverEvent.showText(Component.text("Click to copy")))
+                  .hoverEvent(HoverEvent.showText(Component.text(t("cmd_action_copy"))))
                   .clickEvent(ClickEvent.copyToClipboard(entry.value()))
             );
         }
 
         builder.append(
-          Component.text("> Teleport <\n", NamedTextColor.LIGHT_PURPLE)
-            .hoverEvent(HoverEvent.showText(Component.text("Click to teleport")))
+          Component.text("> %s <\n".formatted(t("cmd_info_teleport")), NamedTextColor.LIGHT_PURPLE)
+            .hoverEvent(HoverEvent.showText(Component.text(t("cmd_info_teleport_hover"))))
             .clickEvent(ClickEvent.runCommand("/sh tp " + shell.getId()))
         );
 
         builder.append(
-          Component.text("> Give Item <", NamedTextColor.LIGHT_PURPLE)
-            .hoverEvent(HoverEvent.showText(Component.text("Click to get an item connected to this snail shell")))
+          Component.text("> %s <".formatted(t("cmd_info_give_item")), NamedTextColor.LIGHT_PURPLE)
+            .hoverEvent(HoverEvent.showText(Component.text(t("cmd_info_give_item_hover"))))
             .clickEvent(ClickEvent.runCommand("/sh giveItem " + shell.getId()))
         );
 

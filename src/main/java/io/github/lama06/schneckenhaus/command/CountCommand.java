@@ -10,10 +10,12 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class CountCommand extends Command {
     @Override
     public List<HelpCommand.Entry> getHelp() {
-        return List.of(new HelpCommand.Entry("", "Displays how many snail shells there are"));
+        return List.of(new HelpCommand.Entry("", t("cmd_count_help")));
     }
 
     @Override
@@ -21,20 +23,18 @@ public final class CountCommand extends Command {
         final int count = SchneckenPlugin.INSTANCE.getWorld().getNumberOfShells();
 
         TextComponent.Builder builder = Component.text()
-          .append(Component.text("There are "))
-          .append(
-            Component.text(count, NamedTextColor.AQUA)
-              .clickEvent(ClickEvent.copyToClipboard(Integer.toString(count)))
-              .hoverEvent(HoverEvent.showText(Component.text("Click to copy")))
-          )
-          .append(Component.text(" snail shells on this server."));
+            .append(
+                Component.text(t("cmd_count_result", count))
+                    .clickEvent(ClickEvent.copyToClipboard(Integer.toString(count)))
+                    .hoverEvent(HoverEvent.showText(Component.text(t("cmd_action_copy"))))
+            );
 
         if (count > 0) {
             builder.appendNewline();
             builder.append(
-              Component.text("> View most recently created <", NamedTextColor.LIGHT_PURPLE)
+              Component.text("> " + t("cmd_count_view_latest") + " <", NamedTextColor.LIGHT_PURPLE)
                 .clickEvent(ClickEvent.runCommand("/sh info " + count))
-                .hoverEvent(HoverEvent.showText(Component.text("Click here")))
+                .hoverEvent(HoverEvent.showText(Component.text(t("cmd_action_click"))))
             );
         }
 

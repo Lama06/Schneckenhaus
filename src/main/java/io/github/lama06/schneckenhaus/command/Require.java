@@ -18,12 +18,14 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class Require {
     private Require() { }
 
     public static Player player(final CommandSender sender) {
         if (!(sender instanceof final Player player)) {
-            sender.sendMessage(Component.text("You are not a player", NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_error_not_player"), NamedTextColor.RED));
             return null;
         }
         return player;
@@ -34,11 +36,11 @@ public final class Require {
         try {
             integer = Integer.parseInt(arg);
         } catch (final NumberFormatException e) {
-            sender.sendMessage(Component.text("Invalid integer: " + arg, NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_error_integer_invalid") + arg, NamedTextColor.RED));
             return null;
         }
         if (!range.contains(integer)) {
-            sender.sendMessage(Component.text("Invalid integer: %d. Must be %s.".formatted(integer, range), NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_error_integer_range", integer, range), NamedTextColor.RED));
             return null;
         }
         return integer;
@@ -50,7 +52,7 @@ public final class Require {
 
     public static BlockPosition blockPosition(final CommandSender sender, final String[] args) {
         if (args.length < 3) {
-            sender.sendMessage(Component.text("Not enough arguments", NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_error_missing_arguments"), NamedTextColor.RED));
             return null;
         }
         final Integer x = integer(sender, args[0]);
@@ -70,7 +72,7 @@ public final class Require {
 
     public static BlockArea blockArea(final CommandSender sender, final String[] args) {
         if (args.length < 6) {
-            sender.sendMessage(Component.text("Not enough arguments", NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_error_missing_arguments"), NamedTextColor.RED));
             return null;
         }
         final BlockPosition first = blockPosition(sender, args);
@@ -87,7 +89,7 @@ public final class Require {
     public static <T extends Keyed> T keyed(final Registry<T> registry, final CommandSender sender, final String arg) {
         final T keyed = registry.get(NamespacedKey.fromString(arg));
         if (keyed == null) {
-            sender.sendMessage(Component.text("Unknown key: " + arg, NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_error_unknown_key") + arg, NamedTextColor.RED));
             return null;
         }
         return keyed;
@@ -106,7 +108,7 @@ public final class Require {
             }
             final CoordinatesGridPosition position = CoordinatesGridPosition.fromWorldPosition(player.getLocation());
             if (position == null) {
-                sender.sendMessage(Component.text("Move to a snail shell or enter an id", NamedTextColor.RED));
+                sender.sendMessage(Component.text(t("cmd_error_missing_shell"), NamedTextColor.RED));
                 return null;
             }
             id = position.getId();
@@ -119,7 +121,7 @@ public final class Require {
         }
         final Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(new IdGridPosition(id));
         if (shell == null) {
-            sender.sendMessage(Component.text("This snail shell doesn't exist", NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_error_shell_not_found"), NamedTextColor.RED));
             return null;
         }
         return shell;

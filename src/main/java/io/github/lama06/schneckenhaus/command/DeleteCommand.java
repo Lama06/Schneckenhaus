@@ -10,10 +10,12 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class DeleteCommand extends Command {
     @Override
     public List<HelpCommand.Entry> getHelp() {
-        return List.of(new HelpCommand.Entry("<id>", "Deletes a snail shell"));
+        return List.of(new HelpCommand.Entry("<id>", t("cmd_delete_help")));
     }
 
     @Override
@@ -26,34 +28,32 @@ public final class DeleteCommand extends Command {
         }
         if (!confirm) {
             Component message = Component.text()
-              .append(
-                Component.text("Confirmation to delete Snail Shell\n")
-                  .color(NamedTextColor.YELLOW)
-                  .decorate(TextDecoration.UNDERLINED)
-              )
-              .append(Component.text("Id: ").color(NamedTextColor.WHITE))
-              .append(Component.text(shell.getId()).color(NamedTextColor.AQUA))
-              .appendNewline()
-              .append(Component.text("Owner: ").color(NamedTextColor.WHITE))
-              .append(Component.text(shell.getCreator().getName()).color(NamedTextColor.AQUA))
-              .appendNewline()
-              .append(Component.text("This ").color(NamedTextColor.YELLOW))
-              .append(Component.text("cannot").decorate(TextDecoration.BOLD))
-              .append(Component.text(" be undone!\n").color(NamedTextColor.YELLOW))
-              .append(
-                Component.text("> Permanently delete this snail shell <")
-                  .color(NamedTextColor.RED)
-                  .decorate(TextDecoration.BOLD)
-                  .hoverEvent(HoverEvent.showText(
-                    Component.text("This is an irreversible action!")
-                  ))
-                  .clickEvent(ClickEvent.runCommand("/sh delete %d confirm".formatted(shell.getId())))
-              )
-              .build();
+                .append(
+                    Component.text(t("cmd_delete_confirm_heading")).color(NamedTextColor.YELLOW).decorate(TextDecoration.UNDERLINED)
+                )
+                .appendNewline()
+                .append(Component.text(t("cmd_delete_confirm_id")).color(NamedTextColor.WHITE))
+                .append(Component.text(shell.getId()).color(NamedTextColor.AQUA))
+                .appendNewline()
+                .append(Component.text(t("cmd_delete_confirm_owner")).color(NamedTextColor.WHITE))
+                .append(Component.text(shell.getCreator().getName()).color(NamedTextColor.AQUA))
+                .appendNewline()
+                .append(Component.text(t("cmd_delete_confirm_warning")).color(NamedTextColor.YELLOW).decorate(TextDecoration.BOLD))
+                .appendNewline()
+                .append(
+                    Component.text("> %s <".formatted(t("cmd_delete_confirm_button")))
+                        .color(NamedTextColor.RED)
+                        .decorate(TextDecoration.BOLD)
+                        .hoverEvent(HoverEvent.showText(
+                            Component.text(t("cmd_delete_confirm_button_warning"))
+                        ))
+                        .clickEvent(ClickEvent.runCommand("/sh delete %d confirm".formatted(shell.getId())))
+                )
+                .build();
             sender.sendMessage(message);
             return;
         }
         shell.delete();
-        sender.sendMessage(Component.text("Deletion successful", NamedTextColor.GREEN));
+        sender.sendMessage(Component.text(t("cmd_delete_success"), NamedTextColor.GREEN));
     }
 }

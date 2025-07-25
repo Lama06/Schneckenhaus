@@ -12,12 +12,14 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class TeleportCommand extends Command {
     @Override
     public List<HelpCommand.Entry> getHelp() {
         return List.of(
-                new HelpCommand.Entry("", "Teleport you to the snail shell world."),
-                new HelpCommand.Entry("<id>", "Teleports you to the specified snail shell.")
+                new HelpCommand.Entry("", t("cmd_tp_help")),
+                new HelpCommand.Entry("<id>", t("cmd_tp_help_id"))
         );
     }
 

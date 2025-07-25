@@ -8,12 +8,14 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class GiveItemCommand extends Command {
     @Override
     public List<HelpCommand.Entry> getHelp() {
         return List.of(
-                new HelpCommand.Entry("", "Gives you an item to teleport to the snail shell at your location"),
-                new HelpCommand.Entry("<id>", "Gives you an item to teleport to the specified snail shell")
+                new HelpCommand.Entry("", t("cmd_give_help")),
+                new HelpCommand.Entry("<id>", t("cmd_give_help_id"))
         );
     }
 
@@ -28,7 +30,7 @@ public final class GiveItemCommand extends Command {
             return;
         }
         if (!player.getInventory().addItem(shell.createItem()).isEmpty()) {
-            player.sendMessage(Component.text("Your inventory is full", NamedTextColor.RED));
+            player.sendMessage(Component.text(t("error_inventory_full"), NamedTextColor.RED));
         }
     }
 }

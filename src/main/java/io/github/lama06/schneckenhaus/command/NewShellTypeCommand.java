@@ -15,16 +15,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class NewShellTypeCommand extends Command {
     @Override
     public List<HelpCommand.Entry> getHelp() {
-        return List.of(new HelpCommand.Entry("<name> <template area> <ingredients>", "Adds a new custom snail shell type."));
+        return List.of(new HelpCommand.Entry("<name> <template area> <ingredients>", t("cmd_new_type_help")));
     }
 
     @Override
     public void execute(final CommandSender sender, final String[] args) {
         if (args.length < 8) {
-            sender.sendMessage(Component.text("Not enough arguments", NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_error_missing_arguments"), NamedTextColor.RED));
             return;
         }
         final Player player = Require.player(sender);
@@ -32,13 +34,13 @@ public final class NewShellTypeCommand extends Command {
             return;
         }
         if (!player.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld().getBukkit())) {
-            sender.sendMessage(Component.text("Templates need to be in the snail shell world", NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_new_type_wrong_world"), NamedTextColor.RED));
             return;
         }
         final Map<String, CustomShellGlobalConfig> customConfig = SchneckenPlugin.INSTANCE.getSchneckenConfig().custom;
         final String name = args[0];
         if (customConfig.containsKey(name)) {
-            sender.sendMessage(Component.text("This name is already taken: " + name, NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_new_type_name_taken") + name, NamedTextColor.RED));
             return;
         }
         final BlockArea template = Require.blockArea(sender, Arrays.copyOfRange(args, 1, 7));
@@ -68,10 +70,9 @@ public final class NewShellTypeCommand extends Command {
 
 
         Component message = Component.text()
-          .append(Component.text("Successfully added shell!").color(NamedTextColor.GREEN))
-          .append(
-            Component.text("\nYou can edit it in the config. Remember that you need a chest besides the specified ingredients to craft it.")
-          )
+            .append(Component.text(t("cmd_new_type_success")).color(NamedTextColor.GREEN))
+            .appendNewline()
+            .append(Component.text(t("cmd_new_type_hint")))
           .build();
         sender.sendMessage(message);
     }

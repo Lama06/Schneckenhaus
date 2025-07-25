@@ -10,6 +10,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public class HomeCommand extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
@@ -22,20 +24,20 @@ public class HomeCommand extends Command {
 
         SchneckenConfig config = plugin.getSchneckenConfig();
         if (!config.home.command) {
-            player.sendMessage(Component.text("This feature is disabled in the configuration file", NamedTextColor.RED));
+            player.sendMessage(Component.text(t("cmd_home_disabled"), NamedTextColor.RED));
             return;
         }
 
         Integer homeId = SchneckenPlayer.HOME.get(player);
         if (homeId == null) {
-            player.sendMessage(Component.text("You don't have a home snail shell", NamedTextColor.RED));
+            player.sendMessage(Component.text(t("cmd_home_no_home"), NamedTextColor.RED));
             return;
         }
 
         IdGridPosition position = new IdGridPosition(homeId);
         Shell<?> shell = plugin.getWorld().getShell(position);
         if (shell == null) {
-            player.sendMessage(Component.text("Your home was not found", NamedTextColor.RED));
+            player.sendMessage(Component.text(t("cmd_home_no_home"), NamedTextColor.RED));
             SchneckenPlayer.HOME.remove(player);
             return;
         }
@@ -44,8 +46,7 @@ public class HomeCommand extends Command {
             return;
         }
         if (player.getWorld().equals(plugin.getWorld().getBukkit()) && !plugin.getSchneckenConfig().nesting) {
-            player.sendMessage(Component.text("You are already in another snail shell. " +
-                    "The nesting feature was disabled by the server owner.", NamedTextColor.RED));
+            player.sendMessage(Component.text(t("cmd_home_nesting_disabled"), NamedTextColor.RED));
             return;
         }
 

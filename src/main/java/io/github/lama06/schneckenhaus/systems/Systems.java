@@ -16,7 +16,8 @@ public final class Systems {
         new HomeShellSystem(),
         new ShellMenuSystem(),
         new KickPlayersSystem(),
-        new RainbowSystem()
+        new RainbowSystem(),
+        new DispenseShellSystem()
     };
 
     public static void start() {

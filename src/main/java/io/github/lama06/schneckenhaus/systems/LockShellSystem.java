@@ -14,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class LockShellSystem implements Listener {
     @EventHandler
     private void onClick(final PlayerInteractEvent event) {
@@ -44,7 +46,7 @@ public final class LockShellSystem implements Listener {
         boolean isLocked = Shell.ACCESS_MODE.get(shell) != AccessMode.EVERYBODY;
 
         if (!shell.getCreator().equals(player)) {
-            String text = "You can't " + (isLocked ? "unlock" : "lock") + " this snail shell because you don't own it";
+            String text = isLocked ? t("snail_shell_unlock_fail") : t("snail_shell_lock_fail");
             player.sendMessage(Component.text(text, NamedTextColor.RED));
             return;
         }
@@ -54,14 +56,15 @@ public final class LockShellSystem implements Listener {
         isLocked = Shell.ACCESS_MODE.get(shell) != AccessMode.EVERYBODY;
         Component msg = Component.text()
             .append(
-                Component.text("You successfully " + (isLocked ? "locked" : "unlocked") + " this snail shell.\n")
+                Component.text(isLocked ? t("snail_shell_lock_success") : t("snail_shell_unlock_success"))
                     .color(NamedTextColor.GREEN)
             )
+            .appendNewline()
             .append(
                 Component.text(
                     isLocked ?
-                        "Others except for you can no longer enter it." :
-                        "Now everyone can enter it."
+                        t("snail_shell_lock_success_hint") :
+                        t("snail_shell_unlock_success_hint")
                 )
             )
             .build();

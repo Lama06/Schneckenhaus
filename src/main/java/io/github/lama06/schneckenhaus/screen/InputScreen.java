@@ -23,6 +23,8 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.function.Consumer;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class InputScreen implements Listener {
     public static void open(
         final Player player,
@@ -45,12 +47,12 @@ public final class InputScreen implements Listener {
     ) {
         open(
             player,
-            Component.text("Type Player Name...", NamedTextColor.WHITE),
+            Component.text(t("ui_input_player_title"), NamedTextColor.WHITE),
             initialText,
             name -> {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
                 if (!offlinePlayer.isOnline() && !offlinePlayer.hasPlayedBefore()) {
-                    player.sendMessage(Component.text("Player not found on this server: " + name, NamedTextColor.RED));
+                    player.sendMessage(Component.text(t("ui_input_player_not_found") + name, NamedTextColor.RED));
                     return;
                 }
                 callback.accept(offlinePlayer);

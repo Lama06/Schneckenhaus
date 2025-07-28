@@ -20,6 +20,8 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public class ShellScreen extends Screen {
     private final Shell<?> shell;
     private BukkitTask changeColorTask;
@@ -31,7 +33,7 @@ public class ShellScreen extends Screen {
 
     @Override
     protected Component getTitle() {
-        return Component.text("Snail Shell", NamedTextColor.YELLOW);
+        return Component.text(t("snail_shell"), NamedTextColor.YELLOW);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class ShellScreen extends Screen {
         ItemStack shellItem = shell.createItem();
         shellItem.editMeta(meta -> {
             List<Component> lore = new ArrayList<>(meta.lore());
-            lore.add(Component.text("Click to add to your inventory", NamedTextColor.YELLOW));
+            lore.add(Component.text(t("ui_shell_add_to_inventory"), NamedTextColor.YELLOW));
             meta.lore(lore);
         });
         setItem(x++, 1, shellItem, () -> {
@@ -61,10 +63,10 @@ public class ShellScreen extends Screen {
         // Owner
         ItemStack ownerItem = new ItemStack(Material.PLAYER_HEAD);
         ownerItem.editMeta(SkullMeta.class, meta -> {
-            meta.displayName(Component.text("Owner: " + shell.getCreator().getName(), NamedTextColor.WHITE));
+            meta.displayName(Component.text(t("ui_shell_owner") + shell.getCreator().getName(), NamedTextColor.WHITE));
             meta.lore(List.of(
-                Component.text("UUID: " + shell.getCreator().getUniqueId(), NamedTextColor.DARK_GRAY),
-                Component.text("Click to transfer ownership", NamedTextColor.YELLOW)
+                Component.text(t("ui_shell_owner_uuid") + shell.getCreator().getUniqueId(), NamedTextColor.DARK_GRAY),
+                Component.text(t("ui_shell_owner_transfer"), NamedTextColor.YELLOW)
             ));
             meta.setOwningPlayer(shell.getCreator());
         });
@@ -75,11 +77,11 @@ public class ShellScreen extends Screen {
                 newOwner -> {
                     new ConfirmationScreen(
                         player,
-                        "Transfer Ownership",
+                        t("ui_transfer_ownership_title"),
                         () -> {},
                         () -> {
                             Shell.CREATOR.set(shell, newOwner.getUniqueId());
-                            player.sendMessage(Component.text("Ownership successfully transferred", NamedTextColor.GREEN));
+                            player.sendMessage(Component.text(t("ui_transfer_ownership_success"), NamedTextColor.GREEN));
                         }
                     ).open();
                 }
@@ -90,9 +92,9 @@ public class ShellScreen extends Screen {
         // Access control
         ItemStack accessControl = new ItemStack(Material.OAK_DOOR);
         accessControl.editMeta(meta -> {
-            meta.displayName(Component.text("Access Control"));
+            meta.displayName(Component.text(t("ui_access_control_title")));
             meta.lore(List.of(
-                Component.text("Manage your whitelist / blacklist"),
+                Component.text(t("ui_access_control_description")),
                 Component.text("Click to open", NamedTextColor.YELLOW)
             ));
         });
@@ -110,10 +112,10 @@ public class ShellScreen extends Screen {
                 () -> {
                     ItemStack glass = new ItemStack(MaterialUtil.getColoredGlassPane(currentItemColor[0]));
                     glass.editMeta(meta -> {
-                        meta.displayName(Component.text("Color: " + EnumUtil.beautifyName(shulkerShell.getColor()))
+                        meta.displayName(Component.text(t("ui_shell_color") + EnumUtil.beautifyName(shulkerShell.getColor()))
                             .color(TextColor.color(shulkerShell.getColor().getColor().asRGB())));
                         meta.lore(List.of(
-                            Component.text("Click to change", NamedTextColor.YELLOW)
+                            Component.text(t("ui_click_to_change"), NamedTextColor.YELLOW)
                         ));
                     });
                     setItem(changeColorX, 1, glass, () -> new ChangeShellColorScreen(player, shulkerShell).open());

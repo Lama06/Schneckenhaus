@@ -6,11 +6,12 @@ import io.github.lama06.schneckenhaus.screen.ShellScreen;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+
+import static io.github.lama06.schneckenhaus.language.Translator.t;
 
 public final class ShellMenuSystem implements Listener {
     @EventHandler
@@ -32,7 +33,7 @@ public final class ShellMenuSystem implements Listener {
         }
         event.setCancelled(true);
         if (!event.getPlayer().equals(shell.getCreator())) {
-            event.getPlayer().sendMessage(Component.text("You don't own this snail shell", NamedTextColor.RED));
+            event.getPlayer().sendMessage(Component.text(t("snail_shell_menu_open_fail"), NamedTextColor.RED));
             return;
         }
         new ShellScreen(shell, event.getPlayer()).open();

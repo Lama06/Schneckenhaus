@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class CustomShell extends Shell<CustomShellConfig> {
     public CustomShell(final GridPosition position, final CustomShellConfig config) {
         super(position, config);
@@ -57,7 +59,7 @@ public final class CustomShell extends Shell<CustomShellConfig> {
     @Override
     public List<InfoCommand.Entry> getInformation() {
         final List<InfoCommand.Entry> information = new ArrayList<>(super.getInformation());
-        information.add(new InfoCommand.Entry("Template", config.getName()));
+        information.add(new InfoCommand.Entry(t("snail_shell_template"), config.getName()));
         return information;
     }
 }

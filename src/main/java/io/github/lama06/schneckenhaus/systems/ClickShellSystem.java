@@ -18,6 +18,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class ClickShellSystem implements Listener {
     @EventHandler
     private void teleportToShell(final PlayerInteractEvent event) {
@@ -55,12 +57,12 @@ public final class ClickShellSystem implements Listener {
             return;
         }
         if (!shell.isAllowedToEnter(player)) {
-            player.sendMessage(Component.text("You are not allowed to enter this snail shell", NamedTextColor.RED)
+            player.sendMessage(Component.text(t("snail_shell_enter_disallowed"), NamedTextColor.RED)
                 .appendNewline()
-                .append(Component.text("Tell the shell's owner to add you to the whitelist")));
+                .append(Component.text(t("snail_shell_enter_disallowed_hint"))));
             Player owner = shell.getCreator().getPlayer();
             if (owner != null) {
-                owner.sendMessage(player.getName() + " wants to enter your snail shell, but it is locked");
+                owner.sendMessage(t("snail_shell_enter_notification", player.getName()));
                 owner.playSound(owner.getLocation(), Sound.BLOCK_BELL_USE, 1, 1);
             }
             return;

@@ -10,6 +10,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public abstract class ShellConfig {
     protected abstract Material getItemMaterial();
 
@@ -24,7 +26,7 @@ public abstract class ShellConfig {
     public final ItemStack createItem() {
         final ItemStack item = new ItemStack(getItemMaterial());
         final ItemMeta meta = item.getItemMeta();
-        meta.displayName(Component.text("Snail Shell", getItemColor()));
+        meta.displayName(Component.text(t("snail_shell"), getItemColor()));
         final String lore = getLore();
         if (lore != null) {
             meta.lore(List.of(Component.text(lore)));

@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
     public static final Attribute<Boolean> RAINBOW = new Attribute<>("rainbow", PersistentDataType.BOOLEAN);
 
@@ -36,7 +38,7 @@ public final class ShulkerShell extends BuiltinShell<ShulkerShellConfig> {
     @Override
     public List<InfoCommand.Entry> getInformation() {
         final List<InfoCommand.Entry> information = new ArrayList<>(super.getInformation());
-        information.add(new InfoCommand.Entry("Color", getColor().toString().toLowerCase(), config.getItemColor()));
+        information.add(new InfoCommand.Entry(t("snail_shell_color"), getColor().toString().toLowerCase(), config.getItemColor()));
         return information;
     }
 

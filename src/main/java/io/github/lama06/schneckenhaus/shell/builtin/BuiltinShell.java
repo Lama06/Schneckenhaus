@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public abstract class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C> {
     protected BuiltinShell(final GridPosition position, final C config) {
         super(position, config);
@@ -50,13 +52,13 @@ public abstract class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C
         final List<InfoCommand.Entry> entries = new ArrayList<>(super.getInformation());
 
         final int size = getSize();
-        entries.add(new InfoCommand.Entry("Size", "%dx%d".formatted(size, size)));
+        entries.add(new InfoCommand.Entry(t("snail_shell_size"), "%dx%d".formatted(size, size)));
 
         BlockPosition pos1 = new BlockPosition(position.getCornerBlock().getRelative(1, 1, 1));
         BlockPosition pos2 = new BlockPosition(position.getCornerBlock().getRelative(size, size, size));
-        entries.add(new InfoCommand.Entry("Position 1", pos1.toString()));
-        entries.add(new InfoCommand.Entry("Position 2", pos2.toString()));
-        entries.add(new InfoCommand.Entry("Area", pos1 + " " + pos2));
+        entries.add(new InfoCommand.Entry(t("snail_shell_pos1"), pos1.toString()));
+        entries.add(new InfoCommand.Entry(t("snail_shell_pos2"), pos2.toString()));
+        entries.add(new InfoCommand.Entry(t("snail_shell_area"), pos1 + " " + pos2));
 
         return entries;
     }

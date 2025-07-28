@@ -12,6 +12,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class AccessControlScreen extends Screen {
     private final Shell<?> shell;
 
@@ -22,7 +24,7 @@ public final class AccessControlScreen extends Screen {
 
     @Override
     protected Component getTitle() {
-        return Component.text("Select Lock Mode", NamedTextColor.YELLOW);
+        return Component.text(t("ui_access_control_title"), NamedTextColor.YELLOW);
     }
 
     @Override
@@ -41,9 +43,9 @@ public final class AccessControlScreen extends Screen {
                 if (Shell.ACCESS_MODE.get(shell) == accessMode) {
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     meta.addEnchant(Enchantment.SHARPNESS, 1, true);
-                    lore.add(Component.text("Selected", NamedTextColor.GREEN));
+                    lore.add(Component.text(t("ui_selected"), NamedTextColor.GREEN));
                 } else {
-                    lore.add(Component.text("Click to Select", NamedTextColor.YELLOW));
+                    lore.add(Component.text(t("ui_click_to_select"), NamedTextColor.YELLOW));
                 }
                 meta.lore(lore);
             });
@@ -55,14 +57,14 @@ public final class AccessControlScreen extends Screen {
 
         ItemStack blacklist = new ItemStack(AccessMode.BLACKLIST.icon);
         blacklist.editMeta(meta -> {
-            meta.customName(Component.text("Edit Blacklist", NamedTextColor.YELLOW));
+            meta.customName(Component.text(t("ui_access_control_edit_blacklist"), NamedTextColor.YELLOW));
             if (Shell.ACCESS_MODE.get(shell) != AccessMode.BLACKLIST) {
-                meta.lore(List.of(Component.text("Note: Blacklist is disabled", NamedTextColor.RED)));
+                meta.lore(List.of(Component.text(t("ui_access_control_blacklist_disabled"), NamedTextColor.RED)));
             }
         });
         setItem(7, 0, blacklist, () -> new PlayerListEditScreen(
             player,
-            Component.text("Edit Blacklist", NamedTextColor.YELLOW),
+            Component.text(t("ui_access_control_edit_blacklist"), NamedTextColor.YELLOW),
             Shell.BLACKLIST.get(shell),
             list -> Shell.BLACKLIST.set(shell, list),
             () -> new AccessControlScreen(player, shell).open()
@@ -70,14 +72,14 @@ public final class AccessControlScreen extends Screen {
 
         ItemStack whitelist = new ItemStack(AccessMode.WHITELIST.icon);
         whitelist.editMeta(meta -> {
-            meta.customName(Component.text("Edit Whitelist", NamedTextColor.YELLOW));
+            meta.customName(Component.text(t("ui_access_control_edit_whitelist"), NamedTextColor.YELLOW));
             if (Shell.ACCESS_MODE.get(shell) != AccessMode.WHITELIST) {
-                meta.lore(List.of(Component.text("Note: Whitelist is disabled", NamedTextColor.RED)));
+                meta.lore(List.of(Component.text(t("ui_access_control_whitelist_disabled"), NamedTextColor.RED)));
             }
         });
         setItem(8, 0, whitelist, () -> new PlayerListEditScreen(
             player,
-            Component.text("Edit Whitelist", NamedTextColor.YELLOW),
+            Component.text(t("ui_access_control_edit_whitelist"), NamedTextColor.YELLOW),
             Shell.WHITELIST.get(shell),
             list -> Shell.WHITELIST.set(shell, list),
             () -> new AccessControlScreen(player, shell).open()

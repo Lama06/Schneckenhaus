@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.random.RandomGenerator;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellConfig> {
     public static final ShulkerShellFactory INSTANCE = new ShulkerShellFactory();
 
@@ -89,7 +91,7 @@ public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellC
         if (args.length == 1) {
             color = Arrays.stream(DyeColor.values()).filter(c -> c.name().equalsIgnoreCase(args[0])).findAny().orElse(null);
             if (color == null) {
-                sender.sendMessage(Component.text("Invalid color: " + args[1], NamedTextColor.RED));
+                sender.sendMessage(Component.text(t("cmd_create_invalid_color") + args[1], NamedTextColor.RED));
                 return null;
             }
         } else {

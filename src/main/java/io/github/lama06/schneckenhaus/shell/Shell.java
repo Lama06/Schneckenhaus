@@ -29,6 +29,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public abstract class Shell<C extends ShellConfig> implements PersistentDataHolder {
     public static final Attribute<String> TYPE = new Attribute<>("type", PersistentDataType.STRING);
     public static final Attribute<UUID> CREATOR = new Attribute<>("creator", UuidPersistentDataType.INSTANCE);
@@ -81,11 +83,11 @@ public abstract class Shell<C extends ShellConfig> implements PersistentDataHold
         final Block cornerBlock = position.getCornerBlock();
         final String creatorName = getCreator().getName();
         return List.of(
-            new InfoCommand.Entry("Id", Integer.toString(position.getId())),
-            new InfoCommand.Entry("Grid Position", "X: %d, Z: %d".formatted(position.getX(), position.getZ())),
-            new InfoCommand.Entry("World Position", "X: %d, Z: %d".formatted(cornerBlock.getX(), cornerBlock.getZ())),
-            new InfoCommand.Entry("Creator", creatorName == null ? "Unknown" : creatorName),
-            new InfoCommand.Entry("Access", PlainTextComponentSerializer.plainText().serialize(ACCESS_MODE.get(this).name))
+            new InfoCommand.Entry(t("snail_shell_id"), Integer.toString(position.getId())),
+            new InfoCommand.Entry(t("snail_shell_grid_position"), "X: %d, Z: %d".formatted(position.getX(), position.getZ())),
+            new InfoCommand.Entry(t("snail_shell_world_position"), "X: %d, Z: %d".formatted(cornerBlock.getX(), cornerBlock.getZ())),
+            new InfoCommand.Entry(t("snail_shell_creator"), creatorName == null ? t("snail_shell_creator_unknown") : creatorName),
+            new InfoCommand.Entry(t("snail_shell_access"), PlainTextComponentSerializer.plainText().serialize(ACCESS_MODE.get(this).name))
         );
     }
 

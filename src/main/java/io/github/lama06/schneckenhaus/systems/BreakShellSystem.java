@@ -19,6 +19,8 @@ import org.bukkit.persistence.PersistentDataContainer;
 
 import java.util.Collection;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class BreakShellSystem implements Listener {
     @EventHandler(priority = EventPriority.LOW) // call before #dropShellForPlayerInCreativeMode
     private void preventTheft(final BlockBreakEvent event) {
@@ -40,7 +42,7 @@ public final class BreakShellSystem implements Listener {
             return;
         }
         event.setCancelled(true);
-        event.getPlayer().sendMessage(Component.text("You are not allowed to break other players' snail shells", NamedTextColor.RED));
+        event.getPlayer().sendMessage(Component.text(t("snail_shell_break_disallowed"), NamedTextColor.RED));
     }
 
     @EventHandler

@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
     public static final CustomShellFactory INSTANCE = new CustomShellFactory();
 
@@ -61,12 +63,12 @@ public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
     @Override
     public CustomShellConfig parseConfig(final CommandSender sender, final String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(Component.text("Missing template name", NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_create_missing_template"), NamedTextColor.RED));
             return null;
         }
         final String template = args[0];
         if (!SchneckenPlugin.INSTANCE.getSchneckenConfig().custom.containsKey(template)) {
-            sender.sendMessage(Component.text("Invalid template name: " + template, NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("cmd_create_invalid_template") + template, NamedTextColor.RED));
             return null;
         }
         return new CustomShellConfig(template);

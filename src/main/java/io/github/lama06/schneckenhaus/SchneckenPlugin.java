@@ -2,6 +2,7 @@ package io.github.lama06.schneckenhaus;
 
 import io.github.lama06.schneckenhaus.command.SchneckenCommand;
 import io.github.lama06.schneckenhaus.config.ConfigException;
+import io.github.lama06.schneckenhaus.language.Language;
 import io.github.lama06.schneckenhaus.language.Translator;
 import io.github.lama06.schneckenhaus.recipe.RecipeManager;
 import io.github.lama06.schneckenhaus.systems.Systems;
@@ -18,10 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 public final class SchneckenPlugin extends JavaPlugin implements Listener {
@@ -48,12 +46,13 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
         }
         saveSchneckenConfig(); // Apply updates, clean up comments etc.
 
+        translator = new Translator();
+        translator.load();
+
         world = new SchneckenWorld();
         recipeManager = new RecipeManager();
         recipeManager.registerRecipes();
         command = new SchneckenCommand();
-        translator = new Translator();
-        translator.load();
 
         Systems.start();
 
@@ -172,6 +171,14 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
         final Metrics metrics = new Metrics(this, BSTATS_ID);
         metrics.addCustomChart(new Metrics.SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
         metrics.addCustomChart(new Metrics.SingleLineChart("shells", world::getNumberOfShells));
+        metrics.addCustomChart(new Metrics.SimplePie("language", () -> {
+            System.out.println("Debug");
+            Language language = getTranslator().getLanguage();
+            if (language == null) {
+                return "Default";
+            }
+            return language.name;
+        }));
     }
 
     public Reader getTextResourcePublic(String path) {

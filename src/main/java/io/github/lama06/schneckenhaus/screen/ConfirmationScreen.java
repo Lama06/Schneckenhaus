@@ -7,6 +7,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class ConfirmationScreen extends Screen {
     private final String actionName;
     private final Runnable cancelCallback;
@@ -21,7 +23,7 @@ public final class ConfirmationScreen extends Screen {
 
     @Override
     protected Component getTitle() {
-        return Component.text("Confirm: " + actionName);
+        return Component.text(t("ui_confirm_title") + actionName);
     }
 
     @Override
@@ -33,7 +35,7 @@ public final class ConfirmationScreen extends Screen {
     protected void draw() {
         ItemStack cancel = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         cancel.editMeta(meta -> {
-            meta.customName(Component.text("Cancel", NamedTextColor.RED));
+            meta.customName(Component.text(t("ui_confirm_cancel"), NamedTextColor.RED));
         });
         setItem(0, 0, cancel, () -> {
             close();
@@ -46,7 +48,7 @@ public final class ConfirmationScreen extends Screen {
 
         ItemStack confirm = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
         confirm.editMeta(meta -> {
-            meta.customName(Component.text("Confirm", NamedTextColor.GREEN));
+            meta.customName(Component.text(t("ui_confirm_confirm"), NamedTextColor.GREEN));
         });
         setItem(8, 0, confirm, () -> {
             close();

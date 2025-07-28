@@ -18,7 +18,8 @@ public final class Systems {
         new KickPlayersSystem(),
         new RainbowSystem(),
         new DispenseShellSystem(),
-        new LockShellSystem()
+        new LockShellSystem(),
+        new SetupLanguageSystem()
     };
 
     public static void start() {

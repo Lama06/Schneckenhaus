@@ -45,7 +45,7 @@ public final class DeleteCommand extends Command {
                         .color(NamedTextColor.RED)
                         .decorate(TextDecoration.BOLD)
                         .hoverEvent(HoverEvent.showText(
-                            Component.text(t("cmd_delete_confirm_button_warning"))
+                            Component.text(t("cmd_delete_confirm_warning"))
                         ))
                         .clickEvent(ClickEvent.runCommand("/sh delete %d confirm".formatted(shell.getId())))
                 )

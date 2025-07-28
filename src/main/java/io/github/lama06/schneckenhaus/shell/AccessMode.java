@@ -8,12 +8,14 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.UUID;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public enum AccessMode {
     // DON'T RENAME ENUM CONSTANTS, THEY ARE USED FOR SERIALIZATION
     EVERYBODY(
-        Component.text("Everybody", NamedTextColor.GREEN),
+        Component.text(t("ui_access_control_everybody"), NamedTextColor.GREEN),
         Material.OAK_DOOR,
-        List.of(Component.text("All players can enter this snail shell"))
+        List.of(Component.text(t("ui_access_control_everybody_description")))
     ) {
         @Override
         public boolean check(Shell<?> shell, Player player) {
@@ -21,10 +23,10 @@ public enum AccessMode {
         }
     },
     BLACKLIST(
-        Component.text("Blacklist", NamedTextColor.RED),
+        Component.text(t("ui_access_control_blacklist"), NamedTextColor.RED),
         Material.WITHER_ROSE,
         List.of(
-            Component.text("Everyone except blacklisted players can enter this snail shell"),
+            Component.text(t("ui_access_control_blacklist_description")),
             Constants.OP_NOTE
         )
     ) {
@@ -35,10 +37,10 @@ public enum AccessMode {
         }
     },
     WHITELIST(
-        Component.text("Whitelist"),
+        Component.text(t("ui_access_control_whitelist")),
         Material.WHITE_TULIP,
         List.of(
-            Component.text("Besides its owner, only players listed here can enter this snail shell"),
+            Component.text(t("ui_access_control_whitelist_description")),
             Constants.OP_NOTE
         )
     ) {
@@ -49,10 +51,10 @@ public enum AccessMode {
         }
     },
     NOBODY(
-        Component.text("Nobody", NamedTextColor.RED),
+        Component.text(t("ui_access_control_nobody"), NamedTextColor.RED),
         Material.IRON_DOOR,
         List.of(
-            Component.text("Only the owner can enter this snail shell"),
+            Component.text(t("ui_access_control_nobody_description")),
             Constants.OP_NOTE
         )
     ) {
@@ -64,7 +66,7 @@ public enum AccessMode {
 
     // must be a separate class, because used in enum constructors
     private static class Constants {
-        private static final Component OP_NOTE = Component.text("Server operators can always enter this snail shell", NamedTextColor.GRAY);
+        private static final Component OP_NOTE = Component.text(t("ui_access_control_hint_op"), NamedTextColor.GRAY);
     }
 
     private static boolean canAlwaysJoin(Shell<?> shell, Player player) {

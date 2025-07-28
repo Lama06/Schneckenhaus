@@ -20,6 +20,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class ChangeShellColorScreen extends Screen {
     private final ShulkerShell shell;
 
@@ -30,7 +32,7 @@ public final class ChangeShellColorScreen extends Screen {
 
     @Override
     protected Component getTitle() {
-        return Component.text("Change Color", NamedTextColor.YELLOW);
+        return Component.text(t("ui_change_color_title"), NamedTextColor.YELLOW);
     }
 
     @Override
@@ -48,11 +50,11 @@ public final class ChangeShellColorScreen extends Screen {
                 meta.customName(Component.text(EnumUtil.beautifyName(color), TextColor.color(color.getColor().asRGB())));
                 List<Component> lore = new ArrayList<>();
                 if (shell.getColor() == color) {
-                    lore.add(Component.text("Current color", NamedTextColor.GREEN));
+                    lore.add(Component.text(t("ui_change_color_current"), NamedTextColor.GREEN));
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     meta.addEnchant(Enchantment.SHARPNESS, 1, true);
                 } else {
-                    lore.add(Component.text("Click to select", NamedTextColor.YELLOW));
+                    lore.add(Component.text(t("ui_click_to_select"), NamedTextColor.YELLOW));
                 }
                 meta.lore(lore);
             });
@@ -67,15 +69,13 @@ public final class ChangeShellColorScreen extends Screen {
             ItemStack rainbowToggle = new ItemStack(Material.CLOCK);
             rainbowToggle.editMeta(meta -> {
                 TextComponent rainbowLabel = Component.text()
-                    .append(MiniMessage.miniMessage().deserialize("<rainbow>Rainbow Mode: </rainbow>"))
-                    .append(Component.text(rainbowEnabled ? "On" : "Off", rainbowEnabled ? NamedTextColor.GREEN : NamedTextColor.RED))
+                    .append(MiniMessage.miniMessage().deserialize("<rainbow>%s</rainbow>".formatted(t("ui_change_color_rainbow_mode"))))
+                    .append(Component.text(rainbowEnabled ? t("ui_on") : t("ui_off"), rainbowEnabled ? NamedTextColor.GREEN : NamedTextColor.RED))
                     .build();
                 meta.displayName(rainbowLabel);
                 meta.lore(List.of(
-                    Component.text("Make the color change automatically every %d seconds".formatted(
-                        SchneckenPlugin.INSTANCE.getSchneckenConfig().rainbow.delay
-                    )),
-                    Component.text("Click to toggle on / off", NamedTextColor.YELLOW)
+                    Component.text(t("ui_change_color_rainbow_mode_description", SchneckenPlugin.INSTANCE.getSchneckenConfig().rainbow.delay)),
+                    Component.text(t("ui_change_color_rainbow_mode_toggle"), NamedTextColor.YELLOW)
                 ));
             });
             setItem(colors.length, rainbowToggle, () -> {

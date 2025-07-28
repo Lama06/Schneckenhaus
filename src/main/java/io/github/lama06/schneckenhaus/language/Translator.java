@@ -43,7 +43,7 @@ public class Translator {
     }
 
     public void setLanguage(Language language) {
-        this.languages = languages;
+        this.language = language;
         saveLanguageConfig();
     }
 
@@ -101,12 +101,12 @@ language: %lang%
 
 # STEP 2: If necessary, override certain messages.
 # Remove the hash symbol # if you change a message. All lines starting with # will be ignored.""";
-        header = header.replace("%lang%", language == null ? "default" : language.name);
-        header = header.replace("%langs%", Arrays.stream(Language.values()).map(l -> l.id).collect(Collectors.joining(",")));
+        header = header.replace("%lang%", language == null ? "default" : language.id);
+        header = header.replace("%langs%", Arrays.stream(Language.values()).map(l -> l.id).collect(Collectors.joining(", ")));
 
         StringBuilder builder = new StringBuilder().append(header);
 
-        for (String key : languages.get(Language.ENGLISH).keySet()) {
+        for (String key : languages.get(Language.ENGLISH).keySet().stream().sorted().toList()) {
             builder.append("\n");
             if (!overrides.containsKey(key)) {
                 builder.append("#");

@@ -172,7 +172,6 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
         metrics.addCustomChart(new Metrics.SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
         metrics.addCustomChart(new Metrics.SingleLineChart("shells", world::getNumberOfShells));
         metrics.addCustomChart(new Metrics.SimplePie("language", () -> {
-            System.out.println("Debug");
             Language language = getTranslator().getLanguage();
             if (language == null) {
                 return "Default";

@@ -51,7 +51,7 @@ public class ShellScreen extends Screen {
         // Shell
         ItemStack shellItem = shell.createItem();
         shellItem.editMeta(meta -> {
-            List<Component> lore = new ArrayList<>(meta.lore());
+            List<Component> lore = new ArrayList<>(meta.hasLore() ? meta.lore() : List.of());
             lore.add(Component.text(t("ui_shell_add_to_inventory"), NamedTextColor.YELLOW));
             meta.lore(lore);
         });

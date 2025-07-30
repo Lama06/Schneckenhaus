@@ -118,16 +118,7 @@ public final class InputScreen implements Listener {
             player.closeInventory();
             callback.accept(input);
 
-            // Make sure that the rename item doesn't end up in the player's inventory
-            for (int i = 0; i < player.getInventory().getSize(); i++) {
-                ItemStack item = player.getInventory().getItem(i);
-                if (item == null) {
-                    continue;
-                }
-                if (ANVIL_INPUT_ITEM.has(item.getItemMeta())) {
-                    player.getInventory().setItem(i, null);
-                }
-            }
+            removePaperFromInventory();
         });
     }
 
@@ -138,6 +129,7 @@ public final class InputScreen implements Listener {
         }
         Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, cancelCallback);
         HandlerList.unregisterAll(this);
+        Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, this::removePaperFromInventory);
     }
 
     @EventHandler
@@ -147,5 +139,18 @@ public final class InputScreen implements Listener {
         }
         cancelCallback.run();
         HandlerList.unregisterAll(this);
+    }
+
+    private void removePaperFromInventory() {
+        // Make sure that the rename item doesn't end up in the player's inventory
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
+            ItemStack item = player.getInventory().getItem(i);
+            if (item == null) {
+                continue;
+            }
+            if (ANVIL_INPUT_ITEM.has(item.getItemMeta())) {
+                player.getInventory().setItem(i, null);
+            }
+        }
     }
 }

@@ -21,7 +21,7 @@ public final class Systems {
         new LockShellSystem(),
         new SetupLanguageSystem(),
         new HopperSystem(),
-        //new ChunkLoaderSystem()
+        new ChunkLoaderSystem()
     };
 
     public static void start() {

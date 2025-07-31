@@ -12,7 +12,9 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -56,6 +58,31 @@ public final class ChunkLoaderSystem implements Listener {
             ));
             loadShell(id);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH) // run after the id of the block is set
+    private void on(BlockPlaceEvent event) {
+        Block blockPlaced = event.getBlockPlaced();
+        if (blockPlaced.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld().getBukkit())) {
+            return;
+        }
+        BlockState state = blockPlaced.getState();
+        if (!(state instanceof TileState tileState)) {
+            return;
+        }
+        Integer id = Shell.BLOCK_ID.get(tileState);
+        if (id == null) {
+            return;
+        }
+        Set<Ticket> shellTickets = tickets.computeIfAbsent(id, k -> new HashSet<>());
+        shellTickets.add(new ShellBlockTicket(
+            blockPlaced.getWorld().getName(),
+            blockPlaced.getChunk().getX(),
+            blockPlaced.getChunk().getZ(),
+            new BlockPosition(blockPlaced),
+            id
+        ));
+        loadShell(id);
     }
 
     private void addShellItemTickets() {
@@ -149,7 +176,7 @@ public final class ChunkLoaderSystem implements Listener {
                     continue;
                 }
                 Integer id = Shell.ITEM_ID.get(meta);
-                if (id == null && id == shellId) {
+                if (id != null && id == shellId) {
                     return true;
                 }
             }

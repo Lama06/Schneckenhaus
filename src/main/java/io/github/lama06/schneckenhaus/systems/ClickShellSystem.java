@@ -27,6 +27,9 @@ public final class ClickShellSystem implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
+        if (event.getPlayer().isSneaking() && event.isBlockInHand()) {
+            return;
+        }
         final Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) {
             return;

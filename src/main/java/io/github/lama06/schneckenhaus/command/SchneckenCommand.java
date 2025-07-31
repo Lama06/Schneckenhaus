@@ -23,8 +23,10 @@ public final class SchneckenCommand extends MultiplexerCommand {
         addSubCommand("count", new CountCommand());
         addSubCommand("newShellType", new NewShellTypeCommand());
         addSubCommand("tp", new TeleportCommand());
+        addSubCommand("tpPlayer", new TeleportOtherPlayerCommand());
         addSubCommand("delete", new DeleteCommand());
         addSubCommand("home", new HomeCommand());
+        addSubCommand("list", new ListCommand());
         addSubCommand("debug", new DebugCommand());
         hideSubCommand("debug");
 

@@ -3,17 +3,22 @@ package io.github.lama06.schneckenhaus.position;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
+import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents the position of a cell in the grid of snail shells.
  */
 public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGridPosition {
+    public static final int CELL_SIZE_CHUNKS = 4;
     /**
      * The width and height of a grid cell.
      */
-    public static final int CELL_SIZE = 64;
+    public static final int CELL_SIZE = 16 * CELL_SIZE_CHUNKS;
 
     protected GridPosition() { }
 
@@ -108,5 +113,18 @@ public sealed abstract class GridPosition permits CoordinatesGridPosition, IdGri
                 new BlockPosition(getX() * CELL_SIZE, world.getMinHeight(), getZ() * CELL_SIZE),
                 new BlockPosition((getX() + 1) * CELL_SIZE - 1, world.getMaxHeight(), (getZ() + 1) * CELL_SIZE - 1)
         );
+    }
+
+    public List<Chunk> getChunks() {
+        List<Chunk> chunks = new ArrayList<>();
+        for (int x = 0; x < CELL_SIZE_CHUNKS; x++) {
+            for (int z = 0; z < CELL_SIZE_CHUNKS; z++) {
+                chunks.add(SchneckenPlugin.INSTANCE.getWorld().getBukkit().getChunkAt(
+                    getX() * CELL_SIZE_CHUNKS + x,
+                    getZ() * CELL_SIZE_CHUNKS + z
+                ));
+            }
+        }
+        return chunks;
     }
 }

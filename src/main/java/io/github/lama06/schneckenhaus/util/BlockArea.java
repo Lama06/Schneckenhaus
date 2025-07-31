@@ -1,5 +1,7 @@
 package io.github.lama06.schneckenhaus.util;
 
+import org.bukkit.block.Block;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
@@ -21,6 +23,10 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
     public BlockArea {
         Objects.requireNonNull(position1);
         Objects.requireNonNull(position2);
+    }
+
+    public BlockArea(Block block1, Block block2) {
+        this(new BlockPosition(block1), new BlockPosition(block2));
     }
 
     @Override

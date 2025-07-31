@@ -22,17 +22,20 @@ public final class CreateShellsCommand extends Command {
         if (player == null) {
             return;
         }
-        final int COUNT = 100;
+        final int ITERATIONS = 10;
+        final int COUNT_PER_ITERATION = 10;
         final RandomGenerator rnd = ThreadLocalRandom.current();
-        for (int i = 0; i < COUNT; i++) {
+        for (int i = 0; i < ITERATIONS; i++) {
             final int finalI = i;
             Bukkit.getScheduler().runTaskLater(SchneckenPlugin.INSTANCE, () -> {
-                final ShulkerShellFactory factory = ShulkerShellFactory.INSTANCE;
-                final int size = factory.getMinSize() + rnd.nextInt(factory.getMaxSize() - factory.getMinSize() + 1);
-                final DyeColor[] dyeColors = DyeColor.values();
-                final DyeColor color = dyeColors[rnd.nextInt(dyeColors.length)];
-                SchneckenPlugin.INSTANCE.getWorld().createShell(factory, player, new ShulkerShellConfig(size, color));
                 player.sendMessage(Component.text(finalI + 1, NamedTextColor.GREEN));
+                for (int j = 0; j < COUNT_PER_ITERATION; j++) {
+                    final ShulkerShellFactory factory = ShulkerShellFactory.INSTANCE;
+                    final int size = factory.getMinSize() + rnd.nextInt(factory.getMaxSize() - factory.getMinSize() + 1);
+                    final DyeColor[] dyeColors = DyeColor.values();
+                    final DyeColor color = dyeColors[rnd.nextInt(dyeColors.length)];
+                    SchneckenPlugin.INSTANCE.getWorld().createShell(factory, player, new ShulkerShellConfig(size, color));
+                }
             }, i);
         }
     }

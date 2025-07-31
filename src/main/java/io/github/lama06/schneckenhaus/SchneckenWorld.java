@@ -10,7 +10,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+import java.util.function.Consumer;
 
 public final class SchneckenWorld implements PersistentDataHolder {
     public static final String NAME = "schneckenhaus";
@@ -109,6 +113,25 @@ public final class SchneckenWorld implements PersistentDataHolder {
         final Shell<C> shell = factory.instantiate(position, config);
         shell.placeInitially();
         return shell;
+    }
+
+    public void getShellsByPlayer(UUID player, Consumer<List<Integer>> callback) {
+        List<Integer> result = new ArrayList<>();
+        int numberOfShells = getNumberOfShells();
+        int[] shellsChecked = {0};
+        for (int id = 1; id <= numberOfShells; id++) {
+            int finalId = id;
+            world.getChunkAtAsync(new IdGridPosition(id).getCornerBlock()).thenAccept(chunk -> {
+                if (Shell.CREATOR.get(chunk).equals(player)) {
+                    result.add(finalId);
+                }
+                shellsChecked[0]++;
+                if (shellsChecked[0] == numberOfShells) {
+                    Collections.sort(result);
+                    callback.accept(result);
+                }
+            });
+        }
     }
 
     @Override

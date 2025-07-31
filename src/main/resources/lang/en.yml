@@ -28,6 +28,7 @@ cmd_action_click: "Click here"
 
 cmd_error_missing_arguments: "Not enough arguments"
 cmd_error_not_player: "You are not a player"
+cmd_error_invalid_player: "Player not found: "
 cmd_error_integer_invalid: "Invalid integer: "
 cmd_error_integer_range: "Invalid integer: {1}. Must be {2}."
 cmd_error_unknown_key: "Unknown key: "
@@ -85,6 +86,15 @@ cmd_new_type_hint: "You can edit it in the config. Remember that you need a ches
 
 cmd_tp_help: "Teleport you to the snail shell world."
 cmd_tp_help_id: "Teleports you to the specified snail shell."
+
+cmd_tp_other_loading: "Loading..."
+cmd_tp_other_no_shell: "No snail shell is owned by this player"
+cmd_tp_other_done: "Teleport successful"
+
+cmd_list_load: "Loading..."
+cmd_list_help: "Lists shells of a player"
+cmd_list_entry: "- Snail Shell {1}"
+cmd_list_hint_click: "Click an ID to get more information"
 
 error_inventory_full: "Your inventory is full"
 

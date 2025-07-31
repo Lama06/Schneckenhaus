@@ -9,10 +9,7 @@ import io.github.lama06.schneckenhaus.util.BlockPosition;
 import io.github.lama06.schneckenhaus.util.Range;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Keyed;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
+import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,6 +23,18 @@ public final class Require {
     public static Player player(final CommandSender sender) {
         if (!(sender instanceof final Player player)) {
             sender.sendMessage(Component.text(t("cmd_error_not_player"), NamedTextColor.RED));
+            return null;
+        }
+        return player;
+    }
+
+    public static Player player(CommandSender sender, String arg) {
+        Player player = Bukkit.selectEntities(sender, arg).stream()
+            .filter(entity -> entity instanceof Player)
+            .map(entity -> (Player) entity)
+            .findAny().orElse(null);
+        if (player == null) {
+            sender.sendMessage(Component.text(t("cmd_error_invalid_player") + arg, NamedTextColor.RED));
             return null;
         }
         return player;

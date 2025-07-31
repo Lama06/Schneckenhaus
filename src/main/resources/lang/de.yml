@@ -28,6 +28,7 @@ cmd_action_click: "Hier klicken"
 
 cmd_error_missing_arguments: "Nicht genug Parameter"
 cmd_error_not_player: "Nur Spieler können diesen Befehl ausführen"
+cmd_error_invalid_player: "Spieler nicht gefunden: "
 cmd_error_integer_invalid: "Keine Ganzzahl: "
 cmd_error_integer_range: "Bereichsfehler: {1}. Ganzzahl muss {2} sein."
 cmd_error_unknown_key: "Unknown key: "
@@ -85,6 +86,11 @@ cmd_new_type_hint: "Es ist in der Konfiguration bearbeitbar. Vergiss nicht, dass
 
 cmd_tp_help: "Teleportiert dich in die Schneckenhauswelt."
 cmd_tp_help_id: "Teleportiert dich zum angegebenen Schneckenhaus."
+
+cmd_list_load: "Laden..."
+cmd_list_help: "Listet die Schneckenhäuser eines Spielers auf"
+cmd_list_entry: "- Schneckenhaus {1}"
+cmd_list_hint_click: "Für mehr Informationen auf eine ID klicken"
 
 error_inventory_full: "Dein Inventar ist voll"
 

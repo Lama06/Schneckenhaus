@@ -19,7 +19,9 @@ public final class Systems {
         new RainbowSystem(),
         new DispenseShellSystem(),
         new LockShellSystem(),
-        new SetupLanguageSystem()
+        new SetupLanguageSystem(),
+        new HopperSystem(),
+        //new ChunkLoaderSystem()
     };
 
     public static void start() {

@@ -8,9 +8,9 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class MultiplexerCommand extends Command {
-    private final Map<String, Command> subCommands = new HashMap<>();
-    private final Set<String> hiddenCommands = new HashSet<>();
-    private Command defaultSubCommand;
+    protected final Map<String, Command> subCommands = new HashMap<>();
+    protected final Set<String> hiddenCommands = new HashSet<>();
+    protected Command defaultSubCommand;
 
     public void addSubCommand(final String name, final Command subCommand, final boolean isDefault) {
         subCommands.put(name, subCommand);

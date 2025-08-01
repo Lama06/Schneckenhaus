@@ -8,7 +8,7 @@ import org.bukkit.permissions.Permissible;
 public final class Permissions {
     public static final String CRAFT = "schneckenhaus.craft";
     public static final String ENTER = "schneckenhaus.enter";
-    public static final String COMMAND = "schneckenhaus.command";
+    public static final String BYPASS_THEFT_PREVENTION = "schneckenhaus.bypass_theft_prevention";
 
     public static boolean require(final Permissible permissible, final String permission) {
         if (!permissible.hasPermission(permission)) {

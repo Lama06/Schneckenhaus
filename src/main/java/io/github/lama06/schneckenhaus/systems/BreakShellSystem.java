@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
+import io.github.lama06.schneckenhaus.Permissions;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
@@ -25,6 +26,9 @@ public final class BreakShellSystem implements Listener {
     @EventHandler(priority = EventPriority.LOW) // call before #dropShellForPlayerInCreativeMode
     private void preventTheft(final BlockBreakEvent event) {
         if (!SchneckenPlugin.INSTANCE.getSchneckenConfig().theftPrevention) {
+            return;
+        }
+        if (event.getPlayer().hasPermission(Permissions.BYPASS_THEFT_PREVENTION)) {
             return;
         }
         if (!(event.getBlock().getState() instanceof final TileState tileState)) {

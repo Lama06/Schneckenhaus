@@ -19,6 +19,10 @@ public class ListLoadedShells extends Command {
     @Override
     public void execute(CommandSender sender, String[] args) {
         Collection<Chunk> chunks = SchneckenPlugin.INSTANCE.getWorld().getBukkit().getPluginChunkTickets().get(SchneckenPlugin.INSTANCE);
+        if (chunks == null) {
+            sender.sendMessage(Component.text("No snail shells are loaded"));
+            return;
+        }
         Set<Integer> shells = new HashSet<>();
         for (Chunk chunk : chunks) {
             CoordinatesGridPosition position = CoordinatesGridPosition.fromWorldPosition(chunk.getBlock(0, 0, 0).getLocation());

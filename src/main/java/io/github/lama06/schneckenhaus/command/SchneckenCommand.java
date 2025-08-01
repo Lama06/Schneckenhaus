@@ -27,6 +27,7 @@ public final class SchneckenCommand extends MultiplexerCommand {
         addSubCommand("delete", new DeleteCommand());
         addSubCommand("home", new HomeCommand());
         addSubCommand("list", new ListCommand());
+        addSubCommand("listLoaded", new ListLoadedShells());
         addSubCommand("debug", new DebugCommand());
         hideSubCommand("debug");
 

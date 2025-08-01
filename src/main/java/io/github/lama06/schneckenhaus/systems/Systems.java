@@ -21,7 +21,8 @@ public final class Systems {
         new LockShellSystem(),
         new SetupLanguageSystem(),
         new HopperSystem(),
-        new ChunkLoaderSystem()
+        new ChunkLoaderSystem(),
+        new PistonSystem()
     };
 
     public static void start() {

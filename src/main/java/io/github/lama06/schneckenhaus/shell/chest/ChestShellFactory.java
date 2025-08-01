@@ -32,7 +32,7 @@ public final class ChestShellFactory extends BuiltinShellFactory<ChestShellConfi
     }
 
     @Override
-    protected BuiltinShellGlobalConfig getGlobalConfig() {
+    public BuiltinShellGlobalConfig getGlobalConfig() {
         return SchneckenPlugin.INSTANCE.getSchneckenConfig().chest;
     }
 

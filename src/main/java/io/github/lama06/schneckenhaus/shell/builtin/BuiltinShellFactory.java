@@ -20,7 +20,7 @@ public abstract class BuiltinShellFactory<C extends BuiltinShellConfig> extends 
 
     protected abstract List<BuiltinShellRecipe<C>> getBuiltinRecipes();
 
-    protected abstract BuiltinShellGlobalConfig getGlobalConfig();
+    public abstract BuiltinShellGlobalConfig getGlobalConfig();
 
     @Override
     public final List<ShellRecipe<C>> getRecipes() {

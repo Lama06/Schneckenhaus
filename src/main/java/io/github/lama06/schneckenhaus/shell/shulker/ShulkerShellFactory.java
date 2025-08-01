@@ -42,7 +42,7 @@ public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellC
     }
 
     @Override
-    protected BuiltinShellGlobalConfig getGlobalConfig() {
+    public BuiltinShellGlobalConfig getGlobalConfig() {
         return SchneckenPlugin.INSTANCE.getSchneckenConfig().shulker;
     }
 

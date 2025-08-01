@@ -50,7 +50,7 @@ public final class SchneckenWorld implements PersistentDataHolder {
         world.setGameRule(GameRule.MOB_GRIEFING, false);
         world.setGameRule(GameRule.FIRE_DAMAGE, false);
         world.setGameRule(GameRule.DO_MOB_SPAWNING, false);
-        world.setTime(12000);
+        world.setTime(6000);
         if (!NEXT_ID.has(world)) {
             NEXT_ID.set(world, 1);
         }

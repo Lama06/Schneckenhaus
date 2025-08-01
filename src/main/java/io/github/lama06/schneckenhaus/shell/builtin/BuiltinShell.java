@@ -3,6 +3,8 @@ package io.github.lama06.schneckenhaus.shell.builtin;
 import io.github.lama06.schneckenhaus.command.InfoCommand;
 import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.chest.ChestShell;
+import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShell;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import org.bukkit.Material;
@@ -18,7 +20,7 @@ import java.util.Map;
 
 import static io.github.lama06.schneckenhaus.language.Translator.t;
 
-public abstract class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C> {
+public abstract sealed class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C> permits ShulkerShell, ChestShell {
     protected BuiltinShell(final GridPosition position, final C config) {
         super(position, config);
     }

@@ -1,8 +1,16 @@
 package io.github.lama06.schneckenhaus.screen;
 
+import io.github.lama06.schneckenhaus.Permissions;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShell;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellConfig;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellGlobalConfig;
+import io.github.lama06.schneckenhaus.shell.chest.ChestShell;
+import io.github.lama06.schneckenhaus.shell.chest.ChestShellFactory;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShell;
+import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellFactory;
 import io.github.lama06.schneckenhaus.util.EnumUtil;
 import io.github.lama06.schneckenhaus.util.InventoryUtil;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
@@ -12,6 +20,8 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -19,11 +29,12 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static io.github.lama06.schneckenhaus.language.Translator.t;
 
 public class ShellScreen extends Screen {
-    private final Shell<?> shell;
+    private Shell<?> shell;
     private BukkitTask changeColorTask;
 
     public ShellScreen(Shell<?> shell, Player player) {
@@ -50,49 +61,27 @@ public class ShellScreen extends Screen {
 
         // Shell
         ItemStack shellItem = shell.createItem();
-        shellItem.editMeta(meta -> {
-            List<Component> lore = new ArrayList<>(meta.hasLore() ? meta.lore() : List.of());
-            lore.add(Component.text(t("ui_shell_add_to_inventory"), NamedTextColor.YELLOW));
-            meta.lore(lore);
-        });
+        if (player.hasPermission(Permissions.CREATE_SHELL_COPIES)) {
+            shellItem.editMeta(meta -> {
+                List<Component> lore = new ArrayList<>(meta.hasLore() ? meta.lore() : List.of());
+                lore.add(Component.text(t("ui_shell_add_to_inventory"), NamedTextColor.YELLOW));
+                meta.lore(lore);
+            });
+        }
         setItem(x++, 1, shellItem, () -> {
-            player.give(shell.createItem());
+            if (player.hasPermission(Permissions.CREATE_SHELL_COPIES)) {
+                player.give(shell.createItem());
+            }
         });
 
 
-        // Owner
-        ItemStack ownerItem = new ItemStack(Material.PLAYER_HEAD);
-        ownerItem.editMeta(SkullMeta.class, meta -> {
-            meta.displayName(Component.text(t("ui_shell_owner") + shell.getCreator().getName(), NamedTextColor.WHITE));
-            meta.lore(List.of(
-                Component.text(t("ui_shell_owner_uuid") + shell.getCreator().getUniqueId(), NamedTextColor.DARK_GRAY),
-                Component.text(t("ui_shell_owner_transfer"), NamedTextColor.YELLOW)
-            ));
-            meta.setOwningPlayer(shell.getCreator());
-        });
-        setItem(x++, 1, ownerItem, () -> {
-            InputScreen.openPlayerNameInput(
-                player,
-                shell.getCreator().getName(),
-                newOwner -> {
-                    new ConfirmationScreen(
-                        player,
-                        t("ui_transfer_ownership_title"),
-                        () -> {},
-                        () -> {
-                            Shell.CREATOR.set(shell, newOwner.getUniqueId());
-                            player.sendMessage(Component.text(t("ui_transfer_ownership_success"), NamedTextColor.GREEN));
-                        }
-                    ).open();
-                }
-            );
-        });
+        addTransferOwnershipButton(x++);
 
 
         // Access control
         ItemStack accessControl = new ItemStack(Material.OAK_DOOR);
         accessControl.editMeta(meta -> {
-            meta.displayName(Component.text(t("ui_access_control_title")));
+            meta.customName(Component.text(t("ui_access_control_title")));
             meta.lore(List.of(
                 Component.text(t("ui_access_control_description")),
                 Component.text("Click to open", NamedTextColor.YELLOW)
@@ -100,6 +89,9 @@ public class ShellScreen extends Screen {
         });
         setItem(x++, 1, accessControl, () -> new AccessControlScreen(player, shell).open());
 
+        if (addChangeSizeButton(x)) {
+            x++;
+        }
 
         // Change color
         if (shell instanceof ShulkerShell shulkerShell) {
@@ -128,6 +120,93 @@ public class ShellScreen extends Screen {
                 0, 10
             );
         }
+    }
+
+    private void addTransferOwnershipButton(int x) {
+        ItemStack ownerItem = new ItemStack(Material.PLAYER_HEAD);
+        ownerItem.editMeta(SkullMeta.class, meta -> {
+            meta.displayName(Component.text(t("ui_shell_owner") + shell.getCreator().getName(), NamedTextColor.WHITE));
+            meta.lore(List.of(
+                Component.text(t("ui_shell_owner_uuid") + shell.getCreator().getUniqueId(), NamedTextColor.DARK_GRAY),
+                Component.text(t("ui_shell_owner_transfer"), NamedTextColor.YELLOW)
+            ));
+            meta.setOwningPlayer(shell.getCreator());
+        });
+        setItem(x, 1, ownerItem, () -> {
+            if (!Permissions.require(player, "schneckenhaus.transfer_ownership")) {
+                return;
+            }
+
+            InputScreen.openPlayerNameInput(
+                player,
+                shell.getCreator().getName(),
+                newOwner -> {
+                    new ConfirmationScreen(
+                        player,
+                        t("ui_transfer_ownership_title"),
+                        () -> {},
+                        () -> {
+                            Shell.CREATOR.set(shell, newOwner.getUniqueId());
+                            player.sendMessage(Component.text(t("ui_transfer_ownership_success"), NamedTextColor.GREEN));
+                        }
+                    ).open();
+                }
+            );
+        });
+    }
+
+    private boolean addChangeSizeButton(int x) {
+        if (!(shell instanceof BuiltinShell<?> builtinShell)) {
+            return false;
+        }
+        BuiltinShellFactory<?> factory = switch (builtinShell) {
+            case ShulkerShell shulkerShell -> ShulkerShellFactory.INSTANCE;
+            case ChestShell chestShell -> ChestShellFactory.INSTANCE;
+        };
+        if (builtinShell.getSize() >= factory.getMaxSize()) {
+            return false;
+        }
+        BuiltinShellGlobalConfig config = factory.getGlobalConfig();
+        boolean hasSizeIngredient = player.getInventory().contains(config.sizeIngredient);
+        int newSize = Math.min(factory.getMaxSize(), builtinShell.getSize() + config.sizePerIngredient);
+
+        ItemStack changeSizeItem = new ItemStack(Material.SLIME_BALL);
+        changeSizeItem.editMeta(meta -> {
+            meta.customName(Component.text("Increase Size to " + newSize));
+            meta.lore(List.of(
+                Component.text("Requires ")
+                    .color(hasSizeIngredient ? NamedTextColor.GREEN : NamedTextColor.RED)
+                    .append(Component.translatable(config.sizeIngredient)),
+                hasSizeIngredient ?
+                    Component.text("Click to increase size", NamedTextColor.YELLOW) :
+                    Component.text("You can't afford this", NamedTextColor.RED)
+            ));
+        });
+        setItem(x, 1, changeSizeItem, () -> {
+            if (!hasSizeIngredient) {
+                return;
+            }
+            Map<Integer, ItemStack> notRemoved = player.getInventory().removeItem(new ItemStack(config.sizeIngredient, 1));
+            if (!notRemoved.isEmpty()) {
+                return;
+            }
+
+            Map<Block, BlockData> blocksBefore = shell.getBlocks();
+            BuiltinShellConfig.SIZE.set(shell, newSize);
+            shell = SchneckenPlugin.INSTANCE.getWorld().getShell(builtinShell.getPosition()); // re-get shell because size changed
+            Map<Block, BlockData> blocksAfter = shell.getBlocks();
+            shell.place();
+            for (Block blockBefore : blocksBefore.keySet()) {
+                if (blocksAfter.containsKey(blockBefore)) {
+                    continue;
+                }
+                blockBefore.setType(Material.AIR);
+            }
+
+            onClose(); // stop color change task
+            redraw();
+        });
+        return true;
     }
 
     @Override

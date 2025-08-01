@@ -3,7 +3,6 @@ package io.github.lama06.schneckenhaus;
 import io.github.lama06.schneckenhaus.config.CompoundConfig;
 import io.github.lama06.schneckenhaus.config.ConfigAttribute;
 import io.github.lama06.schneckenhaus.config.type.CompoundConfigType;
-import io.github.lama06.schneckenhaus.config.type.IntegerConfigType;
 import io.github.lama06.schneckenhaus.config.type.MapConfigType;
 import io.github.lama06.schneckenhaus.config.type.PrimitiveConfigType;
 import io.github.lama06.schneckenhaus.shell.HomeShellConfig;

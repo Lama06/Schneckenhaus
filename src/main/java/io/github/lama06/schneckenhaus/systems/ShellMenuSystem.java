@@ -32,7 +32,7 @@ public final class ShellMenuSystem implements Listener {
             return;
         }
         event.setCancelled(true);
-        if (!event.getPlayer().equals(shell.getCreator())) {
+        if (!event.getPlayer().equals(shell.getCreator()) && !event.getPlayer().isOp()) {
             event.getPlayer().sendMessage(Component.text(t("snail_shell_menu_open_fail"), NamedTextColor.RED));
             return;
         }

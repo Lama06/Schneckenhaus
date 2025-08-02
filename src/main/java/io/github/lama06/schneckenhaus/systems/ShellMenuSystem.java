@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
+import io.github.lama06.schneckenhaus.Permissions;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.screen.ShellScreen;
@@ -31,9 +32,13 @@ public final class ShellMenuSystem implements Listener {
         if (shell == null) {
             return;
         }
+
         event.setCancelled(true);
         if (!event.getPlayer().equals(shell.getCreator()) && !event.getPlayer().isOp()) {
             event.getPlayer().sendMessage(Component.text(t("snail_shell_menu_open_fail"), NamedTextColor.RED));
+            return;
+        }
+        if (!Permissions.require(event.getPlayer(), "schneckenhaus.open_shell_menu")) {
             return;
         }
         new ShellScreen(shell, event.getPlayer()).open();

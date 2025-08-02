@@ -1,9 +1,9 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.shell.HomeShellConfig;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
 import io.github.lama06.schneckenhaus.position.IdGridPosition;
+import io.github.lama06.schneckenhaus.shell.HomeShellConfig;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellConfig;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellFactory;
@@ -27,7 +27,12 @@ public final class HomeShellSystem implements Listener {
 
         Integer homeId = SchneckenPlayer.HOME.get(event.getPlayer());
         if (homeId != null) {
-            return;
+            Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(new IdGridPosition(homeId));
+            if (shell != null) {
+                return;
+            } else {
+                SchneckenPlayer.HOME.remove(event.getPlayer()); // home was deleted, give player a new one
+            }
         }
 
         ShulkerShellConfig shellConfig = new ShulkerShellConfig(SchneckenPlugin.INSTANCE.getSchneckenConfig().home.size, DyeColor.WHITE);

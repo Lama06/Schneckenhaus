@@ -1,7 +1,7 @@
 name: Schneckenhaus
 main: io.github.lama06.schneckenhaus.SchneckenPlugin
 description: Makes it possible to enter shulker boxes and carry your house around with you like a snail.
-version: 2.8.0
+version: 2.9.0
 api-version: 1.21
 website: https://github.com/Lama06/Schneckenhaus
 author: Lama06
@@ -19,6 +19,9 @@ permissions:
       schneckenhaus.enter: true
       schneckenhaus.command.*: true
       schneckenhaus.create_shell_copies: true
+      schneckenhaus.bypass_theft_prevention: true
+      schneckenhaus.open_shell_menu: true
+      schneckenhaus.place_shells: true
   schneckenhaus.craft:
     description: Allows to craft snail shells
     default: true
@@ -26,7 +29,14 @@ permissions:
     description: Allows to enter snail shells
     default: true
   schneckenhaus.bypass_theft_prevention:
+    description: Allows players to break snail shells despite theft prevention being enabled
     default: op
+  schneckenhaus.open_shell_menu:
+    description: Allows players to open the snail shell menu
+    default: true
+  schneckenhaus.place_shells:
+    description: Allows players to place a snail shell
+    default: true
   schneckenhaus.create_shell_copies:
     description: Create copies of a snail shell in the snail shell menu
     default: true

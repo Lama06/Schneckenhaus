@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
+import io.github.lama06.schneckenhaus.Permissions;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
@@ -22,6 +23,10 @@ public final class PlaceShellSystem implements Listener {
         final PersistentDataContainer itemData = meta.getPersistentDataContainer();
         final Integer id = Shell.ITEM_ID.get(itemData);
         if (id == null) {
+            return;
+        }
+        if (!Permissions.require(event.getPlayer(), "schneckenhaus.place_shells")) {
+            event.setCancelled(true);
             return;
         }
         final Block block = event.getBlock();

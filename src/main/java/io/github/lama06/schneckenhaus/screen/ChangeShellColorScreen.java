@@ -3,7 +3,6 @@ package io.github.lama06.schneckenhaus.screen;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShell;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellConfig;
-import io.github.lama06.schneckenhaus.util.EnumUtil;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -47,7 +46,7 @@ public final class ChangeShellColorScreen extends Screen {
             DyeColor color = colors[i];
             ItemStack item = new ItemStack(MaterialUtil.getColoredGlassPane(color));
             item.editMeta(meta -> {
-                meta.customName(Component.text(EnumUtil.beautifyName(color), TextColor.color(color.getColor().asRGB())));
+                meta.customName(Component.text(t(color), TextColor.color(color.getColor().asRGB())));
                 List<Component> lore = new ArrayList<>();
                 if (shell.getColor() == color) {
                     lore.add(Component.text(t("ui_change_color_current"), NamedTextColor.GREEN));

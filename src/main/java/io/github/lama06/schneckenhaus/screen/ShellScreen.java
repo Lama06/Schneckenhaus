@@ -84,7 +84,7 @@ public class ShellScreen extends Screen {
             meta.customName(Component.text(t("ui_access_control_title")));
             meta.lore(List.of(
                 Component.text(t("ui_access_control_description")),
-                Component.text("Click to open", NamedTextColor.YELLOW)
+                Component.text(t("ui_access_control_click_action"), NamedTextColor.YELLOW)
             ));
         });
         setItem(x++, 1, accessControl, () -> new AccessControlScreen(player, shell).open());
@@ -104,7 +104,7 @@ public class ShellScreen extends Screen {
                 () -> {
                     ItemStack glass = new ItemStack(MaterialUtil.getColoredGlassPane(currentItemColor[0]));
                     glass.editMeta(meta -> {
-                        meta.displayName(Component.text(t("ui_shell_color") + EnumUtil.beautifyName(shulkerShell.getColor()))
+                        meta.displayName(Component.text(t("ui_shell_color") + t(shulkerShell.getColor()))
                             .color(TextColor.color(shulkerShell.getColor().getColor().asRGB())));
                         meta.lore(List.of(
                             Component.text(t("ui_click_to_change"), NamedTextColor.YELLOW)
@@ -127,7 +127,6 @@ public class ShellScreen extends Screen {
         ownerItem.editMeta(SkullMeta.class, meta -> {
             meta.displayName(Component.text(t("ui_shell_owner") + shell.getCreator().getName(), NamedTextColor.WHITE));
             meta.lore(List.of(
-                Component.text(t("ui_shell_owner_uuid") + shell.getCreator().getUniqueId(), NamedTextColor.DARK_GRAY),
                 Component.text(t("ui_shell_owner_transfer"), NamedTextColor.YELLOW)
             ));
             meta.setOwningPlayer(shell.getCreator());
@@ -172,14 +171,14 @@ public class ShellScreen extends Screen {
 
         ItemStack changeSizeItem = new ItemStack(Material.SLIME_BALL);
         changeSizeItem.editMeta(meta -> {
-            meta.customName(Component.text("Increase Size to " + newSize));
+            meta.customName(Component.text(t("ui_increase_size_button_label") + newSize));
             meta.lore(List.of(
-                Component.text("Requires ")
+                Component.text(t("ui_increase_size_ingredient"))
                     .color(hasSizeIngredient ? NamedTextColor.GREEN : NamedTextColor.RED)
                     .append(Component.translatable(config.sizeIngredient)),
                 hasSizeIngredient ?
-                    Component.text("Click to increase size", NamedTextColor.YELLOW) :
-                    Component.text("You can't afford this", NamedTextColor.RED)
+                    Component.text(t("ui_increase_size_click_action"), NamedTextColor.YELLOW) :
+                    Component.text(t("ui_increase_size_ingredient_error"), NamedTextColor.RED)
             ));
         });
         setItem(x, 1, changeSizeItem, () -> {

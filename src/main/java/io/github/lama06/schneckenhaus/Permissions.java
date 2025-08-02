@@ -5,6 +5,8 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 
+import static io.github.lama06.schneckenhaus.language.Translator.t;
+
 public final class Permissions {
     public static final String CRAFT = "schneckenhaus.craft";
     public static final String ENTER = "schneckenhaus.enter";
@@ -17,7 +19,7 @@ public final class Permissions {
                 return false;
             }
 
-            sender.sendMessage(Component.text("You are not allowed to do this. Missing permission: " + permission, NamedTextColor.RED));
+            sender.sendMessage(Component.text(t("error_permission", permission), NamedTextColor.RED));
             return false;
         }
         return true;

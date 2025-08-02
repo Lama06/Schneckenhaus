@@ -1,6 +1,7 @@
 package io.github.lama06.schneckenhaus.language;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import org.bukkit.DyeColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -18,6 +19,10 @@ public class Translator {
      */
     public static String t(String key, Object... args) {
         return SchneckenPlugin.INSTANCE.getTranslator().translate(key, args);
+    }
+
+    public static String t(DyeColor color) {
+        return t("color_" + color.name().toLowerCase());
     }
 
     private final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;

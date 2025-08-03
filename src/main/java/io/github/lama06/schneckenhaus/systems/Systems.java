@@ -22,7 +22,8 @@ public final class Systems {
         new SetupLanguageSystem(),
         new HopperSystem(),
         new ChunkLoaderSystem(),
-        new PistonSystem()
+        new PistonSystem(),
+        new DisallowEnderChestSystem()
     };
 
     public static void start() {

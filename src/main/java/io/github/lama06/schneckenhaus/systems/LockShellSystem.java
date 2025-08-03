@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
+import io.github.lama06.schneckenhaus.Permissions;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
 import io.github.lama06.schneckenhaus.shell.AccessMode;
@@ -42,6 +43,10 @@ public final class LockShellSystem implements Listener {
             return;
         }
         event.setCancelled(true);
+
+        if (!Permissions.require(event.getPlayer(), "schneckenhaus.lock")) {
+            return;
+        }
 
         boolean isLocked = Shell.ACCESS_MODE.get(shell) != AccessMode.EVERYBODY;
 

@@ -87,7 +87,12 @@ public class ShellScreen extends Screen {
                 Component.text(t("ui_access_control_click_action"), NamedTextColor.YELLOW)
             ));
         });
-        setItem(x++, 1, accessControl, () -> new AccessControlScreen(player, shell).open());
+        setItem(x++, 1, accessControl, () -> {
+            if (!Permissions.require(player, "schneckenhaus.lock")) {
+                return;
+            }
+            new AccessControlScreen(player, shell).open();
+        });
 
         if (addChangeSizeButton(x)) {
             x++;

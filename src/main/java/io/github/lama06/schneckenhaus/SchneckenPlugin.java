@@ -1,38 +1,33 @@
 package io.github.lama06.schneckenhaus;
 
-import io.github.lama06.schneckenhaus.command.SchneckenCommand;
-import io.github.lama06.schneckenhaus.config.ConfigException;
+import io.github.lama06.schneckenhaus.config.ConfigManager;
+import io.github.lama06.schneckenhaus.config.SchneckenhausConfig;
 import io.github.lama06.schneckenhaus.language.Language;
 import io.github.lama06.schneckenhaus.language.Translator;
-import io.github.lama06.schneckenhaus.recipe.RecipeManager;
+import io.github.lama06.schneckenhaus.shell.ShellManager;
 import io.github.lama06.schneckenhaus.systems.Systems;
-import io.github.lama06.schneckenhaus.update.ConfigurationUpdater;
-import io.github.lama06.schneckenhaus.util.PluginVersion;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.file.Files;
-import java.util.*;
+import java.sql.Connection;
 import java.util.logging.Level;
 
 public final class SchneckenPlugin extends JavaPlugin implements Listener {
     private static final int BSTATS_ID = 21674;
     public static SchneckenPlugin INSTANCE;
 
-    private YamlConfiguration embeddedConfig;
-    private SchneckenConfig schneckenConfig;
-
-    private SchneckenWorld world;
-    private SchneckenCommand command;
-    private RecipeManager recipeManager;
+    private ConfigManager config;
     private Translator translator;
+    private DatabaseManager database;
+    private WorldManager worlds;
+    private ShellManager shellManager;
+
 
     public SchneckenPlugin() {
         INSTANCE = this;
@@ -40,167 +35,70 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        if (!loadSchneckenConfig()) {
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
-        }
-        saveSchneckenConfig(); // Apply updates, clean up comments etc.
-
-        translator = new Translator();
-        translator.load();
-
-        world = new SchneckenWorld();
-        recipeManager = new RecipeManager();
-        recipeManager.registerRecipes();
-        command = new SchneckenCommand();
-
-        Systems.start();
-
         try {
-            startBstats();
-        } catch (final RuntimeException exception) {
-            getLogger().log(Level.WARNING, "Failed to start bStats", exception);
-        }
+            Files.createDirectories(getDataPath());
 
-        Bukkit.getPluginManager().registerEvents(this, this);
-    }
+            config = new ConfigManager();
+            if (!config.load()) {
+                Bukkit.getPluginManager().disablePlugin(this);
+                return;
+            }
 
-    private File getConfigFile() {
-        return new File(getDataFolder(), "config.yml");
-    }
+            database = new DatabaseManager();
+            if (!database.connect()) {
+                Bukkit.getPluginManager().disablePlugin(this);
+                return;
+            }
 
-    private boolean loadSchneckenConfig() {
-        embeddedConfig = YamlConfiguration.loadConfiguration(getTextResource("config.yml"));
+            translator = new Translator();
+            translator.loadConfig();
 
-        final YamlConfiguration configuration;
-        if (Files.exists(getConfigFile().toPath())) {
-            configuration = new YamlConfiguration();
+            worlds = new WorldManager();
+            worlds.load();
+
+            shellManager = new ShellManager();
+
+            Systems.start();
+
             try {
-                configuration.load(getConfigFile());
-            } catch (final IOException | InvalidConfigurationException exception) {
-                getLogger().log(Level.SEVERE, "Failed to load the config file", exception);
-                return false;
+                startBstats();
+            } catch (RuntimeException exception) {
+                getLogger().log(Level.WARNING, "Failed to start bStats", exception);
             }
-            final ConfigurationUpdater updater = new ConfigurationUpdater(configuration);
-            updater.update();
-        } else {
-            configuration = YamlConfiguration.loadConfiguration(getTextResource("config.yml"));
-            configuration.set("data_version", PluginVersion.current().toString());
-        }
 
-        schneckenConfig = new SchneckenConfig();
-        try {
-            schneckenConfig.load(extractConfigurationSectionData(configuration));
-            schneckenConfig.verify();
-        } catch (final ConfigException exception) {
-            getLogger().log(Level.SEVERE, "Invalid configuration at %s".formatted(exception.getPath()), exception);
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Converts a configuration object like a configuration section to a map by recursively traversing it.
-     */
-    private Object extractConfigurationData(final Object value) {
-        if (value instanceof final ConfigurationSection section) {
-            return extractConfigurationSectionData(section);
-        } else if (value instanceof final List<?> list) {
-            return extractConfigurationListData(list);
-        }
-        return value;
-    }
-
-    private Map<String, Object> extractConfigurationSectionData(final ConfigurationSection section) {
-        final Map<String, Object> values = new LinkedHashMap<>();
-        for (final String key : section.getKeys(false)) {
-            values.put(key, extractConfigurationData(section.get(key)));
-        }
-        return values;
-    }
-
-    private List<Object> extractConfigurationListData(final List<?> list) {
-        final List<Object> values = new ArrayList<>();
-        for (final Object value : list) {
-            values.add(extractConfigurationData(value));
-        }
-        return values;
-    }
-
-    private void putConfigurationData(final ConfigurationSection section, final String key, final Object data) {
-        // We can't just set the maps directly but need to create manually configuration sections.
-        // Otherwise, no comments can be attached to the map's entries.
-        if (data instanceof final Map<?, ?> map) {
-            final ConfigurationSection subSection = section.createSection(key);
-            for (final Object subKey : map.keySet()) {
-                if (!(subKey instanceof final String subKeyString)) {
-                    continue;
-                }
-                putConfigurationData(subSection, subKeyString, map.get(subKey));
-            }
-            return;
-        }
-        section.set(key, data);
-    }
-
-    public void saveSchneckenConfig() {
-        final YamlConfiguration configuration = new YamlConfiguration();
-
-        final Map<String, Object> serializedConfig = schneckenConfig.store();
-        for (final String key : serializedConfig.keySet()) {
-            putConfigurationData(configuration, key, serializedConfig.get(key));
-        }
-
-        configuration.set("data_version", PluginVersion.current().toString());
-
-        configuration.options().setHeader(embeddedConfig.options().getHeader());
-        configuration.options().setFooter(embeddedConfig.options().getFooter());
-        for (final String path : embeddedConfig.getKeys(true)) {
-            configuration.setComments(path, embeddedConfig.getComments(path));
-            configuration.setInlineComments(path, embeddedConfig.getInlineComments(path));
-        }
-
-        try {
-            configuration.save(getConfigFile());
-        } catch (final IOException exception) {
-            getLogger().log(Level.SEVERE, "Failed to save the configuration file", exception);
+            Bukkit.getPluginManager().registerEvents(this, this);
+        } catch (RuntimeException | IOException e) {
+            getSLF4JLogger().error("failed to enable Schneckenhaus plugin", e);
+            Bukkit.getPluginManager().disablePlugin(this);
         }
     }
 
     private void startBstats() {
-        final Metrics metrics = new Metrics(this, BSTATS_ID);
-        metrics.addCustomChart(new Metrics.SimplePie("custom_shell_types", () -> schneckenConfig.custom.isEmpty() ? "no" : "yes"));
-        metrics.addCustomChart(new Metrics.SingleLineChart("shells", world::getNumberOfShells));
-        metrics.addCustomChart(new Metrics.SimplePie("language", () -> {
+        Metrics metrics = new Metrics(this, BSTATS_ID);
+        metrics.addCustomChart(new SimplePie("custom_shell_types", () -> getPluginConfig().getCustom().isEmpty() ? "no" : "yes"));
+        metrics.addCustomChart(new SingleLineChart("shells", shellManager::getTotalShellCount));
+        metrics.addCustomChart(new SimplePie("language", () -> {
             Language language = getTranslator().getLanguage();
             if (language == null) {
                 return "Default";
             }
-            return language.name;
+            return language.getName();
         }));
     }
 
-    public Reader getTextResourcePublic(String path) {
-        return getTextResource(path);
+    public SchneckenhausConfig getPluginConfig() {
+        return config.getConfig();
     }
 
-    public SchneckenConfig getSchneckenConfig() {
-        return schneckenConfig;
-    }
-
-    public SchneckenWorld getWorld() {
-        return world;
-    }
-
-    public RecipeManager getRecipeManager() {
-        return recipeManager;
-    }
-
-    public SchneckenCommand getCommand() {
-        return command;
+    public ShellManager getShellManager() {
+        return shellManager;
     }
 
     public Translator getTranslator() {
         return translator;
+    }
+
+    public Connection getDBConnection() {
+        return database.getConnection();
     }
 }

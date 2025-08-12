@@ -1,42 +1,75 @@
 package io.github.lama06.schneckenhaus.shell.custom;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.command.InfoCommand;
-import io.github.lama06.schneckenhaus.position.GridPosition;
+import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.ShellFactory;
+import io.github.lama06.schneckenhaus.shell.ShellInformation;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
+import net.kyori.adventure.text.Component;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.github.lama06.schneckenhaus.language.Translator.t;
+public final class CustomShell extends Shell implements CustomShellData {
+    private String template;
+    private GlobalCustomShellConfig config;
 
-public final class CustomShell extends Shell<CustomShellConfig> {
-    public CustomShell(final GridPosition position, final CustomShellConfig config) {
-        super(position, config);
+    public CustomShell(int id) {
+        super(id);
+    }
+
+    @Override
+    public ShellFactory getFactory() {
+        return CustomShellFactory.INSTANCE;
+    }
+
+    @Override
+    protected boolean load() {
+        if (!super.load()) {
+            return false;
+        }
+
+        String sql = """
+            SELECT template
+            FROM custom_shells
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+            if (!result.next()) {
+                return false;
+            }
+            template = result.getString(1);
+        } catch (SQLException e) {
+            logger.error("failed to load custom shell data: {}", id, e);
+            return false;
+        }
+
+        config = plugin.getPluginConfig().getCustom().get(template);
+        return config != null;
     }
 
     @Override
     public Map<Block, BlockData> getBlocks() {
-        final Map<Block, BlockData> blocks = new HashMap<>();
-        final CustomShellGlobalConfig globalConfig = config.getGlobalConfig();
-        if (globalConfig == null) {
-            return Map.of();
-        }
-        final BlockPosition templateCorner = globalConfig.template.getLowerCorner();
-        final Block targetCorner = getPosition().getCornerBlock();
-        for (final BlockPosition templatePosition : globalConfig.template) {
-            final Block templateBlock = templatePosition.getBlock(SchneckenPlugin.INSTANCE.getWorld().getBukkit());
+        Map<Block, BlockData> blocks = new HashMap<>();
+
+        BlockPosition templateCorner = config.getTemplatePosition().getLowerCorner();
+        Block targetCorner = getPosition().getCornerBlock();
+        for (BlockPosition templatePosition : config.getTemplatePosition()) {
+            Block templateBlock = templatePosition.getBlock(config.getTemplateWorld());
             if (templateBlock.isEmpty()) {
                 continue;
             }
-            final BlockPosition templatePositionRelative = templatePosition.subtract(templateCorner);
-            final Block targetBlock = targetCorner.getRelative(
+            BlockPosition templatePositionRelative = templatePosition.subtract(templateCorner);
+            Block targetBlock = targetCorner.getRelative(
                     templatePositionRelative.x(),
                     templatePositionRelative.y(),
                     templatePositionRelative.z()
@@ -48,7 +81,7 @@ public final class CustomShell extends Shell<CustomShellConfig> {
 
     @Override
     public BlockArea getFloor() {
-        final BlockArea template = config.getGlobalConfig().template;
+        final BlockArea template = config.getTemplatePosition();
         final Block cornerBlock = position.getCornerBlock();
         return new BlockArea(
                 new BlockPosition(cornerBlock.getRelative(1, 0, 1)),
@@ -57,9 +90,27 @@ public final class CustomShell extends Shell<CustomShellConfig> {
     }
 
     @Override
-    public List<InfoCommand.Entry> getInformation() {
-        final List<InfoCommand.Entry> information = new ArrayList<>(super.getInformation());
-        information.add(new InfoCommand.Entry(t("snail_shell_template"), config.getName()));
-        return information;
+    public BlockArea getArea() {
+        BlockArea template = config.getTemplatePosition();
+        int widthX = template.getWidthX();
+        int height = template.getHeight();
+        int widthZ = template.getWidthZ();
+        return new BlockArea(
+            position.getCornerBlock(),
+            position.getCornerBlock().getRelative(widthX, height, widthZ)
+        );
+    }
+
+    @Override
+    protected void addInformation(List<ShellInformation> information) {
+        super.addInformation(information);
+        information.add(new ShellInformation(
+            Message.TEMPLATE.toComponent(),
+            Component.text(template)
+        ));
+    }
+
+    public String getTemplate() {
+        return template;
     }
 }

@@ -1,27 +1,29 @@
 package io.github.lama06.schneckenhaus.shell.shulker;
 
+import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
-import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellGlobalConfig;
-import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellRecipe;
+import io.github.lama06.schneckenhaus.command.EnumArgumentType;
+import io.github.lama06.schneckenhaus.command.parameter.CommandParameter;
+import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.shell.ShellBuilder;
+import io.github.lama06.schneckenhaus.shell.ShellData;
+import io.github.lama06.schneckenhaus.shell.sized.SizedShellFactory;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.persistence.PersistentDataContainer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.random.RandomGenerator;
+import java.util.stream.Collectors;
 
-import static io.github.lama06.schneckenhaus.language.Translator.t;
-
-public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellConfig> {
+public final class ShulkerShellFactory extends SizedShellFactory {
     public static final ShulkerShellFactory INSTANCE = new ShulkerShellFactory();
 
     private ShulkerShellFactory() { }
@@ -37,72 +39,151 @@ public final class ShulkerShellFactory extends BuiltinShellFactory<ShulkerShellC
     }
 
     @Override
-    public int getMaxSize() {
-        return 32 - 2; // Minus two because of the walls on each side
-    }
-
-    @Override
-    public BuiltinShellGlobalConfig getGlobalConfig() {
-        return SchneckenPlugin.INSTANCE.getSchneckenConfig().shulker;
-    }
-
-    @Override
-    public ShulkerShell instantiate(final GridPosition position, final ShulkerShellConfig config) {
-        return new ShulkerShell(position, config);
-    }
-
-    @Override
-    protected List<BuiltinShellRecipe<ShulkerShellConfig>> getBuiltinRecipes() {
-        final List<BuiltinShellRecipe<ShulkerShellConfig>> recipes = new ArrayList<>();
-        recipes.add(new BuiltinShellRecipe<>("default", Material.SHULKER_BOX) {
-            @Override
-            public ShulkerShellConfig getConfig(final int size) {
-                return new ShulkerShellConfig(size, DyeColor.PINK);
-            }
-        });
-        for (final DyeColor color : DyeColor.values()) {
-            recipes.add(new BuiltinShellRecipe<>(color.toString(), MaterialUtil.getColoredShulkerBox(color)) {
-                @Override
-                public ShulkerShellConfig getConfig(final int size) {
-                    return new ShulkerShellConfig(size, color);
-                }
-            });
+    public boolean getCraftingResult(ShellBuilder builder, CraftingInput input) {
+        if (!super.getCraftingResult(builder, input)) {
+            return false;
         }
-        return recipes;
-    }
 
-    @Override
-    protected ShulkerShellConfig loadBuiltinConfig(final int size, final PersistentDataContainer data) {
-        return new ShulkerShellConfig(size, ShulkerShellConfig.COLOR.get(data));
-    }
+        ShulkerShellBuilder shulkerBuilder = (ShulkerShellBuilder) builder;
 
-    @Override
-    protected List<String> tabCompleteBuiltinConfig(final CommandSender sender, final String[] args) {
-        if (args.length != 0 && args.length != 1) {
-            return List.of();
-        }
-        return Arrays.stream(DyeColor.values()).map(Enum::name).map(String::toLowerCase).toList();
-    }
-
-    @Override
-    protected ShulkerShellConfig parseBuiltinConfig(final int size, final CommandSender sender, final String[] args) {
-        final RandomGenerator rnd = ThreadLocalRandom.current();
-        final DyeColor color;
-        if (args.length == 1) {
-            color = Arrays.stream(DyeColor.values()).filter(c -> c.name().equalsIgnoreCase(args[0])).findAny().orElse(null);
-            if (color == null) {
-                sender.sendMessage(Component.text(t("cmd_create_invalid_color") + args[1], NamedTextColor.RED));
-                return null;
+        DyeColor color = null;
+        for (DyeColor possibleColor : DyeColor.values()) {
+            if (input.remove(MaterialUtil.getColoredShulkerBox(possibleColor))) {
+                color = possibleColor;
+                break;
             }
+        }
+        if (color == null && input.remove(Material.SHULKER_BOX)) {
+            color = DyeColor.PINK;
+        }
+        if (color == null) {
+            return false;
+        }
+        shulkerBuilder.setColor(color);
+
+        GlobalShulkerShellConfig config = getGlobalConfig();
+        if (config.isRainbowMode() && input.remove(config.getRainbowIngredient())) {
+            shulkerBuilder.setRainbow(true);
+        }
+
+        shulkerBuilder.setRainbowColors(Arrays.stream(DyeColor.values()).collect(Collectors.toSet()));
+
+        return true;
+    }
+
+    @Override
+    protected void addCommandParameters(List<CommandParameter> parameters) {
+        super.addCommandParameters(parameters);
+        parameters.add(CommandParameter.optional("color", new EnumArgumentType<>(DyeColor.class)));
+        parameters.add(CommandParameter.optional("rainbow", BoolArgumentType.bool()));
+    }
+
+    @Override
+    public ShulkerShellBuilder parseCommandParameters(
+        CommandContext<CommandSourceStack> context,
+        Map<String, ?> parameters
+    ) throws CommandSyntaxException {
+        ShulkerShellBuilder builder = (ShulkerShellBuilder) super.parseCommandParameters(context, parameters);
+        if (parameters.get("color") instanceof DyeColor color) {
+            builder.setColor(color);
         } else {
-            final DyeColor[] dyeColors = DyeColor.values();
-            color = dyeColors[rnd.nextInt(dyeColors.length)];
+            DyeColor[] colors = DyeColor.values();
+            builder.setColor(colors[ThreadLocalRandom.current().nextInt(colors.length)]);
         }
-        return new ShulkerShellConfig(size, color);
+        if (parameters.get("rainbow") instanceof Boolean bool) {
+            builder.setRainbow(bool);
+        }
+        builder.setRainbowColors(Arrays.stream(DyeColor.values()).collect(Collectors.toSet()));
+        return builder;
     }
 
     @Override
-    protected List<String> getBuiltinConfigCommandTemplates() {
-        return List.of("", "<color>");
+    public ShulkerShellBuilder deserializeConfig(Map<?, ?> config) {
+        ShulkerShellBuilder builder = (ShulkerShellBuilder) super.deserializeConfig(config);
+
+        if (config.get("color") instanceof String colorName) {
+            DyeColor color = DyeColor.valueOf(colorName.toUpperCase(Locale.ROOT));
+            builder.setColor(color);
+        } else {
+            builder.setColor(DyeColor.WHITE);
+        }
+
+        if (config.get("rainbow") instanceof Boolean rainbow) {
+            builder.setRainbow(rainbow);
+        }
+
+        Set<DyeColor> rainbowColors = null;
+        if (config.get("rainbow_colors") instanceof List<?> rainbowColorNames) {
+            rainbowColors = rainbowColorNames.stream()
+                .filter(name -> name instanceof String)
+                .map(name -> (String) name)
+                .map(name -> {
+                    try {
+                        return DyeColor.valueOf(name.toUpperCase(Locale.ROOT));
+                    } catch (IllegalArgumentException e) {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+        }
+        if (rainbowColors == null || rainbowColors.isEmpty()) {
+            rainbowColors = Arrays.stream(DyeColor.values()).collect(Collectors.toSet());
+        }
+        builder.setRainbowColors(rainbowColors);
+
+        return builder;
+    }
+
+    @Override
+    public GlobalShulkerShellConfig getGlobalConfig() {
+        return SchneckenPlugin.INSTANCE.getPluginConfig().getShulker();
+    }
+
+    @Override
+    public ShulkerShellBuilder newBuilder() {
+        return new ShulkerShellBuilder();
+    }
+
+    public DyeColor getCurrentColor(ShulkerShellData data) {
+        if (!data.isRainbow()) {
+            return data.getColor();
+        }
+        List<DyeColor> colorList = data.getRainbowColors().stream().sorted().toList();
+        return colorList.get((Bukkit.getCurrentTick() / plugin.getPluginConfig().getShulker().getRainbowDelay()) % colorList.size());
+    }
+
+    @Override
+    protected Material getItemType(ShellData data) {
+        return MaterialUtil.getColoredShulkerBox(getCurrentColor((ShulkerShellData) data));
+    }
+
+    @Override
+    protected TextColor getItemColor(ShellData data) {
+        return TextColor.color(getCurrentColor((ShulkerShellData) data).getColor().asRGB());
+    }
+
+    @Override
+    protected List<Component> getItemLore(ShellData data) {
+        ShulkerShellData shulkerData = (ShulkerShellData) data;
+        List<Component> lore = new ArrayList<>(super.getItemLore(data));
+        if (shulkerData.isRainbow()) {
+            lore.add(MiniMessage.miniMessage().deserialize("<rainbow>Rainbow"));
+        }
+        return lore;
+    }
+
+    @Override
+    public Integer getItemAnimationDelay(ShellData data) {
+        return plugin.getPluginConfig().getShulker().getRainbowDelay();
+    }
+
+    @Override
+    public ShulkerShell loadShell(int id) {
+        ShulkerShell shell = new ShulkerShell(id);
+        if (!shell.load()) {
+            return null;
+        }
+        return shell;
     }
 }

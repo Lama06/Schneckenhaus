@@ -1,11 +1,12 @@
 package io.github.lama06.schneckenhaus.screen;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.data.Attribute;
+import io.github.lama06.schneckenhaus.language.Message;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,51 +18,36 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MenuType;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.view.AnvilView;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
 import java.util.function.Consumer;
 
-import static io.github.lama06.schneckenhaus.language.Translator.t;
-
 public final class InputScreen implements Listener {
-    public static void open(
-        final Player player,
-        final Component title,
-        final String initialText,
-        final Consumer<String> callback,
-        final Runnable cancelCallback
-    ) {
-        if (!player.isConnected()) {
-            return;
-        }
-
-        new InputScreen(player, title, initialText, callback, cancelCallback).open();
-    }
-
     public static void openPlayerNameInput(
-        final Player player,
-        final String initialText,
-        final Consumer<OfflinePlayer> callback
+        Player player,
+        String initialText,
+        Consumer<OfflinePlayer> callback,
+        Runnable cancelCallback
     ) {
-        open(
+        new InputScreen(
             player,
-            Component.text(t("ui_input_player_title"), NamedTextColor.WHITE),
+            Message.PLAYER_NAME_INPUT.toComponent(NamedTextColor.WHITE),
             initialText,
             name -> {
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
                 if (!offlinePlayer.isOnline() && !offlinePlayer.hasPlayedBefore()) {
-                    player.sendMessage(Component.text(t("ui_input_player_not_found") + name, NamedTextColor.RED));
+                    player.sendMessage(Message.PLAYER_NOT_FOUND.toComponent(NamedTextColor.RED, name));
                     return;
                 }
                 callback.accept(offlinePlayer);
             },
-            () -> {}
-        );
+            cancelCallback
+        ).open();
     }
 
-    private static final Attribute<Boolean> ANVIL_INPUT_ITEM = new Attribute<>("anvil_input_item", PersistentDataType.BOOLEAN);
+    private final NamespacedKey anvilInputItemKey = new NamespacedKey(SchneckenPlugin.INSTANCE, "anvil_input_item");
 
     private final Player player;
     private final Component title;
@@ -72,7 +58,7 @@ public final class InputScreen implements Listener {
     private AnvilInventory inventory;
     private AnvilView view;
 
-    private InputScreen(
+    public InputScreen(
         final Player player,
         final Component title,
         final String initialText,
@@ -86,25 +72,27 @@ public final class InputScreen implements Listener {
         this.cancelCallback = cancelCallback != null ? cancelCallback : () -> {};
     }
 
-    private void open() {
+    public void open() {
         view = MenuType.ANVIL.builder()
             .title(title)
             .checkReachable(false)
             .build(player);
         view.open();
         inventory = view.getTopInventory();
-        final ItemStack firstItem = new ItemStack(Material.PAPER);
-        final ItemMeta firstItemMeta = firstItem.getItemMeta();
-        firstItemMeta.customName(Component.text(initialText));
-        ANVIL_INPUT_ITEM.set(firstItemMeta, true);
-        firstItem.setItemMeta(firstItemMeta);
+
+        ItemStack firstItem = new ItemStack(Material.PAPER);
+        firstItem.editMeta(meta -> {
+            meta.customName(Component.text(initialText));
+            PersistentDataContainer pdc = meta.getPersistentDataContainer();
+            pdc.set(anvilInputItemKey, PersistentDataType.BOOLEAN, true);
+        });
         inventory.setFirstItem(firstItem);
 
         Bukkit.getPluginManager().registerEvents(this, SchneckenPlugin.INSTANCE);
     }
 
     @EventHandler
-    private void onInventoryClick(final InventoryClickEvent event) {
+    private void onInventoryClick(InventoryClickEvent event) {
         if (!event.getWhoClicked().equals(player) || !event.getInventory().equals(inventory)) {
             return;
         }
@@ -123,22 +111,22 @@ public final class InputScreen implements Listener {
     }
 
     @EventHandler
-    private void onInventoryClose(final InventoryCloseEvent event) {
+    private void onInventoryClose(InventoryCloseEvent event) {
         if (!event.getPlayer().equals(player)) {
             return;
         }
-        Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, cancelCallback);
         HandlerList.unregisterAll(this);
+        Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, cancelCallback);
         Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, this::removePaperFromInventory);
     }
 
     @EventHandler
-    private void onPlayerQuit(final PlayerQuitEvent event) {
+    private void onPlayerQuit(PlayerQuitEvent event) {
         if (!event.getPlayer().equals(player)) {
             return;
         }
-        cancelCallback.run();
         HandlerList.unregisterAll(this);
+        cancelCallback.run();
     }
 
     private void removePaperFromInventory() {
@@ -148,7 +136,7 @@ public final class InputScreen implements Listener {
             if (item == null) {
                 continue;
             }
-            if (ANVIL_INPUT_ITEM.has(item.getItemMeta())) {
+            if (item.getItemMeta().getPersistentDataContainer().has(anvilInputItemKey)) {
                 player.getInventory().setItem(i, null);
             }
         }

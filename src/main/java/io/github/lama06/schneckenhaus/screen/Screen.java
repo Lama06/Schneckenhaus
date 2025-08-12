@@ -1,10 +1,8 @@
 package io.github.lama06.schneckenhaus.screen;
 
 import io.github.lama06.schneckenhaus.util.EventUtil;
+import io.github.lama06.schneckenhaus.util.InventoryUtil;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,7 +27,6 @@ public abstract class Screen implements Listener {
 
     private boolean open;
     private final Map<InventoryPosition, Consumer<ClickType>> callbacks = new HashMap<>();
-    private boolean reopening;
 
     public Screen(Player player) {
         this.player = player;
@@ -67,10 +64,10 @@ public abstract class Screen implements Listener {
             return;
         }
         open = false;
+
         onClose();
-        if (player.getOpenInventory().equals(view)) {
-            view.close();
-        }
+
+        view.close();
         view = null;
         inventory = null;
         callbacks.clear();
@@ -86,24 +83,8 @@ public abstract class Screen implements Listener {
         draw();
     }
 
-    public final Player getPlayer() {
-        return player;
-    }
-
     protected final void setItem(int x, int y, ItemStack item, Consumer<ClickType> callback) {
-        item.editMeta(meta -> {
-            TextComponent noItalic = Component.empty().decoration(TextDecoration.ITALIC, false).color(NamedTextColor.WHITE);
-            if (meta.hasCustomName()) {
-                meta.customName(noItalic.append(meta.customName()));
-            }
-            if (meta.lore() != null) {
-                meta.lore(
-                    meta.lore().stream()
-                        .map(noItalic::append)
-                        .toList()
-                );
-            }
-        });
+        InventoryUtil.removeDefaultFormatting(item);
         inventory.setItem(9*y + x, item);
         callbacks.put(new InventoryPosition(x, y), callback);
     }
@@ -131,22 +112,8 @@ public abstract class Screen implements Listener {
         setItem(InventoryPosition.fromSlot(slot), item, callback);
     }
 
-    protected final void reopen() {
-        inventory = Bukkit.createInventory(player, 9*getHeight(), getTitle());
-        redraw();
-        reopening = true;
-        view = player.openInventory(inventory);
-        reopening = false;
-    }
-
     @EventHandler
     private void onInventoryClose(InventoryCloseEvent event) {
-        if (!open) {
-            return;
-        }
-        if (reopening) {
-            return;
-        }
         if (!event.getPlayer().equals(player)) {
             return;
         }
@@ -155,9 +122,6 @@ public abstract class Screen implements Listener {
 
     @EventHandler
     private void onPlayerQuit(PlayerQuitEvent event) {
-        if (!open) {
-            return;
-        }
         if (!event.getPlayer().equals(player)) {
             return;
         }
@@ -166,9 +130,6 @@ public abstract class Screen implements Listener {
 
     @EventHandler
     private void onInventoryClick(InventoryClickEvent event) {
-        if (!open) {
-            return;
-        }
         if (!event.getWhoClicked().equals(player)) {
             return;
         }

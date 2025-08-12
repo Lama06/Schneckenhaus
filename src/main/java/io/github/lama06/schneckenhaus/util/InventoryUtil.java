@@ -1,6 +1,8 @@
 package io.github.lama06.schneckenhaus.util;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -42,5 +44,22 @@ public final class InventoryUtil {
         itemMeta.displayName(Component.empty());
         item.setItemMeta(itemMeta);
         return item;
+    }
+
+    public static void removeDefaultFormatting(ItemStack item) {
+        item.editMeta(meta -> {
+            if (meta.hasCustomName()) {
+                Component customName = meta.customName();
+                if (customName.decoration(TextDecoration.ITALIC) == TextDecoration.State.NOT_SET) {
+                    meta.customName(customName.decoration(TextDecoration.ITALIC, false));
+                }
+            }
+            if (meta.hasLore()) {
+                meta.lore(meta.lore().stream()
+                    .map(line -> line.colorIfAbsent(NamedTextColor.WHITE))
+                    .toList()
+                );
+            }
+        });
     }
 }

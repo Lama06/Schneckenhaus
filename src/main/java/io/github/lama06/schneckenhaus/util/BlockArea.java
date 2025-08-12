@@ -75,6 +75,17 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
         return x && y && z;
     }
 
+    public BlockArea getLayer(int index) {
+        if (index < 0 || index >= getHeight()) {
+            throw new IndexOutOfBoundsException(index);
+        }
+        int lowerY = getLowerY();
+        return new BlockArea(
+            new BlockPosition(position1.x(), lowerY + index, position1.z()),
+            new BlockPosition(position2.x(), lowerY + index, position2.z())
+        );
+    }
+
     public int getLowerX() {
         return Math.min(position1.x(), position2.x());
     }

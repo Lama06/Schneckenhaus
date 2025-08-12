@@ -1,3 +1,5 @@
 server
 out
 .idea/workspace.xml
+dependency-reduced-pom.xml
+target

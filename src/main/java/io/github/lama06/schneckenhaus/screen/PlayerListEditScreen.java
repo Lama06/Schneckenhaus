@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.screen;
 
+import io.github.lama06.schneckenhaus.language.Message;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -9,32 +10,27 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.function.Consumer;
-
-import static io.github.lama06.schneckenhaus.language.Translator.t;
+import java.util.*;
+import java.util.function.BiConsumer;
 
 public final class PlayerListEditScreen extends Screen {
     private final Component title;
-    private final List<UUID> list;
-    private final Consumer<List<UUID>> update;
-    private final Runnable callback;
+    private final List<UUID> players;
+    private final BiConsumer<UUID, Boolean> callback;
+    private final Runnable closeCallback;
 
     public PlayerListEditScreen(
         Player player,
         Component title,
-        List<UUID> list,
-        Consumer<List<UUID>> update,
-        Runnable callback
+        Collection<UUID> players,
+        BiConsumer<UUID, Boolean> callback,
+        Runnable closeCallback
     ) {
         super(player);
         this.title = title;
-        this.list = new ArrayList<>(list);
-        this.update = update;
+        this.players = new ArrayList<>(players);
         this.callback = callback;
+        this.closeCallback = closeCallback;
     }
 
     @Override
@@ -51,27 +47,28 @@ public final class PlayerListEditScreen extends Screen {
     protected void draw() {
         ItemStack addPlayerItem = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
         addPlayerItem.editMeta(meta -> {
-            meta.customName(Component.text(t("ui_player_list_add"), NamedTextColor.GREEN));
+            meta.customName(Message.ADD_PLAYER.toComponent(NamedTextColor.GREEN));
         });
         setItem(0, 0, addPlayerItem, () -> InputScreen.openPlayerNameInput(
             player, "", addedPlayer -> {
-                if (!list.contains(addedPlayer.getUniqueId())) {
-                    list.add(addedPlayer.getUniqueId());
-                    update.accept(list);
+                if (!players.contains(addedPlayer.getUniqueId())) {
+                    players.add(addedPlayer.getUniqueId());
+                    callback.accept(addedPlayer.getUniqueId(), true);
                 }
-                player.sendMessage(Component.text(t("ui_player_list_add_success", addedPlayer.getName()), NamedTextColor.GREEN));
-                new PlayerListEditScreen(player, title, list, update, callback).open();
-            }
+                player.sendMessage(Message.ADD_PLAYER_SUCCESS.toComponent(NamedTextColor.GREEN, addedPlayer.getName()));
+                new PlayerListEditScreen(player, title, players, callback, closeCallback).open();
+            },
+            () -> new PlayerListEditScreen(player, title, players, callback, closeCallback).open()
         ));
 
         ItemStack back = new ItemStack(Material.ARROW);
         back.editMeta(meta -> {
-            meta.customName(Component.text(t("ui_player_list_back"), NamedTextColor.GREEN));
+            meta.customName(Message.BACK.toComponent(NamedTextColor.GREEN));
         });
-        setItem(8, 0, back, callback);
+        setItem(8, 0, back, closeCallback);
 
-        for (int i = 0; i < list.size(); i++) {
-            OfflinePlayer listPlayer = Bukkit.getOfflinePlayer(list.get(i));
+        for (int i = 0; i < players.size(); i++) {
+            OfflinePlayer listPlayer = Bukkit.getOfflinePlayer(players.get(i));
 
             ItemStack head = new ItemStack(Material.PLAYER_HEAD);
             head.editMeta(SkullMeta.class, meta -> {
@@ -79,14 +76,12 @@ public final class PlayerListEditScreen extends Screen {
                     listPlayer.getName(),
                     listPlayer.getUniqueId().toString()
                 )));
-                meta.lore(List.of(
-                    Component.text(t("ui_player_list_remove"), NamedTextColor.RED)
-                ));
+                meta.lore(List.of(Message.CLICK_TO_REMOVE.toComponent(NamedTextColor.YELLOW)));
                 meta.setOwningPlayer(listPlayer);
             });
             setItem(9 + i, head, () -> {
-                list.remove(listPlayer.getUniqueId());
-                update.accept(list);
+                players.remove(listPlayer.getUniqueId());
+                callback.accept(listPlayer.getUniqueId(), false);
                 redraw();
             });
         }

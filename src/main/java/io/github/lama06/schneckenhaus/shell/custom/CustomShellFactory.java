@@ -1,23 +1,23 @@
 package io.github.lama06.schneckenhaus.shell.custom;
 
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.position.GridPosition;
+import io.github.lama06.schneckenhaus.command.parameter.CommandParameter;
+import io.github.lama06.schneckenhaus.config.ItemConfig;
+import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.ShellBuilder;
+import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.ShellFactory;
-import io.github.lama06.schneckenhaus.shell.ShellRecipe;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.persistence.PersistentDataContainer;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import static io.github.lama06.schneckenhaus.language.Translator.t;
-
-public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
+public final class CustomShellFactory extends ShellFactory {
     public static final CustomShellFactory INSTANCE = new CustomShellFactory();
 
     private CustomShellFactory() { }
@@ -28,54 +28,75 @@ public final class CustomShellFactory extends ShellFactory<CustomShellConfig> {
     }
 
     @Override
-    public List<ShellRecipe<CustomShellConfig>> getRecipes() {
-        final List<ShellRecipe<CustomShellConfig>> recipes = new ArrayList<>();
-        final Map<String, CustomShellGlobalConfig> config = SchneckenPlugin.INSTANCE.getSchneckenConfig().custom;
-        for (final String templateName : config.keySet()) {
-            final CustomShellGlobalConfig templateConfig = config.get(templateName);
-            if (!templateConfig.enabled) {
+    public ShellBuilder newBuilder() {
+        return new CustomShellBuilder();
+    }
+
+    @Override
+    public boolean getCraftingResult(ShellBuilder builder, CraftingInput input) {
+        CustomShellBuilder customBuilder = (CustomShellBuilder) builder;
+        Map<String, GlobalCustomShellConfig> customConfigs = SchneckenPlugin.INSTANCE.getPluginConfig().getCustom();
+
+        customConfigs:
+        for (String name : customConfigs.keySet()) {
+            GlobalCustomShellConfig customConfig = customConfigs.get(name);
+            if (!customConfig.isCrafting()) {
                 continue;
             }
-            final List<Material> ingredients = new ArrayList<>(templateConfig.ingredients);
-            ingredients.add(Material.CHEST);
-            recipes.add(new ShellRecipe<>(templateName, ingredients, new CustomShellConfig(templateName)));
+            CraftingInput inputCopy = input.copy();
+            if (!inputCopy.remove(customConfig.getItem())) {
+                continue;
+            }
+            for (ItemConfig ingredient : customConfig.getIngredients()) {
+                if (!inputCopy.remove(ingredient)) {
+                    continue customConfigs;
+                }
+            }
+            customBuilder.setTemplate(name);
+            return true;
         }
-        return recipes;
+
+        return false;
     }
 
     @Override
-    public CustomShell instantiate(final GridPosition position, final CustomShellConfig config) {
-        return new CustomShell(position, config);
+    protected void addCommandParameters(List<CommandParameter> parameters) {
+        super.addCommandParameters(parameters);
+        parameters.add(CommandParameter.required("template", StringArgumentType.string()));
     }
 
     @Override
-    public CustomShellConfig loadConfig(final PersistentDataContainer data) {
-        final String name = CustomShellConfig.NAME.get(data);
-        return new CustomShellConfig(name);
+    public CustomShellBuilder parseCommandParameters(
+        CommandContext<CommandSourceStack> context,
+        Map<String, ?> parameters
+    ) throws CommandSyntaxException {
+        CustomShellBuilder builder = (CustomShellBuilder) super.parseCommandParameters(context, parameters);
+        builder.setTemplate((String) parameters.get("template"));
+        return builder;
     }
 
     @Override
-    public List<String> tabCompleteConfig(final CommandSender sender, final String[] args) {
-        final Set<String> names = SchneckenPlugin.INSTANCE.getSchneckenConfig().custom.keySet();
-        return new ArrayList<>(names);
-    }
-
-    @Override
-    public CustomShellConfig parseConfig(final CommandSender sender, final String[] args) {
-        if (args.length == 0) {
-            sender.sendMessage(Component.text(t("cmd_create_missing_template"), NamedTextColor.RED));
+    public ShellBuilder deserializeConfig(Map<?, ?> config) {
+        CustomShellBuilder builder = new CustomShellBuilder();
+        if (!(config.get("template") instanceof String template)) {
             return null;
         }
-        final String template = args[0];
-        if (!SchneckenPlugin.INSTANCE.getSchneckenConfig().custom.containsKey(template)) {
-            sender.sendMessage(Component.text(t("cmd_create_invalid_template") + template, NamedTextColor.RED));
-            return null;
-        }
-        return new CustomShellConfig(template);
+        builder.setTemplate(template);
+        return builder;
     }
 
     @Override
-    public List<String> getConfigCommandTemplates() {
-        return List.of("<name>");
+    protected Material getItemType(ShellData data) {
+        CustomShellData customData = (CustomShellData) data;
+        return SchneckenPlugin.INSTANCE.getPluginConfig().getCustom().get(customData.getTemplate()).getItem();
+    }
+
+    @Override
+    public Shell loadShell(int id) {
+        CustomShell shell = new CustomShell(id);
+        if (!shell.load()) {
+            return null;
+        }
+        return shell;
     }
 }

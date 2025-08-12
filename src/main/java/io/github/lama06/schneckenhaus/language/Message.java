@@ -1,0 +1,128 @@
+package io.github.lama06.schneckenhaus.language;
+
+import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextColor;
+import org.bukkit.DyeColor;
+
+import java.util.Locale;
+
+public enum Message {
+    SNAIL_SHELL("Snail Shell", "Schneckenhaus"),
+    ID("ID", "ID"),
+    TYPE("Type", "Typ"),
+    CREATOR("Creator", "Ersteller"),
+    CREATION_TIME("Creation Time", "Erstellungsdatum"),
+    OWNERS("Owners", "Eigentümer"),
+    UNKNOWN_PLAYER("unknown player", "unbekannter Spieler"),
+    WORLD("World", "Welt"),
+    GRID_POSITION("Grid Position", "Position im Häuserraster"),
+    POSITION_1("Position 1", "Position 1"),
+    POSITION_2("Position 2", "Position 2"),
+    ENTER_PERMISSION("Enter Permission", "Zutrittsrecht"),
+    BUILD_PERMISSION("Build Permission", "Baurecht"),
+    ACCESS_COUNT("Access Count", "Zutrittszahl"),
+    SIZE("Size", "Größe"),
+    COLOR("Color", "Farbe"),
+    RAINBOW_MODE("Rainbow Mode", "Regenbogenmodus"),
+    RAINBOW_COLORS("Rainbow Colors", "Regenbogenfarben"),
+    TEMPLATE("Template", "Vorlage"),
+
+    ON("on", "an"),
+    OFF("off", "aus"),
+    SELECTED("Selected", "Ausgewählt"),
+    CLICK_TO_SELECT("Click to select", "Zum Auswählen klicken"),
+    CLICK_TO_REMOVE("Click to remove", "Zum Entfernen klicken"),
+    BACK("Back", "Zurück"),
+    CONFIRM_ACTION("Confirm: {1}", "Bestätigen: {1}"),
+    CANCEL("Cancel", "Abbrechen"),
+    CONFIRM("Confirm", "Bestätigen"),
+    ERROR_PERMISSION("Missing permission: {1}", "Fehlende Berechtigung: {1}"),
+
+    EVERYBODY("Everybody", "Jeder"),
+    BLACKLIST("Blacklist", "Negativliste"),
+    WHITELIST("Whitelist", "Positivliste"),
+    NOBODY("Nobody", "Keiner"),
+    EDIT_WHITELIST("Edit whitelist", "Positivliste bearbeiten"),
+    EDIT_BLACKLIST("Edit blacklist", "Negativliste bearbeiten"),
+    WHITELIST_DISABLED("The whitelist is currently disabled", "Die Positivliste ist aktuell deaktiviert"),
+    BLACKLIST_DISABLED("The blacklist is currently disabled", "Die Negativliste ist aktuell deaktiviert"),
+    LOCK_SHELL_SUCCESS("You successfully locked this snail shell", "Du hast das Schneckenhaus erfolgreich abgeschlossen"),
+    UNLOCK_SHELL_SUCCESS("You successfully unlocked this snail shell", "Du hast das Schneckenhaus erfolgreich aufgeschlossen"),
+    ERROR_ENTER_PERMISSION("You are not allowed to enter this snail shell", "Du darfst dieses Schneckenhaus nicht betreten"),
+    ERROR_STEAL_PERMISSION(
+        "You are not allowed to break other player's snail shells",
+        "Du darfst die Schneckenhäuser anderer Spieler nicht abbauen"
+    ),
+
+    ADD_PLAYER("Add player", "Spieler hinzufügen"),
+    PLAYER_NAME_INPUT("Player Name Input", "Spielernameneingabe"),
+    ADD_PLAYER_SUCCESS("{1} was successfully added", "{1} wurde erfolgreich hinzugefügt"),
+    PLAYER_NOT_FOUND("{1} has never player on this server", "{1} hat nie auf diesem Server gespielt"),
+
+    CLICK_TO_CREATE_SHELL_COPY("Click to create copy", "Zum Anfertigen einer Kopie klicken"),
+    SNAIL_SHELL_NAME("Snail shell name: {1}", "Name des Schneckenhauses: {1}"),
+    NAME_NOT_SET("Name: not set", "Name: nicht festgelegt"),
+    CLICK_TO_CHANGE_NAME("Click to change name", "Zum Festlegen eines Namens klicken"),
+    RENAME_SHELL_TITLE("Rename Snail Shell", "Schneckenhaus umbenennen"),
+    RENAME_SHELL_SUCCESS("Successfully renamed snail shell to {1}", "Namen des Schneckenhauses erfolgreich auf {1} geändert"),
+
+    WHITE("white", "weiß"),
+    ORANGE("orange", "orange"),
+    MAGENTA("magenta", "magenta"),
+    LIGHT_BLUE("light blue", "hellblau"),
+    YELLOW("yellow", "gelb"),
+    LIME("lime", "hellgrün"),
+    PINK("pink", "pink"),
+    GRAY("gray", "grau"),
+    LIGHT_GRAY("light gray", "hellgrau"),
+    CYAN("cyan", "türkis"),
+    PURPLE("purple", "lila"),
+    BLUE("blue", "blau"),
+    BROWN("brown", "brown"),
+    GREEN("green", "grün"),
+    RED("red", "rot"),
+    BLACK("black", "black"),;
+
+    public static Message getDyeColor(DyeColor color) {
+        return valueOf(color.name());
+    }
+
+    public static Message getBool(boolean bool) {
+        return bool ? ON : OFF;
+    }
+
+    private final String key;
+    private final String english;
+    private final String german;
+
+    Message(String english, String german) {
+        key = name().toLowerCase(Locale.ROOT);
+        this.english = english;
+        this.german = german;
+    }
+
+    public String toString(String... args) {
+        return SchneckenPlugin.INSTANCE.getTranslator().translate(this, args);
+    }
+
+    public Component toComponent(String... args) {
+        return Component.text(SchneckenPlugin.INSTANCE.getTranslator().translate(this, args));
+    }
+
+    public Component toComponent(TextColor color, String... args) {
+        return Component.text(SchneckenPlugin.INSTANCE.getTranslator().translate(this, args), color);
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public String getEnglish() {
+        return english;
+    }
+
+    public String getGerman() {
+        return german;
+    }
+}

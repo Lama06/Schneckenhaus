@@ -1,86 +1,102 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
-import io.github.lama06.schneckenhaus.position.IdGridPosition;
-import io.github.lama06.schneckenhaus.shell.HomeShellConfig;
-import io.github.lama06.schneckenhaus.shell.Shell;
-import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellConfig;
-import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellFactory;
-import org.bukkit.DyeColor;
+import io.github.lama06.schneckenhaus.Permission;
+import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
+import io.github.lama06.schneckenhaus.shell.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Iterator;
+import java.util.Map;
 
-public final class HomeShellSystem implements Listener {
+public final class HomeShellSystem extends System {
     @EventHandler
-    private void giveHomeOnFirstJoin(PlayerJoinEvent event) {
-        HomeShellConfig homeConfig = SchneckenPlugin.INSTANCE.getSchneckenConfig().home;
-        if (!homeConfig.enabled) {
+    private void createHomeOnJoinIfMissing(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        if (!Permission.HOME_SHELL.check(player)) {
+            return;
+        }
+        SchneckenhausPlayer schneckenhausPlayer = new SchneckenhausPlayer(player);
+        Shell homeShell = schneckenhausPlayer.getHomeShell();
+        if (homeShell != null) {
             return;
         }
 
-        Integer homeId = SchneckenPlayer.HOME.get(event.getPlayer());
-        if (homeId != null) {
-            Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(new IdGridPosition(homeId));
-            if (shell != null) {
-                return;
-            } else {
-                SchneckenPlayer.HOME.remove(event.getPlayer()); // home was deleted, give player a new one
-            }
-        }
-
-        ShulkerShellConfig shellConfig = new ShulkerShellConfig(SchneckenPlugin.INSTANCE.getSchneckenConfig().home.size, DyeColor.WHITE);
-        Shell<ShulkerShellConfig> shell = SchneckenPlugin.INSTANCE.getWorld().createShell(ShulkerShellFactory.INSTANCE, event.getPlayer(), shellConfig);
-        SchneckenPlayer.HOME.set(event.getPlayer(), shell.getId());
-        event.getPlayer().give(shell.createItem());
-    }
-
-    @EventHandler
-    private static void preventHomelessness(PlayerRespawnEvent event) {
-        HomeShellConfig homeConfig = SchneckenPlugin.INSTANCE.getSchneckenConfig().home;
-        if (!homeConfig.preventHomelessness) {
+        Map<?, ?> homeShellConfig = config.getHomeShell();
+        if (!(homeShellConfig.get("type") instanceof String type)) {
+            logger.error("home shell config has no type attribute");
             return;
         }
-
-        Integer homeId = SchneckenPlayer.HOME.get(event.getPlayer());
-        if (homeId == null) {
+        ShellFactory factory = ShellFactories.getByName(type);
+        if (factory == null) {
+            logger.error("unknown shell type in home shell config: {}", type);
             return;
         }
-        Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(new IdGridPosition(homeId));
+        ShellBuilder builder = factory.deserializeConfig(homeShellConfig);
+        if (builder == null) {
+            logger.error("failed to deserialize home shell config");
+            return;
+        }
+        builder.setCreationType(ShellCreationType.HOME);
+        builder.setCreator(player.getUniqueId());
+        builder.setOwner(player.getUniqueId());
+        Integer id = builder.build();
+        if (id == null) {
+            return;
+        }
+        Shell shell = plugin.getShellManager().getShell(id);
         if (shell == null) {
             return;
         }
+        player.give(shell.createItem());
+    }
 
-        for (ItemStack item : event.getPlayer().getInventory()) {
-            if (item == null) {
+    @EventHandler
+    private void preventHomelessness(PlayerRespawnEvent event) {
+        ensureHasHomeInInventory(event.getPlayer());
+    }
+
+    @EventHandler
+    private void preventHomelessness(PlayerJoinEvent event) {
+        ensureHasHomeInInventory(event.getPlayer());
+    }
+
+    private void ensureHasHomeInInventory(Player player) {
+        if (!Permission.NEVER_HOMELESS.check(player)) {
+            return;
+        }
+
+        Shell home = new SchneckenhausPlayer(player).getHomeShell();
+        if (home == null) {
+            return;
+        }
+
+        for (ItemStack item : player.getInventory()) {
+            Shell shell = plugin.getShellManager().getShell(item);
+            if (shell == null) {
                 continue;
             }
-            Integer id = Shell.ITEM_ID.get(item.getItemMeta());
-            if (id == null) {
-                continue;
-            }
-            if (id.equals(homeId)) {
+            if (shell.getId() == home.getId()) {
                 return;
             }
         }
 
-        event.getPlayer().give(shell.createItem());
+        player.give(home.createItem());
     }
 
     @EventHandler
     private void preventDropHomeOnDeath(PlayerDeathEvent event) {
-        if (!SchneckenPlugin.INSTANCE.getSchneckenConfig().home.preventHomelessness) {
+        Player player = event.getPlayer();
+        if (!Permission.NEVER_HOMELESS.check(player)) {
             return;
         }
 
-        Integer homeId = SchneckenPlayer.HOME.get(event.getPlayer());
-        if (homeId == null) {
+        Shell home = new SchneckenhausPlayer(player).getHomeShell();
+        if (home == null) {
             return;
         }
 
@@ -90,11 +106,10 @@ public final class HomeShellSystem implements Listener {
             if (item == null) {
                 continue;
             }
-            Integer id = Shell.ITEM_ID.get(item.getItemMeta());
-            if (id == null || !id.equals(homeId)) {
-                continue;
+            Integer id = plugin.getShellManager().getShellId(item);
+            if (id != null && id == home.getId()) {
+                iterator.remove();
             }
-            iterator.remove();
         }
     }
 }

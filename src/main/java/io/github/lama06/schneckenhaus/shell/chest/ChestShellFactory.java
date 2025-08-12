@@ -1,17 +1,12 @@
 package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.position.GridPosition;
-import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
-import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellGlobalConfig;
-import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellRecipe;
+import io.github.lama06.schneckenhaus.shell.ShellData;
+import io.github.lama06.schneckenhaus.shell.sized.GlobalSizedShellConfig;
+import io.github.lama06.schneckenhaus.shell.sized.SizedShellFactory;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.persistence.PersistentDataContainer;
 
-import java.util.List;
-
-public final class ChestShellFactory extends BuiltinShellFactory<ChestShellConfig> {
+public final class ChestShellFactory extends SizedShellFactory {
     public static final ChestShellFactory INSTANCE = new ChestShellFactory();
 
     private ChestShellFactory() { }
@@ -27,37 +22,26 @@ public final class ChestShellFactory extends BuiltinShellFactory<ChestShellConfi
     }
 
     @Override
-    public int getMaxSize() {
-        return 32 - 2;
+    public GlobalSizedShellConfig getGlobalConfig() {
+        return SchneckenPlugin.INSTANCE.getPluginConfig().getChest();
     }
 
     @Override
-    public BuiltinShellGlobalConfig getGlobalConfig() {
-        return SchneckenPlugin.INSTANCE.getSchneckenConfig().chest;
+    public ChestShellBuilder newBuilder() {
+        return new ChestShellBuilder();
     }
 
     @Override
-    protected List<BuiltinShellRecipe<ChestShellConfig>> getBuiltinRecipes() {
-        return List.of(new BuiltinShellRecipe<>("default", Material.CHEST) {
-            @Override
-            public ChestShellConfig getConfig(final int size) {
-                return new ChestShellConfig(size);
-            }
-        });
+    protected Material getItemType(ShellData data) {
+        return Material.CHEST;
     }
 
     @Override
-    public ChestShell instantiate(final GridPosition position, final ChestShellConfig config) {
-        return new ChestShell(position, config);
-    }
-
-    @Override
-    protected ChestShellConfig loadBuiltinConfig(final int size, final PersistentDataContainer data) {
-        return new ChestShellConfig(size);
-    }
-
-    @Override
-    protected ChestShellConfig parseBuiltinConfig(final int size, final CommandSender sender, final String[] args) {
-        return new ChestShellConfig(size);
+    public ChestShell loadShell(int id) {
+        ChestShell shell = new ChestShell(id);
+        if (!shell.load()) {
+            return null;
+        }
+        return shell;
     }
 }

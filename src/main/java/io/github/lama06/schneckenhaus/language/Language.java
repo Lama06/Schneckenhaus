@@ -1,16 +1,22 @@
 package io.github.lama06.schneckenhaus.language;
 
 public enum Language {
-    ENGLISH("english", "English", "en.yml"),
-    GERMAN("german", "Deutsch", "de.yml");
+    ENGLISH("english", "English"),
+    GERMAN("german", "Deutsch");
 
-    public final String id;
-    public final String name;
-    public final String file;
+    private final String id;
+    private final String name;
 
-    Language(String id, String name, String file) {
+    Language(String id, String name) {
         this.id = id;
         this.name = name;
-        this.file = file;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -1,12 +1,6 @@
 package io.github.lama06.schneckenhaus.shell.builtin;
 
-import io.github.lama06.schneckenhaus.command.InfoCommand;
-import io.github.lama06.schneckenhaus.position.GridPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
-import io.github.lama06.schneckenhaus.shell.chest.ChestShell;
-import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShell;
-import io.github.lama06.schneckenhaus.util.BlockArea;
-import io.github.lama06.schneckenhaus.util.BlockPosition;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,15 +8,11 @@ import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Door;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import static io.github.lama06.schneckenhaus.language.Translator.t;
-
-public abstract sealed class BuiltinShell<C extends BuiltinShellConfig> extends Shell<C> permits ShulkerShell, ChestShell {
-    protected BuiltinShell(final GridPosition position, final C config) {
-        super(position, config);
+public abstract class BuiltinShell extends Shell implements BuiltinShellData {
+    protected BuiltinShell(int id) {
+        super(id);
     }
 
     protected final Block getLowerDoorBlock() {
@@ -50,30 +40,7 @@ public abstract sealed class BuiltinShell<C extends BuiltinShellConfig> extends 
     }
 
     @Override
-    public List<InfoCommand.Entry> getInformation() {
-        final List<InfoCommand.Entry> entries = new ArrayList<>(super.getInformation());
-
-        final int size = getSize();
-        entries.add(new InfoCommand.Entry(t("snail_shell_size"), "%dx%d".formatted(size, size)));
-
-        BlockPosition pos1 = new BlockPosition(position.getCornerBlock().getRelative(1, 1, 1));
-        BlockPosition pos2 = new BlockPosition(position.getCornerBlock().getRelative(size, size, size));
-        entries.add(new InfoCommand.Entry(t("snail_shell_pos1"), pos1.toString()));
-        entries.add(new InfoCommand.Entry(t("snail_shell_pos2"), pos2.toString()));
-        entries.add(new InfoCommand.Entry(t("snail_shell_area"), pos1 + " " + pos2));
-
-        return entries;
-    }
-
-    @Override
-    public final BlockArea getFloor() {
-        return new BlockArea(
-                new BlockPosition(position.getCornerBlock().getRelative(1, 0, 1)),
-                new BlockPosition(position.getCornerBlock().getRelative(getSize(), 0, getSize()))
-        );
-    }
-
-    public final int getSize() {
-        return config.getSize();
+    public boolean isDoorBlock(Block block) {
+        return getLowerDoorBlock().equals(block) || getUpperDoorBlock().equals(block);
     }
 }

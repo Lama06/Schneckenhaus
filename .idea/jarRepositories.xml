@@ -2,6 +2,16 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
+      <option name="id" value="Sonatype-public" />
+      <option name="name" value="SnakeYAML repository" />
+      <option name="url" value="http://oss.sonatype.org/content/groups/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="central" />
+      <option name="name" value="Central Repository" />
+      <option name="url" value="https://repo.maven.apache.org/maven2" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Maven Central repository" />
       <option name="url" value="https://repo1.maven.org/maven2" />
@@ -14,6 +24,11 @@
     <remote-repository>
       <option name="id" value="2e21cfdd-0433-46cb-a03d-395b2e33e228" />
       <option name="name" value="2e21cfdd-0433-46cb-a03d-395b2e33e228" />
+      <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="papermc" />
+      <option name="name" value="papermc" />
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
     </remote-repository>
   </component>

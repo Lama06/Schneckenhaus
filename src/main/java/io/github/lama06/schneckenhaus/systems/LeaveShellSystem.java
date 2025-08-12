@@ -1,56 +1,42 @@
 package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.player.SchneckenPlayer;
-import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
-import io.github.lama06.schneckenhaus.position.GridPosition;
+import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public final class LeaveShellSystem implements Listener {
+public final class LeaveShellSystem extends System {
     public LeaveShellSystem() {
-        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::detectPlayerLeaveSnailShellUnexpectedly, 0, 1);
+        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::detectPlayerLeaveSnailShellUnexpectedly, 0, 10);
     }
 
     @EventHandler
-    private void teleportBack(final PlayerInteractEvent event) {
+    private void teleportBack(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
-        final Player player = event.getPlayer();
-        final SchneckenPlayer schneckenPlayer = new SchneckenPlayer(player);
-        final Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock == null) {
+        Block block = event.getClickedBlock();
+        if (block == null) {
             return;
         }
-        if (!clickedBlock.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld().getBukkit())) {
-            return;
-        }
-        if (!Tag.DOORS.isTagged(clickedBlock.getType())) {
-            return;
-        }
-        final GridPosition position = CoordinatesGridPosition.fromWorldPosition(clickedBlock.getLocation());
-        if (position == null) {
-            return;
-        }
-        final Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(position);
+        Shell shell = plugin.getShellManager().getShellAt(block);
         if (shell == null) {
             return;
         }
-        if (!shell.getBlocks().containsKey(event.getClickedBlock())) { // don't handle doors placed by the player
+        if (!shell.isDoorBlock(block)) {
             return;
         }
+
         event.setCancelled(true);
-        schneckenPlayer.teleportBack();
-        player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
+        SchneckenhausPlayer schneckenhausPlayer = new SchneckenhausPlayer(event.getPlayer());
+        schneckenhausPlayer.leave();
+        event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
     }
 
     /**
@@ -60,12 +46,11 @@ public final class LeaveShellSystem implements Listener {
      * Otherwise, the player can't enter a snail shell again which is stored as a previous location.
      */
     private void detectPlayerLeaveSnailShellUnexpectedly() {
-        for (final Player player : Bukkit.getOnlinePlayers()) {
-            if (player.getWorld().equals(SchneckenPlugin.INSTANCE.getWorld().getBukkit())) {
-                continue;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (config.getWorlds().containsKey(player.getWorld().getName())) {
+                return;
             }
-            new SchneckenPlayer(player); // Upgrade data
-            SchneckenPlayer.PREVIOUS_LOCATIONS.remove(player);
+            new SchneckenhausPlayer(player).clearPreviousLocations();
         }
     }
 }

@@ -1,46 +1,34 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.Permissions;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.position.CoordinatesGridPosition;
+import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.screen.ShellScreen;
 import io.github.lama06.schneckenhaus.shell.Shell;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import static io.github.lama06.schneckenhaus.language.Translator.t;
-
-public final class ShellMenuSystem implements Listener {
+public final class ShellMenuSystem extends System {
     @EventHandler
-    private void openMenuDoorstep(PlayerInteractEvent event) {
-        Block clickedBlock = event.getClickedBlock();
-        if (clickedBlock == null) {
+    private void openMenu(PlayerInteractEvent event) {
+        Block block = event.getClickedBlock();
+        if (block == null) {
             return;
         }
-        CoordinatesGridPosition position = CoordinatesGridPosition.fromWorldPosition(clickedBlock.getLocation());
-        if (position == null) {
-            return;
-        }
-        if (!clickedBlock.equals(position.getCornerBlock().getRelative(1, 0, 1))) {
-            return;
-        }
-        Shell<?> shell = SchneckenPlugin.INSTANCE.getWorld().getShell(position);
+        Shell shell = plugin.getShellManager().getShellAt(block);
         if (shell == null) {
+            return;
+        }
+        if (shell.isMenuBlock(block)) {
             return;
         }
 
         event.setCancelled(true);
-        if (!event.getPlayer().equals(shell.getCreator()) && !event.getPlayer().isOp()) {
-            event.getPlayer().sendMessage(Component.text(t("snail_shell_menu_open_fail"), NamedTextColor.RED));
+        Player player = event.getPlayer();
+        Permission permission = shell.getOwners().contains(player) ? Permission.OPEN_OWN_SNAIL_SHELL_MENU : Permission.OPEN_OTHER_SNAIL_SHELL_MENUS;
+        if (!permission.require(event.getPlayer())) {
             return;
         }
-        if (!Permissions.require(event.getPlayer(), "schneckenhaus.open_shell_menu")) {
-            return;
-        }
-        new ShellScreen(shell, event.getPlayer()).open();
+        new ShellScreen(shell, player).open();
     }
 }

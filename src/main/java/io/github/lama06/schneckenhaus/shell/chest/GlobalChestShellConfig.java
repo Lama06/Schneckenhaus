@@ -1,0 +1,24 @@
+package io.github.lama06.schneckenhaus.shell.chest;
+
+import io.github.lama06.schneckenhaus.config.ItemConfig;
+import io.github.lama06.schneckenhaus.shell.sized.GlobalSizedShellConfig;
+import org.bukkit.Material;
+
+import java.util.List;
+
+public final class GlobalChestShellConfig extends GlobalSizedShellConfig {
+    @Override
+    protected List<ItemConfig> getDefaultIngredients() {
+        return List.of(new ItemConfig(Material.CHEST));
+    }
+
+    @Override
+    protected ItemConfig getDefaultSizeIngredient() {
+        return new ItemConfig(Material.DIAMOND);
+    }
+
+    @Override
+    protected int getDefaultSizePerIngredient() {
+        return 1;
+    }
+}

@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.command.EnumArgumentType;
 import io.github.lama06.schneckenhaus.command.parameter.CommandParameter;
+import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
@@ -150,7 +151,11 @@ public final class ShulkerShellFactory extends SizedShellFactory {
             return data.getColor();
         }
         List<DyeColor> colorList = data.getRainbowColors().stream().sorted().toList();
-        return colorList.get((Bukkit.getCurrentTick() / plugin.getPluginConfig().getShulker().getRainbowDelay()) % colorList.size());
+        if (colorList.isEmpty()) {
+            return data.getColor();
+        }
+        int delayTicks = plugin.getPluginConfig().getShulker().getRainbowDelay();
+        return colorList.get((Bukkit.getCurrentTick() / delayTicks) % colorList.size());
     }
 
     @Override
@@ -168,13 +173,17 @@ public final class ShulkerShellFactory extends SizedShellFactory {
         ShulkerShellData shulkerData = (ShulkerShellData) data;
         List<Component> lore = new ArrayList<>(super.getItemLore(data));
         if (shulkerData.isRainbow()) {
-            lore.add(MiniMessage.miniMessage().deserialize("<rainbow>Rainbow"));
+            lore.add(MiniMessage.miniMessage().deserialize("<rainbow>" + Message.RAINBOW.toString()));
         }
         return lore;
     }
 
     @Override
     public Integer getItemAnimationDelay(ShellData data) {
+        ShulkerShellData shulkerData = (ShulkerShellData) data;
+        if (!shulkerData.isRainbow()) {
+            return null;
+        }
         return plugin.getPluginConfig().getShulker().getRainbowDelay();
     }
 

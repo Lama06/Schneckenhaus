@@ -9,7 +9,7 @@ import java.util.List;
 public final class GlobalChestShellConfig extends GlobalSizedShellConfig {
     @Override
     protected List<ItemConfig> getDefaultIngredients() {
-        return List.of(new ItemConfig(Material.CHEST));
+        return List.of(new ItemConfig(Material.CHEST), new ItemConfig(Material.SPYGLASS));
     }
 
     @Override

@@ -28,11 +28,12 @@ public abstract class ShellBuilder implements ShellData {
 
     public abstract ShellFactory getFactory();
 
-    public final Integer build() {
+    public final Shell build() {
         Connection connection = SchneckenPlugin.INSTANCE.getDBConnection();
+        int id;
         try {
             connection.setAutoCommit(false);
-            return buildDuringTransaction();
+            id = buildDuringTransaction();
         } catch (Exception e) {
             logger.error("failed to build snail shell", e);
             try {
@@ -48,6 +49,9 @@ public abstract class ShellBuilder implements ShellData {
                 logger.error("failed to disable auto commit mode", e);
             }
         }
+        Shell shell = plugin.getShellManager().getShell(id);
+        shell.placeInitially();
+        return shell;
     }
 
     protected int buildDuringTransaction() throws SQLException {
@@ -96,20 +100,18 @@ public abstract class ShellBuilder implements ShellData {
         }
 
         String insertSql = """
-            INSERT INTO shells(world, position, creator, type, name, enter_permission_mode, build_permission_mode)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO shells(world, position, creator, creation_type, type, name, enter_permission_mode, build_permission_mode)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """;
         try (PreparedStatement statement = connection.prepareStatement(insertSql)) {
             int i = 1;
             statement.setString(i++, world.getName());
             statement.setInt(i++, position);
-            if (creator != null) {
-                statement.setString(i, creator.toString());
-            }
-            i++;
+            statement.setString(i++, creator == null ? null : creator.toString());
+            statement.setString(i++, creationType.name().toLowerCase(Locale.ROOT));
             statement.setString(i++, getFactory().getName());
             statement.setString(i++, name);
-            statement.setString(i, enterPermissionMode.name().toLowerCase(Locale.ROOT));
+            statement.setString(i++, enterPermissionMode.name().toLowerCase(Locale.ROOT));
             statement.setString(i++, buildPermissionMode.name().toLowerCase(Locale.ROOT));
             statement.executeUpdate();
         }

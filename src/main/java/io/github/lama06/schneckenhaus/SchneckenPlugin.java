@@ -58,6 +58,8 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
 
             shellManager = new ShellManager();
 
+            Permission.register();
+
             Systems.start();
 
             try {

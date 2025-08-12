@@ -88,30 +88,16 @@ public final class ShellPermissionPlayerList {
             }
         }
 
-        String updateSql = """
-            UPDATE shell_permissions
-            SET name = ?
-            WHERE id = ? AND player = ?
-            """.replace("name", name);
-        try (PreparedStatement statement = connection.prepareStatement(updateSql)) {
-            statement.setBoolean(1, value);
-            statement.setInt(2, id);
-            statement.setString(3, player.toString());
-            if (statement.executeUpdate() == 1) {
-                return;
-            }
-        } catch (SQLException e) {
-            logger.error("failed to update player permission status: {}, {}", id, player, e);
-        }
-
-        String insertSql = """
+        String sql = """
             INSERT INTO shell_permissions(id, player, name)
-            VALUES (?, ?, ?);
+            VALUES (?, ?, ?)
+            ON CONFLICT (id, player) DO UPDATE SET name = excluded.name
             """.replace("name", name);
-        try (PreparedStatement statement = connection.prepareStatement(insertSql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             statement.setString(2, player.toString());
             statement.setBoolean(3, value);
+            statement.executeUpdate();
         } catch (SQLException e) {
             logger.error("failed to set player permission status: {}, {}", id, player, e);
         }

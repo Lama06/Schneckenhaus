@@ -19,7 +19,7 @@ public final class ShellMenuSystem extends System {
         if (shell == null) {
             return;
         }
-        if (shell.isMenuBlock(block)) {
+        if (!shell.isMenuBlock(block)) {
             return;
         }
 

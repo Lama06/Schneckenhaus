@@ -24,6 +24,7 @@ public enum Message {
     ACCESS_COUNT("Access Count", "Zutrittszahl"),
     SIZE("Size", "Größe"),
     COLOR("Color", "Farbe"),
+    RAINBOW("Rainbow", "Regenbogen"),
     RAINBOW_MODE("Rainbow Mode", "Regenbogenmodus"),
     RAINBOW_COLORS("Rainbow Colors", "Regenbogenfarben"),
     TEMPLATE("Template", "Vorlage"),
@@ -31,8 +32,11 @@ public enum Message {
     ON("on", "an"),
     OFF("off", "aus"),
     SELECTED("Selected", "Ausgewählt"),
+    CLICK_TO_ENABLE("Click to enable", "Zum Einschalten klicken"),
+    CLICK_TO_DISABLE("Click to disable", "Zum Ausschalten klicken"),
     CLICK_TO_SELECT("Click to select", "Zum Auswählen klicken"),
     CLICK_TO_REMOVE("Click to remove", "Zum Entfernen klicken"),
+    CLICK_TO_EDIT("Click to edit", "Zum Bearbeiten klicken"),
     BACK("Back", "Zurück"),
     CONFIRM_ACTION("Confirm: {1}", "Bestätigen: {1}"),
     CANCEL("Cancel", "Abbrechen"),
@@ -61,10 +65,11 @@ public enum Message {
     PLAYER_NOT_FOUND("{1} has never player on this server", "{1} hat nie auf diesem Server gespielt"),
 
     CLICK_TO_CREATE_SHELL_COPY("Click to create copy", "Zum Anfertigen einer Kopie klicken"),
+
     SNAIL_SHELL_NAME("Snail shell name: {1}", "Name des Schneckenhauses: {1}"),
     NAME_NOT_SET("Name: not set", "Name: nicht festgelegt"),
     CLICK_TO_CHANGE_NAME("Click to change name", "Zum Festlegen eines Namens klicken"),
-    RENAME_SHELL_TITLE("Rename Snail Shell", "Schneckenhaus umbenennen"),
+    RENAME_SHELL_TITLE("Rename", "Umbenennen"),
     RENAME_SHELL_SUCCESS("Successfully renamed snail shell to {1}", "Namen des Schneckenhauses erfolgreich auf {1} geändert"),
 
     WHITE("white", "weiß"),
@@ -92,6 +97,14 @@ public enum Message {
         return bool ? ON : OFF;
     }
 
+    public static Message getClickToEnableDisable(boolean enable) {
+        return enable ? CLICK_TO_ENABLE : CLICK_TO_DISABLE;
+    }
+
+    public static Message getSelectedOrClickToSelect(boolean selected) {
+        return selected ? SELECTED : CLICK_TO_SELECT;
+    }
+
     private final String key;
     private final String english;
     private final String german;
@@ -104,6 +117,11 @@ public enum Message {
 
     public String toString(String... args) {
         return SchneckenPlugin.INSTANCE.getTranslator().translate(this, args);
+    }
+
+    @Override
+    public String toString() {
+        return toString(new String[0]);
     }
 
     public Component toComponent(String... args) {

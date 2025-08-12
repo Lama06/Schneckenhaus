@@ -2,6 +2,7 @@ package io.github.lama06.schneckenhaus;
 
 import io.github.lama06.schneckenhaus.language.Message;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissionDefault;
@@ -33,26 +34,35 @@ public enum Permission {
     OPEN_OTHER_SNAIL_SHELL_MENUS,
     CREATE_SNAIL_SHELL_COPIES,
     RENAME_SNAIL_SHELL(PermissionDefault.TRUE),
+    EDIT_OWNERS(PermissionDefault.TRUE),
     CHANGE_SNAIL_SHELL_COLOR(PermissionDefault.TRUE),
-    ENABLED_RAINBOW_MODE(PermissionDefault.TRUE),
-    UPGRADE_SNAIL_SHELL_SIZE(PermissionDefault.TRUE)
-    ;
+    TOGGLE_RAINBOW_MODE(PermissionDefault.TRUE),
+    UPGRADE_SNAIL_SHELL_SIZE(PermissionDefault.TRUE);
+
+    public static void register() {
+        for (Permission permission : Permission.values()) {
+            Bukkit.getPluginManager().addPermission(new org.bukkit.permissions.Permission(
+                permission.name,
+                permission.defaultValue
+            ));
+        }
+    }
 
     private final String name;
-    private final PermissionDefault permissionDefault;
+    private final PermissionDefault defaultValue;
 
-    Permission(String name, PermissionDefault permissionDefault) {
+    Permission(String name, PermissionDefault defaultValue) {
         this.name = "schneckenhaus." + name;
-        this.permissionDefault = permissionDefault;
+        this.defaultValue = defaultValue;
     }
 
     Permission(String name) {
         this(name, PermissionDefault.OP);
     }
 
-    Permission(PermissionDefault permissionDefault) {
+    Permission(PermissionDefault defaultValue) {
         name = "schneckenhaus." + name().toLowerCase(Locale.ROOT);
-        this.permissionDefault = permissionDefault;
+        this.defaultValue = defaultValue;
     }
 
     Permission() {

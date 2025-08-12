@@ -73,6 +73,7 @@ public final class ShellPermission {
     }
 
     public void setMode(ShellPermissionMode mode) {
+        this.mode = mode;
         String sql = """
             UPDATE shells
             SET attribute = ?

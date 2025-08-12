@@ -4,11 +4,13 @@ import io.github.lama06.schneckenhaus.config.AnimationConfig;
 import io.github.lama06.schneckenhaus.shell.PlacedShell;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collection;
 import java.util.Set;
 
 public final class ShellAnimationSystem extends System {
@@ -30,6 +32,9 @@ public final class ShellAnimationSystem extends System {
         if (animationConfig.isAnimateItems()) {
             Bukkit.getScheduler().runTaskTimer(plugin, this::animateItems, delay, delay);
         }
+        if (animationConfig.isAnimateDroppedItems()) {
+            Bukkit.getScheduler().runTaskTimer(plugin, this::animateDroppedItems, delay, delay);
+        }
     }
 
     private void animateShells() {
@@ -44,12 +49,12 @@ public final class ShellAnimationSystem extends System {
     private void animateItems() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             InventoryView view = player.getOpenInventory();
-            animateInventoryItems(view.getTopInventory());
-            animateInventoryItems(view.getBottomInventory());
+            animateItemsInInventory(view.getTopInventory());
+            animateItemsInInventory(view.getBottomInventory());
         }
     }
 
-    private void animateInventoryItems(Inventory inventory) {
+    private void animateItemsInInventory(Inventory inventory) {
         for (int slot = 0; slot < inventory.getSize(); slot++) {
             ItemStack oldItem = inventory.getItem(slot);
             Shell shell = plugin.getShellManager().getShell(oldItem);
@@ -78,6 +83,26 @@ public final class ShellAnimationSystem extends System {
                     continue;
                 }
                 placedShell.block().setType(shell.createItem().getType()); // TODO copy item data
+            }
+        }
+    }
+
+    private void animateDroppedItems() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            Collection<Item> nearbyItems = player.getWorld().getNearbyEntitiesByType(
+                Item.class,
+                player.getLocation(),
+                animationConfig.getDroppedItemsAnimationRange()
+            );
+            for (Item item : nearbyItems) {
+                Shell shell = plugin.getShellManager().getShell(item.getItemStack());
+                if (shell == null) {
+                    continue;
+                }
+                if (!shouldAnimate(shell.getFactory().getItemAnimationDelay(shell))) {
+                    continue;
+                }
+                item.setItemStack(shell.createItem());
             }
         }
     }

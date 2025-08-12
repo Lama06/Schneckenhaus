@@ -108,8 +108,24 @@ public abstract class Screen implements Listener {
         setItem(position.x(), position.y(), item, callback);
     }
 
+    protected final void setItem(InventoryPosition position, ItemStack item, Consumer<ClickType> callback) {
+        setItem(position.x(), position.y(), item, callback);
+    }
+
     protected final void setItem(int slot, ItemStack item, Runnable callback) {
         setItem(InventoryPosition.fromSlot(slot), item, callback);
+    }
+
+    protected final void setItem(int slot, ItemStack item, Consumer<ClickType> callback) {
+        setItem(InventoryPosition.fromSlot(slot), item, callback);
+    }
+
+    protected final void setItem(int slot, ScreenItem item) {
+        setItem(slot, item.item(), item.callback());
+    }
+
+    public boolean isOpen() {
+        return open;
     }
 
     @EventHandler

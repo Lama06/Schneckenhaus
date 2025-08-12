@@ -1,15 +1,21 @@
 package io.github.lama06.schneckenhaus.shell.shulker;
 
+import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
+import io.github.lama06.schneckenhaus.screen.ShulkerColorScreen;
 import io.github.lama06.schneckenhaus.shell.ShellInformation;
+import io.github.lama06.schneckenhaus.shell.ShellMenuAction;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShell;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -176,6 +182,34 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
         ));
     }
 
+    @Override
+    protected void addMenuActions(Player player, List<ShellMenuAction> actions) {
+        super.addMenuActions(player, actions);
+        actions.add(new ShellMenuAction(
+            Message.COLOR.toComponent(TextColor.color(getCurrentColor().getColor().asRGB())),
+            MaterialUtil.getColoredGlassPane(getCurrentColor()),
+            Message.CLICK_TO_EDIT.toComponent(NamedTextColor.YELLOW)
+        ) {
+            @Override
+            public ItemStack getItem() {
+                if (!Permission.CHANGE_SNAIL_SHELL_COLOR.check(player)) {
+                    return null;
+                }
+                return super.getItem();
+            }
+
+            @Override
+            public Integer getItemAnimationDelay() {
+                return getFactory().getItemAnimationDelay(ShulkerShell.this);
+            }
+
+            @Override
+            public void onClick() {
+                new ShulkerColorScreen(player, ShulkerShell.this).open();
+            }
+        });
+    }
+
     public DyeColor getCurrentColor() {
         return getFactory().getCurrentColor(this);
     }
@@ -199,6 +233,8 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
         } catch (SQLException e) {
             logger.error("failed to update shulker shell color: {}", id, e);
         }
+
+        place();
     }
 
     public boolean isRainbow() {
@@ -220,6 +256,8 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
         } catch (SQLException e) {
             logger.error("failed to update rainbow mode: {}", id, e);
         }
+
+        place();
     }
 
     public Set<DyeColor> getRainbowColors() {
@@ -247,5 +285,7 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
         } catch (SQLException e) {
             logger.error("failed to update shulker shell rainbow colors: {}", id, e);
         }
+
+        place();
     }
 }

@@ -78,12 +78,15 @@ public final class SchneckenhausPlayer {
             return;
         }
 
-        player.teleport(shell.getSpawnLocation());
-
         if (previousLocations.isEmpty() || options.isStorePreviousPositionWhenNesting()) {
             pushPreviousLocation(player.getLocation());
         }
-        player.showTitle(Title.title(Component.text(shell.getName()), Component.empty()));
+
+        player.teleport(shell.getSpawnLocation());
+
+        if (shell.getName() != null) {
+            player.showTitle(Title.title(Component.text(shell.getName()), Component.empty()));
+        }
         if (options.isPlaySound()) {
             player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_OPEN, 1, 1);
         }
@@ -96,8 +99,6 @@ public final class SchneckenhausPlayer {
         try (PreparedStatement statement = connection.prepareStatement(incrementStatisticsSql)) {
             statement.setInt(1, shell.getId());
             statement.setString(2, player.getUniqueId().toString());
-            statement.setInt(3, shell.getId());
-            statement.setString(4, player.getUniqueId().toString());
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.error("failed to increment shell access statistics: {}, {}", player, shell.getId(), e);

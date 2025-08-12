@@ -46,17 +46,21 @@ public final class InventoryUtil {
         return item;
     }
 
+    private static Component removeDefaultFormatting(Component component) {
+        if (component.decoration(TextDecoration.ITALIC) == TextDecoration.State.NOT_SET) {
+            component = component.decoration(TextDecoration.ITALIC, false);
+        }
+        return component.colorIfAbsent(NamedTextColor.WHITE);
+    }
+
     public static void removeDefaultFormatting(ItemStack item) {
         item.editMeta(meta -> {
             if (meta.hasCustomName()) {
-                Component customName = meta.customName();
-                if (customName.decoration(TextDecoration.ITALIC) == TextDecoration.State.NOT_SET) {
-                    meta.customName(customName.decoration(TextDecoration.ITALIC, false));
-                }
+                meta.customName(removeDefaultFormatting(meta.customName()));
             }
             if (meta.hasLore()) {
                 meta.lore(meta.lore().stream()
-                    .map(line -> line.colorIfAbsent(NamedTextColor.WHITE))
+                    .map(InventoryUtil::removeDefaultFormatting)
                     .toList()
                 );
             }

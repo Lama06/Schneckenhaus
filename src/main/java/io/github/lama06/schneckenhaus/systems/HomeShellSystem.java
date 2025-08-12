@@ -44,11 +44,7 @@ public final class HomeShellSystem extends System {
         builder.setCreationType(ShellCreationType.HOME);
         builder.setCreator(player.getUniqueId());
         builder.setOwner(player.getUniqueId());
-        Integer id = builder.build();
-        if (id == null) {
-            return;
-        }
-        Shell shell = plugin.getShellManager().getShell(id);
+        Shell shell = builder.build();
         if (shell == null) {
             return;
         }

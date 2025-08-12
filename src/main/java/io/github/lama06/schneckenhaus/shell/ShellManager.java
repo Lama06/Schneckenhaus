@@ -125,7 +125,7 @@ public final class ShellManager {
             return null;
         }
         PersistentDataContainerView data = item.getPersistentDataContainer();
-        return data.get(new NamespacedKey(plugin, "id"), PersistentDataType.INTEGER);
+        return data.get(new NamespacedKey(plugin, Shell.ITEM_ID), PersistentDataType.INTEGER);
     }
 
     public Shell getShell(ItemStack item) {

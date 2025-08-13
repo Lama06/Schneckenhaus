@@ -22,6 +22,7 @@ public final class Systems {
         start(new ShellMenuSystem());
         start(new TranslationSystem());
         start(new ShellRepairSystem());
+        start(new TimeSystem());
     }
 
     private static void start(System system) {

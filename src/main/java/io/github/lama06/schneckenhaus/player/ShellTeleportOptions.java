@@ -1,8 +1,8 @@
 package io.github.lama06.schneckenhaus.player;
 
 public class ShellTeleportOptions {
-    private boolean playSound;
-    private boolean storePreviousPositionWhenNesting;
+    private boolean playSound = true;
+    private boolean storePreviousPositionWhenNesting = true;
 
     public void setPlaySound(boolean playSound) {
         this.playSound = playSound;

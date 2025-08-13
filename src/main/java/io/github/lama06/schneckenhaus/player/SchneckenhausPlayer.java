@@ -111,6 +111,8 @@ public final class SchneckenhausPlayer {
             return;
         }
 
+        player.playSound(player.getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
+
         if (leaveToLastLocation()) {
             return;
         }

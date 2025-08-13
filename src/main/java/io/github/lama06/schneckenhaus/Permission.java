@@ -14,6 +14,7 @@ public enum Permission {
     PLACE_SHELL(PermissionDefault.TRUE),
 
     ENTER_SHELL(PermissionDefault.TRUE),
+    QUICKLY_ENTER_SHELL(PermissionDefault.TRUE),
     ENTER_NESTED_SHELLS(PermissionDefault.TRUE),
 
     ASK_FOR_ENTER_PERMISSION(PermissionDefault.TRUE),

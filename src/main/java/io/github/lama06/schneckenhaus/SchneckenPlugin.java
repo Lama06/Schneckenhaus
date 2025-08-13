@@ -73,6 +73,8 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
             getSLF4JLogger().error("failed to enable Schneckenhaus plugin", e);
             Bukkit.getPluginManager().disablePlugin(this);
         }
+
+        Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     private void startBstats() {

@@ -1,15 +1,16 @@
 package io.github.lama06.schneckenhaus.systems;
 
+import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 public final class LeaveShellSystem extends System {
     public LeaveShellSystem() {
@@ -17,7 +18,7 @@ public final class LeaveShellSystem extends System {
     }
 
     @EventHandler
-    private void teleportBack(PlayerInteractEvent event) {
+    private void teleportBackUsingDoor(PlayerInteractEvent event) {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
@@ -36,7 +37,19 @@ public final class LeaveShellSystem extends System {
         event.setCancelled(true);
         SchneckenhausPlayer schneckenhausPlayer = new SchneckenhausPlayer(event.getPlayer());
         schneckenhausPlayer.leave();
-        event.getPlayer().playSound(event.getPlayer().getLocation(), Sound.BLOCK_WOODEN_DOOR_CLOSE, 1, 1);
+    }
+
+    @EventHandler
+    private void teleportBackQuickly(PlayerSwapHandItemsEvent event) {
+        if (!Permission.QUICKLY_ENTER_SHELL.check(event.getPlayer())) {
+            return;
+        }
+        Shell shell = plugin.getShellManager().getShell(event.getMainHandItem());
+        if (shell == null) {
+            return;
+        }
+        SchneckenhausPlayer schneckenhausPlayer = new SchneckenhausPlayer(event.getPlayer());
+        schneckenhausPlayer.leave();
     }
 
     /**

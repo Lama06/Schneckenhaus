@@ -2,14 +2,23 @@ package io.github.lama06.schneckenhaus.shell.sized;
 
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.ShellInformation;
+import io.github.lama06.schneckenhaus.shell.ShellMenuAction;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShell;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public abstract class SizedShell extends BuiltinShell implements SizedShellData {
     protected SizedShell(int id) {
@@ -17,6 +26,9 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
     }
 
     private int size;
+
+    @Override
+    public abstract SizedShellFactory getFactory();
 
     @Override
     protected boolean load() {
@@ -62,7 +74,68 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
     @Override
     protected void addInformation(List<ShellInformation> information) {
         super.addInformation(information);
-        information.add(new ShellInformation(Message.SIZE.toComponent(), Component.text(size)));
+        information.add(new ShellInformation(Message.SIZE.asComponent(), Component.text(size)));
+    }
+
+    @Override
+    protected void addMenuActions(Player player, List<ShellMenuAction> actions) {
+        super.addMenuActions(player, actions);
+
+        actions.add(new ShellMenuAction() {
+            private static final int ANIMATION_DELAY = 20;
+
+            private static final List<Material> ICONS = List.of(
+                Material.SMALL_AMETHYST_BUD,
+                Material.MEDIUM_AMETHYST_BUD,
+                Material.LARGE_AMETHYST_BUD,
+                Material.AMETHYST_CLUSTER
+            );
+
+            private int newSize;
+
+            @Override
+            public ItemStack getItem() {
+                GlobalSizedShellConfig config = getFactory().getGlobalConfig();
+
+                int maxSize = Math.max(getFactory().getMaxSize(), config.getMaxUpgradeSize());
+                if (size >= maxSize) {
+                    return null;
+                }
+                newSize = Math.min(maxSize, size + config.getSizePerUpgradeIngredient());
+
+                boolean canAfford = config.getUpgradeIngredient().canRemoveFrom(player.getInventory());
+
+                Material icon = ICONS.get((Bukkit.getCurrentTick() / ANIMATION_DELAY) % ICONS.size());
+                ItemStack item = new ItemStack(icon);
+                item.editMeta(meta -> {
+                    meta.customName(Message.SIZE_UPGRADE.asComponent(NamedTextColor.YELLOW));
+                    meta.lore(List.of(
+                        Message.CURRENT_SIZE.asComponent().append(Component.text(": " + size)),
+                        Message.SIZE_AFTER_UPGRADE.asComponent().append(Component.text(": " + newSize)),
+                        Message.COST.asComponent(canAfford ? NamedTextColor.GREEN : NamedTextColor.RED)
+                            .append(Component.text(": "))
+                            .append(config.getUpgradeIngredient())
+                    ));
+                });
+
+                return item;
+            }
+
+            @Override
+            public Integer getItemAnimationDelay() {
+                return ANIMATION_DELAY;
+            }
+
+            @Override
+            public void onClick() {
+                if (!getFactory().getGlobalConfig().getUpgradeIngredient().removeFrom(player.getInventory())) {
+                    player.sendMessage(Message.ERROR_NOT_AFFORDABLE.asComponent(NamedTextColor.RED));
+                    return;
+                }
+                setSize(newSize);
+                player.sendMessage(Message.SIZE_UPGRADE_SUCCESS);
+            }
+        });
     }
 
     @Override
@@ -71,7 +144,8 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
     }
 
     public void setSize(int size) {
-        this.size = size;
+        Map<Block, BlockData> oldBlocks = getBlocks();
+
         String sql = """
             UPDATE sized_shells
             SET size = ?
@@ -83,6 +157,18 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
             statement.executeUpdate();
         } catch (SQLException e) {
             logger.error("failed to update shell size: {}", id, e);
+            return;
         }
+
+        this.size = size;
+
+        Map<Block, BlockData> newBlocks = getBlocks();
+        for (Block block : oldBlocks.keySet()) {
+            if (newBlocks.containsKey(block)) {
+                continue;
+            }
+            block.setType(Material.AIR);
+        }
+        place();
     }
 }

@@ -52,6 +52,10 @@ public final class CustomShellFactory extends ShellFactory {
                     continue customConfigs;
                 }
             }
+            input.remove(customConfig.getItem());
+            for (ItemConfig ingredient : customConfig.getIngredients()) {
+                input.remove(ingredient);
+            }
             customBuilder.setTemplate(name);
             return true;
         }

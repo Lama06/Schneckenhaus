@@ -22,7 +22,7 @@ public final class PermissionScreen extends Screen {
 
     @Override
     protected Component getTitle() {
-        return permission.getName().toComponent(NamedTextColor.YELLOW);
+        return permission.getName().asComponent(NamedTextColor.YELLOW);
     }
 
     @Override
@@ -41,9 +41,9 @@ public final class PermissionScreen extends Screen {
                 if (permission.getMode() == mode) {
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     meta.addEnchant(Enchantment.SHARPNESS, 1, true);
-                    meta.lore(List.of(Message.SELECTED.toComponent(NamedTextColor.GREEN)));
+                    meta.lore(List.of(Message.SELECTED.asComponent(NamedTextColor.GREEN)));
                 } else {
-                    meta.lore(List.of(Message.CLICK_TO_SELECT.toComponent(NamedTextColor.YELLOW)));
+                    meta.lore(List.of(Message.CLICK_TO_SELECT.asComponent(NamedTextColor.YELLOW)));
                 }
             });
             setItem(i, item, () -> {
@@ -54,14 +54,14 @@ public final class PermissionScreen extends Screen {
 
         ItemStack blacklist = new ItemStack(ShellPermissionMode.BLACKLIST.getIcon());
         blacklist.editMeta(meta -> {
-            meta.customName(Message.EDIT_BLACKLIST.toComponent(NamedTextColor.YELLOW));
+            meta.customName(Message.EDIT_BLACKLIST.asComponent(NamedTextColor.YELLOW));
             if (permission.getMode() != ShellPermissionMode.BLACKLIST) {
-                meta.lore(List.of(Message.BLACKLIST_DISABLED.toComponent(NamedTextColor.RED)));
+                meta.lore(List.of(Message.BLACKLIST_DISABLED.asComponent(NamedTextColor.RED)));
             }
         });
         setItem(7, 0, blacklist, () -> new PlayerListEditScreen(
             player,
-            Message.EDIT_BLACKLIST.toComponent(NamedTextColor.YELLOW),
+            Message.EDIT_BLACKLIST.asComponent(NamedTextColor.YELLOW),
             permission.getBlacklist().get(),
             permission.getBlacklist()::set,
             () -> new PermissionScreen(player, permission).open()
@@ -69,14 +69,14 @@ public final class PermissionScreen extends Screen {
 
         ItemStack whitelist = new ItemStack(ShellPermissionMode.WHITELIST.getIcon());
         whitelist.editMeta(meta -> {
-            meta.customName(Message.EDIT_WHITELIST.toComponent(NamedTextColor.YELLOW));
+            meta.customName(Message.EDIT_WHITELIST.asComponent(NamedTextColor.YELLOW));
             if (permission.getMode() != ShellPermissionMode.WHITELIST) {
-                meta.lore(List.of(Message.WHITELIST_DISABLED.toComponent(NamedTextColor.RED)));
+                meta.lore(List.of(Message.WHITELIST_DISABLED.asComponent(NamedTextColor.RED)));
             }
         });
         setItem(8, 0, whitelist, () -> new PlayerListEditScreen(
             player,
-            Message.WHITELIST.toComponent(NamedTextColor.YELLOW),
+            Message.WHITELIST.asComponent(NamedTextColor.YELLOW),
             permission.getWhitelist().get(),
             permission.getWhitelist()::set,
             () -> new PermissionScreen(player, permission).open()

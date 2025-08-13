@@ -41,11 +41,11 @@ public final class CraftingSystem extends System {
         if (!Permission.CRAFT_SHELL.check(player)) {
             return;
         }
-        ShellBuilder builder = getCraftingResult(inventory, player);
-        if (builder == null) {
+        CraftingResult result = getCraftingResult(inventory, player);
+        if (result == null) {
             return;
         }
-        inventory.setResult(builder.getFactory().createItem(builder));
+        inventory.setResult(result.shellBuilder.getFactory().createItem(result.shellBuilder));
     }
 
     @EventHandler
@@ -60,23 +60,22 @@ public final class CraftingSystem extends System {
         if (event.getSlotType() != InventoryType.SlotType.RESULT) {
             return;
         }
-        ShellBuilder builder = getCraftingResult(inventory, player);
-        if (builder == null) {
+        CraftingResult result = getCraftingResult(inventory, player);
+        if (result == null) {
             return;
         }
 
-        Shell shell = builder.build();
+        event.setCancelled(true);
+        Shell shell = result.shellBuilder.build();
         if (shell == null) {
             return;
         }
-        event.setCancelled(true);
-        for (int i = 0; i < inventory.getSize(); i++) {
-            inventory.setItem(i, null);
-        }
+
+        inventory.setMatrix(result.remainingInput().getMatrix());
         player.getOpenInventory().setCursor(shell.createItem());
     }
 
-    private ShellBuilder getCraftingResult(CraftingInventory inventory, Player player) {
+    private CraftingResult getCraftingResult(CraftingInventory inventory, Player player) {
         for (ShellFactory factory : ShellFactories.getFactories()) {
             ShellBuilder builder = factory.newBuilder();
             builder.setCreationType(ShellCreationType.CRAFTING);
@@ -84,11 +83,14 @@ public final class CraftingSystem extends System {
             builder.setOwner(player.getUniqueId());
             builder.setEnterPermissionMode(ShellPermissionMode.EVERYBODY);
             builder.setBuildPermissionMode(ShellPermissionMode.EVERYBODY);
-            if (!factory.getCraftingResult(builder, new CraftingInput(inventory))) {
+            CraftingInput input = new CraftingInput(inventory);
+            if (!factory.getCraftingResult(builder, input)) {
                 continue;
             }
-            return builder;
+            return new CraftingResult(builder, input);
         }
         return null;
     }
+
+    private record CraftingResult(ShellBuilder shellBuilder, CraftingInput remainingInput) { }
 }

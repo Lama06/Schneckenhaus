@@ -8,19 +8,19 @@ import org.bukkit.Material;
 public enum ShellPermissionMode {
     // DON'T RENAME ENUM CONSTANTS, THEY ARE USED FOR SERIALIZATION
     EVERYBODY(
-        Message.EVERYBODY.toComponent(NamedTextColor.GREEN),
+        Message.EVERYBODY.asComponent(NamedTextColor.GREEN),
         Material.OAK_DOOR
     ),
     BLACKLIST(
-        Message.BLACKLIST.toComponent(NamedTextColor.RED),
+        Message.BLACKLIST.asComponent(NamedTextColor.RED),
         Material.WITHER_ROSE
     ),
     WHITELIST(
-        Message.WHITELIST.toComponent(NamedTextColor.WHITE),
+        Message.WHITELIST.asComponent(NamedTextColor.WHITE),
         Material.WHITE_TULIP
     ),
     NOBODY(
-        Message.NOBODY.toComponent(NamedTextColor.RED),
+        Message.NOBODY.asComponent(NamedTextColor.RED),
         Material.IRON_DOOR
     );
 

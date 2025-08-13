@@ -47,7 +47,7 @@ public final class PlayerListEditScreen extends Screen {
     protected void draw() {
         ItemStack addPlayerItem = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
         addPlayerItem.editMeta(meta -> {
-            meta.customName(Message.ADD_PLAYER.toComponent(NamedTextColor.GREEN));
+            meta.customName(Message.ADD_PLAYER.asComponent(NamedTextColor.GREEN));
         });
         setItem(0, 0, addPlayerItem, () -> InputScreen.openPlayerNameInput(
             player, "", addedPlayer -> {
@@ -55,7 +55,7 @@ public final class PlayerListEditScreen extends Screen {
                     players.add(addedPlayer.getUniqueId());
                     callback.accept(addedPlayer.getUniqueId(), true);
                 }
-                player.sendMessage(Message.ADD_PLAYER_SUCCESS.toComponent(NamedTextColor.GREEN, addedPlayer.getName()));
+                player.sendMessage(Message.ADD_PLAYER_SUCCESS.asComponent(NamedTextColor.GREEN, addedPlayer.getName()));
                 new PlayerListEditScreen(player, title, players, callback, closeCallback).open();
             },
             () -> new PlayerListEditScreen(player, title, players, callback, closeCallback).open()
@@ -63,7 +63,7 @@ public final class PlayerListEditScreen extends Screen {
 
         ItemStack back = new ItemStack(Material.ARROW);
         back.editMeta(meta -> {
-            meta.customName(Message.BACK.toComponent(NamedTextColor.GREEN));
+            meta.customName(Message.BACK.asComponent(NamedTextColor.GREEN));
         });
         setItem(8, 0, back, closeCallback);
 
@@ -76,7 +76,7 @@ public final class PlayerListEditScreen extends Screen {
                     listPlayer.getName(),
                     listPlayer.getUniqueId().toString()
                 )));
-                meta.lore(List.of(Message.CLICK_TO_REMOVE.toComponent(NamedTextColor.YELLOW)));
+                meta.lore(List.of(Message.CLICK_TO_REMOVE.asComponent(NamedTextColor.YELLOW)));
                 meta.setOwningPlayer(listPlayer);
             });
             setItem(9 + i, head, () -> {

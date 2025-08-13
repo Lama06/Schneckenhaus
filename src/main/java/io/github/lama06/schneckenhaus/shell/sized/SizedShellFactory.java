@@ -41,8 +41,8 @@ public abstract class SizedShellFactory extends BuiltinShellFactory {
         while (input.remove(config.getSizeIngredient())) {
             sizeIngredients++;
         }
-        int size = config.getInitialSize() + sizeIngredients * config.getSizePerIngredient();
-        size = Math.min(size, config.getMaxSize());
+        int size = config.getInitialCraftingSize() + sizeIngredients * config.getSizePerIngredient();
+        size = Math.min(size, config.getMaxCraftingSize());
         size = Math.clamp(size, getMinSize(), getMaxSize());
         sizedBuilder.setSize(size);
 

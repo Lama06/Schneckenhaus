@@ -74,7 +74,7 @@ public final class SchneckenhausPlayer {
             return;
         }
         if (!shell.getEnterPermission().hasPermission(player)) {
-            player.sendMessage(Message.ERROR_ENTER_PERMISSION.toComponent(NamedTextColor.RED));
+            player.sendMessage(Message.ERROR_ENTER_PERMISSION.asComponent(NamedTextColor.RED));
             return;
         }
 

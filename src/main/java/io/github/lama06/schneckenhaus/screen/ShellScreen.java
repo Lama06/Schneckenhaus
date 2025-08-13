@@ -21,7 +21,7 @@ public class ShellScreen extends Screen {
 
     @Override
     protected Component getTitle() {
-        return Message.SNAIL_SHELL.toComponent(NamedTextColor.YELLOW);
+        return Message.SNAIL_SHELL.asComponent(NamedTextColor.YELLOW);
     }
 
     @Override
@@ -40,7 +40,10 @@ public class ShellScreen extends Screen {
             if (item == null) {
                 continue;
             }
-            setItem(slot++, item, action::onClick);
+            setItem(slot++, item, () -> {
+                action.onClick();
+                redraw();
+            });
             Integer delay = action.getItemAnimationDelay();
             if (delay != null) {
                 if (smallestAnimationDelay == null) {

@@ -173,7 +173,7 @@ public final class ShulkerShellFactory extends SizedShellFactory {
         ShulkerShellData shulkerData = (ShulkerShellData) data;
         List<Component> lore = new ArrayList<>(super.getItemLore(data));
         if (shulkerData.isRainbow()) {
-            lore.add(MiniMessage.miniMessage().deserialize("<rainbow>" + Message.RAINBOW.toString()));
+            lore.add(MiniMessage.miniMessage().deserialize("<rainbow>" + Message.RAINBOW));
         }
         return lore;
     }

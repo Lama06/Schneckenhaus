@@ -105,7 +105,7 @@ public final class CustomShell extends Shell implements CustomShellData {
     protected void addInformation(List<ShellInformation> information) {
         super.addInformation(information);
         information.add(new ShellInformation(
-            Message.TEMPLATE.toComponent(),
+            Message.TEMPLATE.asComponent(),
             Component.text(template)
         ));
     }

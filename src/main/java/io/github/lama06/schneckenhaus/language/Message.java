@@ -2,12 +2,13 @@ package io.github.lama06.schneckenhaus.language;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.DyeColor;
 
 import java.util.Locale;
 
-public enum Message {
+public enum Message implements ComponentLike {
     SNAIL_SHELL("Snail Shell", "Schneckenhaus"),
     ID("ID", "ID"),
     TYPE("Type", "Typ"),
@@ -41,6 +42,8 @@ public enum Message {
     CONFIRM_ACTION("Confirm: {1}", "Bestätigen: {1}"),
     CANCEL("Cancel", "Abbrechen"),
     CONFIRM("Confirm", "Bestätigen"),
+    COST("Cost", "Kosten"),
+    ERROR_NOT_AFFORDABLE("You can't afford this", "Das kannst du dir nicht leisten"),
     ERROR_PERMISSION("Missing permission: {1}", "Fehlende Berechtigung: {1}"),
 
     EVERYBODY("Everybody", "Jeder"),
@@ -71,6 +74,11 @@ public enum Message {
     CLICK_TO_CHANGE_NAME("Click to change name", "Zum Festlegen eines Namens klicken"),
     RENAME_SHELL_TITLE("Rename", "Umbenennen"),
     RENAME_SHELL_SUCCESS("Successfully renamed snail shell to {1}", "Namen des Schneckenhauses erfolgreich auf {1} geändert"),
+
+    SIZE_UPGRADE("Size Upgrade", "Vergrößerung"),
+    CURRENT_SIZE("Current size", "Aktuelle Größe"),
+    SIZE_AFTER_UPGRADE("Upgraded size", "Neue Größe"),
+    SIZE_UPGRADE_SUCCESS("Successfully upgraded size!", "Schneckenhaus erfolgreich vergrößert!"),
 
     WHITE("white", "weiß"),
     ORANGE("orange", "orange"),
@@ -121,15 +129,20 @@ public enum Message {
 
     @Override
     public String toString() {
-        return toString(new String[0]);
+        return SchneckenPlugin.INSTANCE.getTranslator().translate(this);
     }
 
-    public Component toComponent(String... args) {
-        return Component.text(SchneckenPlugin.INSTANCE.getTranslator().translate(this, args));
+    @Override
+    public Component asComponent() {
+        return Component.text(toString());
     }
 
-    public Component toComponent(TextColor color, String... args) {
-        return Component.text(SchneckenPlugin.INSTANCE.getTranslator().translate(this, args), color);
+    public Component asComponent(String... args) {
+        return Component.text(toString(args));
+    }
+
+    public Component asComponent(TextColor color, String... args) {
+        return Component.text(toString(args), color);
     }
 
     public String getKey() {

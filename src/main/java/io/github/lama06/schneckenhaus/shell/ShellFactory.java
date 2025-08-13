@@ -104,7 +104,7 @@ public abstract class ShellFactory {
         item.editMeta(meta -> {
             String name = data.getName();
             if (name == null) {
-                meta.customName(Message.SNAIL_SHELL.toComponent(getItemColor(data)));
+                meta.customName(Message.SNAIL_SHELL.asComponent(getItemColor(data)));
             } else {
                 meta.customName(Component.text(name, getItemColor(data)));
             }

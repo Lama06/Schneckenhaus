@@ -5,60 +5,36 @@ import org.bukkit.Material;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Arrays;
 
 public final class CraftingInput {
-    private final List<ItemStack> items;
+    private final ItemStack[] matrix;
 
     public CraftingInput(CraftingInventory inventory) {
-        items = new ArrayList<>();
-        for (ItemStack item : inventory.getMatrix()) {
-            if (item != null) {
-                items.add(item.clone());
-            }
-        }
-    }
-
-    public CraftingInput(List<ItemStack> items) {
-        this.items = items;
-    }
-
-    private boolean canRemove(ItemConfig ingredient) {
-        int remainingAmount = ingredient.amount;
-        for (ItemStack item : items) {
-            if (!ingredient.hasMatchingTypeAndModelData(item)) {
+        ItemStack[] originalMatrix = inventory.getMatrix();
+        matrix = new ItemStack[originalMatrix.length];
+        for (int i = 0; i < matrix.length; i++) {
+            if (originalMatrix[i] == null) {
                 continue;
             }
-            remainingAmount -= item.getAmount();
+            matrix[i] = originalMatrix[i].clone();
         }
-        return remainingAmount <= 0;
+    }
+
+    public CraftingInput(ItemStack[] matrix) {
+        this.matrix = matrix;
+    }
+
+    public boolean canRemove(ItemConfig ingredient) {
+        return ingredient.canRemoveFrom(matrix.length, i -> matrix[i]);
     }
 
     public boolean remove(ItemConfig ingredient) {
-        if (!canRemove(ingredient)) {
-            return false;
-        }
-        int remainingAmount = ingredient.amount;
-        Iterator<ItemStack> iterator = items.iterator();
-        while (iterator.hasNext()) {
-            ItemStack item = iterator.next();
-            if (!ingredient.hasMatchingTypeAndModelData(item)) {
-                continue;
-            }
-            if (item.getAmount() > remainingAmount) {
-                item.setAmount(item.getAmount() - remainingAmount);
-            } else if (item.getAmount() == remainingAmount) {
-                iterator.remove();
-                return true;
-            } else {
-                remainingAmount -= item.getAmount();
-                iterator.remove();
-            }
-        }
-        return true;
+        return ingredient.removeFrom(matrix.length, i -> matrix[i], (i, item) -> matrix[i] = item);
+    }
+
+    public boolean canRemove(Material material) {
+        return canRemove(new ItemConfig(material));
     }
 
     public boolean remove(Material material) {
@@ -66,7 +42,10 @@ public final class CraftingInput {
     }
 
     public CraftingInput copy() {
-        List<ItemStack> items = this.items.stream().map(ItemStack::clone).collect(Collectors.toCollection(ArrayList::new));
-        return new CraftingInput(items);
+        return new CraftingInput(Arrays.stream(matrix).map(ItemStack::clone).toArray(ItemStack[]::new));
+    }
+
+    public ItemStack[] getMatrix() {
+        return matrix;
     }
 }

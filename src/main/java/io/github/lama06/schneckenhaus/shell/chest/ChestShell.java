@@ -1,6 +1,5 @@
 package io.github.lama06.schneckenhaus.shell.chest;
 
-import io.github.lama06.schneckenhaus.shell.ShellFactory;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShell;
 import org.bukkit.Axis;
 import org.bukkit.Material;
@@ -131,7 +130,7 @@ public final class ChestShell extends SizedShell implements ChestShellData {
     }
 
     @Override
-    public ShellFactory getFactory() {
+    public ChestShellFactory getFactory() {
         return ChestShellFactory.INSTANCE;
     }
 }

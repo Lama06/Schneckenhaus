@@ -7,10 +7,11 @@ import java.util.Map;
 import java.util.Objects;
 
 public abstract class GlobalSizedShellConfig extends GlobalBuiltinShellConfig {
-    private int initialSize = 4;
-    private int maxSize = 30;
+    private int initialCraftingSize = 4;
+    private int maxCraftingSize = 30;
     private ItemConfig sizeIngredient = getDefaultSizeIngredient();
     private int sizePerIngredient = getDefaultSizePerIngredient();
+    private int maxUpgradeSize = 30;
     private ItemConfig upgradeIngredient = getDefaultSizeIngredient();
     private int sizePerUpgradeIngredient = getDefaultSizePerIngredient();
 
@@ -22,14 +23,17 @@ public abstract class GlobalSizedShellConfig extends GlobalBuiltinShellConfig {
     public void deserialize(Map<?, ?> config) {
         super.deserialize(config);
         if (config.get("initial_size") instanceof Integer integer) {
-            initialSize = integer;
+            initialCraftingSize = integer;
         }
         if (config.get("max_size") instanceof Integer integer) {
-            maxSize = integer;
+            maxCraftingSize = integer;
         }
         sizeIngredient = Objects.requireNonNullElse(ItemConfig.parse(config.get("size_ingredient")), sizeIngredient);
         if (config.get("size_per_ingredient") instanceof Integer integer) {
             sizePerIngredient = integer;
+        }
+        if (config.get("max_upgrade_size") instanceof Integer maxUpgradeSize) {
+            this.maxUpgradeSize = maxUpgradeSize;
         }
         upgradeIngredient = Objects.requireNonNullElse(ItemConfig.parse(config.get("upgrade_ingredient")), upgradeIngredient);
         if (config.get("size_per_upgrade_ingredient") instanceof Integer integer) {
@@ -40,20 +44,21 @@ public abstract class GlobalSizedShellConfig extends GlobalBuiltinShellConfig {
     @Override
     protected void serialize(Map<String, Object> config) {
         super.serialize(config);
-        config.put("initial_size", initialSize);
-        config.put("max_size", maxSize);
+        config.put("initial_size", initialCraftingSize);
+        config.put("max_size", maxCraftingSize);
         config.put("size_ingredient", sizeIngredient.serialize());
         config.put("size_per_ingredient", sizePerIngredient);
+        config.put("max_upgrade_size", maxUpgradeSize);
         config.put("upgrade_ingredient", upgradeIngredient.serialize());
         config.put("size_per_upgrade_ingredient", sizePerUpgradeIngredient);
     }
 
-    public int getInitialSize() {
-        return initialSize;
+    public int getInitialCraftingSize() {
+        return initialCraftingSize;
     }
 
-    public int getMaxSize() {
-        return maxSize;
+    public int getMaxCraftingSize() {
+        return maxCraftingSize;
     }
 
     public ItemConfig getSizeIngredient() {
@@ -62,6 +67,10 @@ public abstract class GlobalSizedShellConfig extends GlobalBuiltinShellConfig {
 
     public int getSizePerIngredient() {
         return sizePerIngredient;
+    }
+
+    public int getMaxUpgradeSize() {
+        return maxUpgradeSize;
     }
 
     public ItemConfig getUpgradeIngredient() {

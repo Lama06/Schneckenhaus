@@ -189,40 +189,40 @@ public abstract class Shell implements ShellData {
     }
 
     protected void addInformation(List<ShellInformation> information) {
-        information.add(new ShellInformation(Message.ID.toComponent(), Component.text(id)));
-        information.add(new ShellInformation(Message.TYPE.toComponent(), Component.text(getFactory().getName()))); // TODO translatable
+        information.add(new ShellInformation(Message.ID.asComponent(), Component.text(id)));
+        information.add(new ShellInformation(Message.TYPE.asComponent(), Component.text(getFactory().getName()))); // TODO translatable
 
         information.add(new ShellInformation(
-            Message.GRID_POSITION.toComponent(),
+            Message.GRID_POSITION.asComponent(),
             Component.text(position.getX() + " " + position.getZ())
         ));
         information.add(new ShellInformation(
-            Message.WORLD.toComponent(),
+            Message.WORLD.asComponent(),
             Component.text(world.getName())
         ));
         BlockArea area = getArea();
         information.add(new ShellInformation(
-            Message.POSITION_1.toComponent(),
+            Message.POSITION_1.asComponent(),
             Component.text(area.position1().toString())
         ));
         information.add(new ShellInformation(
-            Message.POSITION_2.toComponent(),
+            Message.POSITION_2.asComponent(),
             Component.text(area.position2().toString())
         ));
 
         information.add(new ShellInformation(
-            Message.CREATOR.toComponent(),
+            Message.CREATOR.asComponent(),
             Component.text(Objects.requireNonNullElse(Bukkit.getOfflinePlayer(creator).getName(), Message.UNKNOWN_PLAYER.toString()))
         ));
         information.add(new ShellInformation(
-            Message.CREATION_TIME.toComponent(),
+            Message.CREATION_TIME.asComponent(),
             Component.text(creationTime.toString())
         ));
 
-        information.add(new ShellInformation(Message.OWNERS.toComponent(), Component.text(owners.toString())));
-        information.add(new ShellInformation(Message.ENTER_PERMISSION.toComponent(), enterPermission.toComponent()));
-        information.add(new ShellInformation(Message.BUILD_PERMISSION.toComponent(), buildPermission.toComponent()));
-        information.add(new ShellInformation(Message.ACCESS_COUNT.toComponent(), Component.text(getTotalAccessCount())));
+        information.add(new ShellInformation(Message.OWNERS.asComponent(), Component.text(owners.toString())));
+        information.add(new ShellInformation(Message.ENTER_PERMISSION.asComponent(), enterPermission.toComponent()));
+        information.add(new ShellInformation(Message.BUILD_PERMISSION.asComponent(), buildPermission.toComponent()));
+        information.add(new ShellInformation(Message.ACCESS_COUNT.asComponent(), Component.text(getTotalAccessCount())));
     }
 
     public final List<ShellInformation> getInformation() {
@@ -240,7 +240,7 @@ public abstract class Shell implements ShellData {
                 item.editMeta(meta -> {
                     List<Component> lore = new ArrayList<>(meta.lore());
                     if (Permission.CREATE_SNAIL_SHELL_COPIES.check(player)) {
-                        lore.add(Message.CLICK_TO_CREATE_SHELL_COPY.toComponent(NamedTextColor.YELLOW));
+                        lore.add(Message.CLICK_TO_CREATE_SHELL_COPY.asComponent(NamedTextColor.YELLOW));
                     }
                     meta.lore(lore);
                 });
@@ -262,11 +262,23 @@ public abstract class Shell implements ShellData {
         });
 
         // Name
-        actions.add(new ShellMenuAction(
-            name == null ? Message.NAME_NOT_SET.toComponent() : Message.SNAIL_SHELL_NAME.toComponent(name),
-            Material.NAME_TAG,
-            Permission.RENAME_SNAIL_SHELL.check(player) ? Message.CLICK_TO_CHANGE_NAME.toComponent(NamedTextColor.YELLOW) : null
-        ) {
+        actions.add(new ShellMenuAction() {
+            @Override
+            public ItemStack getItem() {
+                ItemStack item = new ItemStack(Material.NAME_TAG);
+                item.editMeta(meta -> {
+                    if (name == null) {
+                        meta.customName(Message.NAME_NOT_SET.asComponent());
+                    } else {
+                        meta.customName(Message.SNAIL_SHELL_NAME.asComponent(name));
+                    }
+                    if (Permission.RENAME_SNAIL_SHELL.check(player)) {
+                        meta.lore(List.of(Message.CLICK_TO_CHANGE_NAME.asComponent(NamedTextColor.YELLOW)));
+                    }
+                });
+                return item;
+            }
+
             @Override
             public void onClick() {
                 if (!Permission.RENAME_SNAIL_SHELL.check(player)) {
@@ -274,11 +286,11 @@ public abstract class Shell implements ShellData {
                 }
                 new InputScreen(
                     player,
-                    Message.RENAME_SHELL_TITLE.toComponent(NamedTextColor.YELLOW),
+                    Message.RENAME_SHELL_TITLE.asComponent(NamedTextColor.YELLOW),
                     name == null ? "" : name,
                     newName -> {
                         setName(newName);
-                        player.sendMessage(Message.RENAME_SHELL_SUCCESS.toComponent(NamedTextColor.GREEN, newName));
+                        player.sendMessage(Message.RENAME_SHELL_SUCCESS.asComponent(NamedTextColor.GREEN, newName));
                     },
                     () -> { }
                 ).open();
@@ -310,10 +322,10 @@ public abstract class Shell implements ShellData {
 
                 ItemStack head = new ItemStack(Material.PLAYER_HEAD);
                 head.editMeta(SkullMeta.class, meta -> {
-                    meta.customName(Message.OWNERS.toComponent(NamedTextColor.YELLOW));
+                    meta.customName(Message.OWNERS.asComponent(NamedTextColor.YELLOW));
                     meta.lore(List.of(
                         Component.text(currentlyDisplayedOwnerName),
-                        Message.CLICK_TO_EDIT.toComponent(NamedTextColor.YELLOW)
+                        Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)
                     ));
                     meta.setOwningPlayer(currentlyDisplayedOwner);
                 });
@@ -332,7 +344,7 @@ public abstract class Shell implements ShellData {
             public void onClick() {
                 new PlayerListEditScreen(
                     player,
-                    Message.OWNERS.toComponent(NamedTextColor.YELLOW),
+                    Message.OWNERS.asComponent(NamedTextColor.YELLOW),
                     owners.get(),
                     owners::set,
                     () -> new ShellScreen(Shell.this, player).open()
@@ -341,17 +353,18 @@ public abstract class Shell implements ShellData {
         });
 
         // Enter Permissions
-        actions.add(new ShellMenuAction(
-            Message.ENTER_PERMISSION.toComponent(NamedTextColor.YELLOW),
-            Material.OAK_DOOR,
-            Message.CLICK_TO_EDIT.toComponent(NamedTextColor.YELLOW)
-        ) {
+        actions.add(new ShellMenuAction() {
             @Override
             public ItemStack getItem() {
                 if (!Permission.CHANGE_ENTER_PERMISSION.check(player)) {
                     return null;
                 }
-                return super.getItem();
+                ItemStack item = new ItemStack(Material.OAK_DOOR);
+                item.editMeta(meta -> {
+                    meta.customName(Message.ENTER_PERMISSION.asComponent(NamedTextColor.YELLOW));
+                    meta.lore(List.of(Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)));
+                });
+                return item;
             }
 
             @Override
@@ -361,22 +374,23 @@ public abstract class Shell implements ShellData {
         });
 
         // Build Permissions
-        actions.add(new ShellMenuAction(
-            Message.BUILD_PERMISSION.toComponent(NamedTextColor.YELLOW),
-            Material.GOLDEN_PICKAXE,
-            Message.CLICK_TO_EDIT.toComponent(NamedTextColor.YELLOW)
-        ) {
+        actions.add(new ShellMenuAction() {
             @Override
             public ItemStack getItem() {
                 if (!Permission.CHANGE_BUILD_PERMISSION.check(player)) {
                     return null;
                 }
-                return super.getItem();
+                ItemStack item = new ItemStack(Material.IRON_PICKAXE);
+                item.editMeta(meta -> {
+                    meta.customName(Message.BUILD_PERMISSION.asComponent(NamedTextColor.YELLOW));
+                    meta.lore(List.of(Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)));
+                });
+                return item;
             }
 
             @Override
             public void onClick() {
-                new PermissionScreen(player, enterPermission).open();
+                new PermissionScreen(player, buildPermission).open();
             }
         });
     }

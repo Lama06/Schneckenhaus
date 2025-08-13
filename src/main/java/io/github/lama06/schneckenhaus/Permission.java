@@ -89,7 +89,7 @@ public enum Permission {
                 return false;
             }
 
-            sender.sendMessage(Message.ERROR_PERMISSION.toComponent(NamedTextColor.RED, permission));
+            sender.sendMessage(Message.ERROR_PERMISSION.asComponent(NamedTextColor.RED, permission));
             return false;
         }
         return true;

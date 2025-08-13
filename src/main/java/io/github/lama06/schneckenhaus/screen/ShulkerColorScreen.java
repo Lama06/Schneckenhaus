@@ -29,7 +29,7 @@ public final class ShulkerColorScreen extends Screen {
 
     @Override
     protected Component getTitle() {
-        return Message.COLOR.toComponent(NamedTextColor.YELLOW);
+        return Message.COLOR.asComponent(NamedTextColor.YELLOW);
     }
 
     @Override
@@ -69,9 +69,9 @@ public final class ShulkerColorScreen extends Screen {
         rainbowToggle.editMeta(meta -> {
             meta.customName(MiniMessage.miniMessage().deserialize("<rainbow>" + Message.RAINBOW_MODE)
                 .append(Component.text(": "))
-                .append(Message.getBool(shell.isRainbow()).toComponent())
+                .append(Message.getBool(shell.isRainbow()).asComponent())
             );
-            meta.lore(List.of(Message.getClickToEnableDisable(!shell.isRainbow()).toComponent()));
+            meta.lore(List.of(Message.getClickToEnableDisable(!shell.isRainbow()).asComponent()));
             if (shell.isRainbow()) {
                 meta.addEnchant(Enchantment.SHARPNESS, 1, true);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -85,11 +85,11 @@ public final class ShulkerColorScreen extends Screen {
 
     private void addColorSelectionItems(List<ScreenItem> items) {
         for (DyeColor color : DyeColor.values()) {
-            ItemStack item = new ItemStack(MaterialUtil.getColoredGlassPane(color));
+            ItemStack item = new ItemStack(MaterialUtil.getColoredDye(color));
             item.editMeta(meta -> {
-                meta.customName(Message.getDyeColor(color).toComponent());
+                meta.customName(Message.getDyeColor(color).asComponent());
                 meta.lore(List.of(
-                    Message.getSelectedOrClickToSelect(color == shell.getColor()).toComponent()
+                    Message.getSelectedOrClickToSelect(color == shell.getColor()).asComponent()
                 ));
             });
             items.add(new ScreenItem(item, () -> {
@@ -103,11 +103,11 @@ public final class ShulkerColorScreen extends Screen {
         Set<DyeColor> rainbowColors = shell.getRainbowColors();
         for (DyeColor color : DyeColor.values()) {
             boolean enabled = rainbowColors.contains(color);
-            Material material = enabled ? MaterialUtil.getColoredGlassPane(color) : Material.GLASS_PANE;
+            Material material = enabled ? MaterialUtil.getColoredDye(color) : Material.GLASS_PANE;
             ItemStack item = new ItemStack(material);
             item.editMeta(meta -> {
-                meta.customName(Message.getDyeColor(color).toComponent(enabled ? NamedTextColor.GREEN : NamedTextColor.RED));
-                meta.lore(List.of(Message.getClickToEnableDisable(!enabled).toComponent(NamedTextColor.YELLOW)));
+                meta.customName(Message.getDyeColor(color).asComponent(enabled ? NamedTextColor.GREEN : NamedTextColor.RED));
+                meta.lore(List.of(Message.getClickToEnableDisable(!enabled).asComponent(NamedTextColor.YELLOW)));
             });
             items.add(new ScreenItem(item, () -> {
                 shell.setRainbowColor(color, !enabled);

@@ -165,15 +165,15 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
     protected void addInformation(List<ShellInformation> information) {
         super.addInformation(information);
         information.add(new ShellInformation(
-            Message.COLOR.toComponent(),
-            Message.getDyeColor(color).toComponent(TextColor.color(color.getColor().asRGB()))
+            Message.COLOR.asComponent(),
+            Message.getDyeColor(color).asComponent(TextColor.color(color.getColor().asRGB()))
         ));
         information.add(new ShellInformation(
-            Message.RAINBOW_MODE.toComponent(),
-            Message.getBool(rainbow).toComponent()
+            Message.RAINBOW_MODE.asComponent(),
+            Message.getBool(rainbow).asComponent()
         ));
         information.add(new ShellInformation(
-            Message.RAINBOW_COLORS.toComponent(),
+            Message.RAINBOW_COLORS.asComponent(),
             Component.text(rainbowColors.stream()
                 .map(Message::getDyeColor)
                 .map(Message::toString)
@@ -185,17 +185,20 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
     @Override
     protected void addMenuActions(Player player, List<ShellMenuAction> actions) {
         super.addMenuActions(player, actions);
-        actions.add(new ShellMenuAction(
-            Message.COLOR.toComponent(TextColor.color(getCurrentColor().getColor().asRGB())),
-            MaterialUtil.getColoredGlassPane(getCurrentColor()),
-            Message.CLICK_TO_EDIT.toComponent(NamedTextColor.YELLOW)
-        ) {
+        actions.add(new ShellMenuAction() {
+
+
             @Override
             public ItemStack getItem() {
                 if (!Permission.CHANGE_SNAIL_SHELL_COLOR.check(player)) {
                     return null;
                 }
-                return super.getItem();
+                ItemStack item = new ItemStack(MaterialUtil.getColoredDye(getCurrentColor()));
+                item.editMeta(meta -> {
+                    meta.customName(Message.COLOR.asComponent(TextColor.color(getCurrentColor().getColor().asRGB())));
+                    meta.lore(List.of(Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)));
+                });
+                return item;
             }
 
             @Override

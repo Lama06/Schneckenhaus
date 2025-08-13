@@ -22,7 +22,7 @@ public final class ConfirmationScreen extends Screen {
 
     @Override
     protected Component getTitle() {
-        return Message.CONFIRM_ACTION.toComponent(actionName);
+        return Message.CONFIRM_ACTION.asComponent(actionName);
     }
 
     @Override
@@ -34,7 +34,7 @@ public final class ConfirmationScreen extends Screen {
     protected void draw() {
         ItemStack cancel = new ItemStack(Material.RED_STAINED_GLASS_PANE);
         cancel.editMeta(meta -> {
-            meta.customName(Message.CANCEL.toComponent(NamedTextColor.RED));
+            meta.customName(Message.CANCEL.asComponent(NamedTextColor.RED));
         });
         setItem(0, 0, cancel, () -> {
             close();
@@ -47,7 +47,7 @@ public final class ConfirmationScreen extends Screen {
 
         ItemStack confirm = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
         confirm.editMeta(meta -> {
-            meta.customName(Message.CONFIRM.toComponent(NamedTextColor.GREEN));
+            meta.customName(Message.CONFIRM.asComponent(NamedTextColor.GREEN));
         });
         setItem(8, 0, confirm, () -> {
             close();

@@ -93,9 +93,9 @@ public final class PermissionSystem extends System {
         ShellPermissionMode newMode = mode == ShellPermissionMode.EVERYBODY ? ShellPermissionMode.NOBODY : ShellPermissionMode.EVERYBODY;
         shell.getEnterPermission().setMode(newMode);
         if (newMode == ShellPermissionMode.EVERYBODY) {
-            player.sendMessage(Message.UNLOCK_SHELL_SUCCESS.toComponent(NamedTextColor.GREEN));
+            player.sendMessage(Message.UNLOCK_SHELL_SUCCESS.asComponent(NamedTextColor.GREEN));
         } else {
-            player.sendMessage(Message.LOCK_SHELL_SUCCESS.toComponent(NamedTextColor.GREEN));
+            player.sendMessage(Message.LOCK_SHELL_SUCCESS.asComponent(NamedTextColor.GREEN));
         }
     }
 }

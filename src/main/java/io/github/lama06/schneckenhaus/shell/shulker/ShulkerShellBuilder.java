@@ -23,12 +23,13 @@ public final class ShulkerShellBuilder extends SizedShellBuilder implements Shul
         int id = super.buildDuringTransaction();
 
         String sql = """
-            INSERT INTO shulker_shells(color, rainbow)
-            VALUES (?, ?)
+            INSERT INTO shulker_shells(id, color, rainbow)
+            VALUES (?, ?, ?)
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, color.name().toLowerCase(Locale.ROOT));
-            statement.setBoolean(2, rainbow);
+            statement.setInt(1, id);
+            statement.setString(2, color.name().toLowerCase(Locale.ROOT));
+            statement.setBoolean(3, rainbow);
             statement.executeUpdate();
         }
 

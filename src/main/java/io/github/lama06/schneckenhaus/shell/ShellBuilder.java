@@ -34,6 +34,7 @@ public abstract class ShellBuilder implements ShellData {
         try {
             connection.setAutoCommit(false);
             id = buildDuringTransaction();
+            connection.commit();
         } catch (Exception e) {
             logger.error("failed to build snail shell", e);
             try {

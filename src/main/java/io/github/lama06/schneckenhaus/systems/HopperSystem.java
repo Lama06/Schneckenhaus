@@ -9,6 +9,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.HopperInventorySearchEvent;
 
 public final class HopperSystem extends System {
+    @Override
+    public boolean isEnabled() {
+        return config.getHoppers().isEnabled();
+    }
+
     @EventHandler
     private void transferItemIntoShell(HopperInventorySearchEvent event) {
         if (event.getContainerType() != HopperInventorySearchEvent.ContainerType.DESTINATION) {

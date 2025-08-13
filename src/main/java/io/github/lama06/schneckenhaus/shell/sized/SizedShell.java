@@ -55,7 +55,7 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
     @Override
     public BlockArea getArea() {
         return new BlockArea(
-            position.getCornerBlock(), position.getCornerBlock().getRelative(size - 1, size - 1, size - 1)
+            position.getCornerBlock(), position.getCornerBlock().getRelative(size + 1, size + 1, size + 1)
         );
     }
 

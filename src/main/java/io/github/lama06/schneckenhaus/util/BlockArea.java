@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.util;
 
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 
 import java.util.Iterator;
@@ -73,6 +74,12 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
         final boolean z = position.z() >= lowerCorner.z() && position.z() <= upperCorner.z();
 
         return x && y && z;
+    }
+
+    public boolean contains(Location location) {
+        return getLowerX() <= location.getX() && location.getX() <= getUpperX() &&
+            getLowerY() <= location.getY() && location.getY() <= getUpperY() &&
+            getLowerZ() <= location.getZ() && location.getZ() <= getUpperZ();
     }
 
     public BlockArea getLayer(int index) {

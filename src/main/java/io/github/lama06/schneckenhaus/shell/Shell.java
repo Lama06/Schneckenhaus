@@ -362,7 +362,7 @@ public abstract class Shell implements ShellData {
 
         // Build Permissions
         actions.add(new ShellMenuAction(
-            Message.ENTER_PERMISSION.toComponent(NamedTextColor.YELLOW),
+            Message.BUILD_PERMISSION.toComponent(NamedTextColor.YELLOW),
             Material.GOLDEN_PICKAXE,
             Message.CLICK_TO_EDIT.toComponent(NamedTextColor.YELLOW)
         ) {
@@ -395,23 +395,6 @@ public abstract class Shell implements ShellData {
     @Override
     public int hashCode() {
         return id;
-    }
-
-    public int getTotalAccessCount() {
-        String sql = """
-            SELECT SUM(amount)
-            FROM shell_access_statistics
-            WHERE id = ?
-            """;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet result = statement.executeQuery();
-            result.next();
-            return result.getInt(1);
-        } catch (SQLException e) {
-            logger.error("failed to query join statistics: {}", id, e);
-            return 0;
-        }
     }
 
     public int getId() {
@@ -490,6 +473,101 @@ public abstract class Shell implements ShellData {
         } catch (SQLException e) {
             logger.error("failed to query snail shell home owner: {}", id, e);
             return null;
+        }
+    }
+
+    public int getTotalAccessCount() {
+        String sql = """
+            SELECT SUM(amount)
+            FROM shell_access_statistics
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+            result.next();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            logger.error("failed to query join statistics: {}", id, e);
+            return 0;
+        }
+    }
+
+    public List<String> getTags() {
+        List<String> tags = new ArrayList<>();
+        String sql = """
+            SELECT tag
+            FROM shell_tags
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                tags.add(result.getString("tag"));
+            }
+            return tags;
+        } catch (SQLException e) {
+            logger.error("failed to query tags of shell {}", id, e);
+            return List.of();
+        }
+    }
+
+    public boolean hasTag(String tag) {
+        String sql = """
+            SELECT 1
+            FROM shell_tags
+            WHERE id = ? AND tag = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.setString(2, tag);
+            return statement.executeQuery().next();
+        } catch (SQLException e) {
+            logger.error("failed to query if shell {} has tag {}", id, tag, e);
+            return false;
+        }
+    }
+
+    public void addTag(String tag) {
+        String sql = """
+            INSERT INTO shell_tags(id, tag)
+            VALUES (?, ?)
+            ON CONFLICT (id, tag) DO NOTHING
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.setString(2, tag);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("failed to add tag {} to {}", tag, id, e);
+        }
+    }
+
+    public void removeTag(String tag) {
+        String sql = """
+            DELETE FROM shell_tags
+            WHERE id = ? AND tag = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.setString(2, tag);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("failed to remove tag {} from shell {}", tag, id, e);
+        }
+    }
+
+    public void clearTags() {
+        String sql = """
+            DELETE FROM shell_tags
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("failed to clear tags of shell {}", id, e);
         }
     }
 }

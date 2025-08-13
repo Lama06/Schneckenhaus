@@ -13,5 +13,9 @@ public abstract class System implements Listener {
     protected final Connection connection = plugin.getDBConnection();
     protected final Logger logger = plugin.getSLF4JLogger();
 
+    public boolean isEnabled() {
+        return true;
+    }
+
     public void start() { }
 }

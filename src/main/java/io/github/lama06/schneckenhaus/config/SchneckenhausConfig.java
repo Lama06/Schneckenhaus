@@ -24,8 +24,10 @@ public final class SchneckenhausConfig {
 
     private final ConditionalFeatureConfig chunkLoading = new ConditionalFeatureConfig();
     private final ConditionalFeatureConfig hoppers = new ConditionalFeatureConfig();
-    private final AnimationConfig animation = new AnimationConfig();
+    private final ShellInstanceSyncConfig shellInstancesSync = new ShellInstanceSyncConfig();
     private final ConditionalFeatureConfig theftPrevention = new ConditionalFeatureConfig();
+    private final ConditionalTaskFeatureConfig escapePrevention = new ConditionalTaskFeatureConfig(20);
+    private final ConditionalTaskFeatureConfig repairSystem = new ConditionalTaskFeatureConfig(200);
     private Location fallbackExitLocation;
 
     public SchneckenhausConfig() {
@@ -84,13 +86,20 @@ public final class SchneckenhausConfig {
             this.hoppers.deserialize(hoppers);
         }
 
-        if (config.get("animation") instanceof Map<?, ?> animation) {
-            this.animation.deserialize(animation);
+        if (config.get("shell_instances_sync") instanceof Map<?, ?> shellInstancesSync) {
+            this.shellInstancesSync.deserialize(shellInstancesSync);
         }
 
         if (config.get("theft_prevention") instanceof Map<?, ?> theftPrevention) {
             this.theftPrevention.deserialize(theftPrevention);
         }
+
+        if (config.get("escape_prevention") instanceof Map<?, ?> escapePrevention) {
+            this.escapePrevention.deserialize(escapePrevention);
+        }
+
+        if (config.get("repair_system") instanceof Map<?, ?> repairSystem)
+            this.repairSystem.deserialize(repairSystem);
 
         if (config.get("fallback_exit_location") instanceof Map<?, ?> fallbackExitLocation) {
             //noinspection unchecked
@@ -120,11 +129,11 @@ public final class SchneckenhausConfig {
 
         config.put("chunk_loading", chunkLoading.serialize());
         config.put("hoppers", hoppers.serialize());
-        config.put("animation", animation.serialize());
+        config.put("shell_instances_sync", shellInstancesSync.serialize());
         config.put("theft_prevention", theftPrevention.serialize());
-        if (fallbackExitLocation != null) {
-            config.put("fallback_exit_location", fallbackExitLocation.serialize());
-        }
+        config.put("escape_prevention", escapePrevention.serialize());
+        config.put("repair_system", repairSystem.serialize());
+        config.put("fallback_exit_location", fallbackExitLocation == null ? null : fallbackExitLocation.serialize());
 
         config.put("data_version", SchneckenPlugin.INSTANCE.getPluginMeta().getVersion());
 
@@ -159,12 +168,20 @@ public final class SchneckenhausConfig {
         return hoppers;
     }
 
-    public AnimationConfig getAnimation() {
-        return animation;
+    public ShellInstanceSyncConfig getShellInstanceSync() {
+        return shellInstancesSync;
     }
 
     public ConditionalFeatureConfig getTheftPrevention() {
         return theftPrevention;
+    }
+
+    public ConditionalTaskFeatureConfig getEscapePrevention() {
+        return escapePrevention;
+    }
+
+    public ConditionalTaskFeatureConfig getRepairSystem() {
+        return repairSystem;
     }
 
     public Location getFallbackExitLocation() {

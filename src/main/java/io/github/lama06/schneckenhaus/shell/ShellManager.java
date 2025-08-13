@@ -116,7 +116,7 @@ public final class ShellManager {
         return getShell(position);
     }
 
-    public Shell getShell(Entity entity) {
+    public Shell getShellAt(Entity entity) {
         return getShell(entity.getLocation());
     }
 

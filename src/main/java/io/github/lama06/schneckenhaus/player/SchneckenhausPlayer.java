@@ -106,7 +106,7 @@ public final class SchneckenhausPlayer {
     }
 
     public void leave() {
-        Shell shell = plugin.getShellManager().getShell(player);
+        Shell shell = plugin.getShellManager().getShellAt(player);
         if (shell == null) {
             return;
         }

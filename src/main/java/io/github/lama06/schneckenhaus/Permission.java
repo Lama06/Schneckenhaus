@@ -37,7 +37,9 @@ public enum Permission {
     EDIT_OWNERS(PermissionDefault.TRUE),
     CHANGE_SNAIL_SHELL_COLOR(PermissionDefault.TRUE),
     TOGGLE_RAINBOW_MODE(PermissionDefault.TRUE),
-    UPGRADE_SNAIL_SHELL_SIZE(PermissionDefault.TRUE);
+    UPGRADE_SNAIL_SHELL_SIZE(PermissionDefault.TRUE),
+
+    BYPASS_ESCAPE_PREVENTION;
 
     public static void register() {
         for (Permission permission : Permission.values()) {

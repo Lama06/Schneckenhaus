@@ -49,6 +49,7 @@ public final class HomeShellSystem extends System {
             return;
         }
         player.give(shell.createItem());
+        schneckenhausPlayer.setHomeShell(shell.getId());
     }
 
     @EventHandler

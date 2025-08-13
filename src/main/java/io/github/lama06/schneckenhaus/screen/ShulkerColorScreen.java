@@ -42,8 +42,6 @@ public final class ShulkerColorScreen extends Screen {
         for (int x = 0; x < 9; x++) {
             setItem(x, 0, InventoryUtil.createMarginItem());
         }
-        setItem(0, 2, InventoryUtil.createMarginItem());
-        setItem(8, 2, InventoryUtil.createMarginItem());
 
         addRainbowToggle();
 

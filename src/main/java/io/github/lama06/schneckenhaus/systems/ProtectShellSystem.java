@@ -1,9 +1,7 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.position.Position;
 import io.github.lama06.schneckenhaus.shell.Shell;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
@@ -13,13 +11,6 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 import java.util.*;
 
 public final class ProtectShellSystem extends System {
-    private static final int REPAIR_DELAY = 5 * 20;
-
-    @Override
-    public void start() {
-        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::repairShells, REPAIR_DELAY, REPAIR_DELAY);
-    }
-
     @EventHandler
     private void preventBlockBreaking(BlockBreakEvent event) {
         Block block = event.getBlock();
@@ -98,12 +89,6 @@ public final class ProtectShellSystem extends System {
                 continue;
             }
             iterator.remove();
-        }
-    }
-
-    private void repairShells() {
-        for (Shell shell : plugin.getShellManager().getInhabitedShells()) {
-            shell.place();
         }
     }
 }

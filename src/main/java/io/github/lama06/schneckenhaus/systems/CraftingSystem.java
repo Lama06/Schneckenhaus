@@ -1,6 +1,7 @@
 package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.Permission;
+import io.github.lama06.schneckenhaus.config.ShellInstanceSyncConfig;
 import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.*;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionMode;
@@ -15,7 +16,10 @@ import org.bukkit.inventory.CraftingInventory;
 public final class CraftingSystem extends System {
     @Override
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(plugin, this::animateCrafting, 0, config.getAnimation().getAnimationTaskDelay());
+        ShellInstanceSyncConfig syncConfig = config.getShellInstanceSync();
+        if (syncConfig.isEnabled() && syncConfig.isItems()) {
+            Bukkit.getScheduler().runTaskTimer(plugin, this::animateCrafting, 0, syncConfig.getDelay());
+        }
     }
 
     @EventHandler

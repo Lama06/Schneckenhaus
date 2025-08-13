@@ -31,7 +31,7 @@ public final class PermissionSystem extends System {
 
     private void enforceEnterPermissions() {
         for (Player player : plugin.getShellManager().getPlayersInShellWorlds()) {
-            Shell shell = plugin.getShellManager().getShell(player);
+            Shell shell = plugin.getShellManager().getShellAt(player);
             if (shell == null) {
                 continue;
             }

@@ -56,24 +56,23 @@ CREATE TABLE custom_shells (
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;
 
-CREATE TABLE texture_shells (
+CREATE TABLE head_shells (
     id INTEGER PRIMARY KEY,
 
-    texture
+    head_owner TEXT NOT NULL,
+    texture INTEGER Not NULL,
+
+    FOREIGN KEY (id) REFERENCES shells(id),
+    FOREIGN KEY (texture) REFERENCES head_shell_textures(id)
 ) STRICT;
 
-CREATE TABLE textures (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE head_shell_textures (
+    id INTEGER PRIMARY KEY,
 
-    size INTEGER NOT NULL,
+    texture BLOB NOT NULL,
 
-    top BLOB NOT NULL CHECK (length(top) = size * size),
-    north BLOB NOT NULL CHECK (length(top) = size * size),
-    west BLOB NOT NULL CHECK (length(top) = size * size),
-    south BLOB NOT NULL,
-    east BLOB NOT NULL,
-    bottom BLOB NOT NULL,
-)
+    UNIQUE (texture)
+) STRICT;
 
 CREATE TABLE shell_tags (
     id INTEGER,

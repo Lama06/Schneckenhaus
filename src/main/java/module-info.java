@@ -13,4 +13,6 @@ module io.github.lama06.schneckenhaus {
     requires it.unimi.dsi.fastutil;
     requires bstats.bukkit;
     requires bstats.base;
+    requires java.net.http;
+    requires java.desktop;
 }

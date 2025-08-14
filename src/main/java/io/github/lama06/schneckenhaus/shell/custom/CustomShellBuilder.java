@@ -14,8 +14,8 @@ public final class CustomShellBuilder extends ShellBuilder implements CustomShel
     }
 
     @Override
-    protected int buildDuringTransaction() throws SQLException {
-        int id = super.buildDuringTransaction();
+    protected int buildDuringTransaction(Object prepared) throws SQLException {
+        int id = super.buildDuringTransaction(prepared);
         String sql = """
             INSERT INTO custom_shells(id, template)
             VALUES(?, ?)

@@ -129,7 +129,7 @@ public abstract class Shell implements ShellData {
 
     public final void place() {
         Map<Block, BlockData> blocks = getBlocks();
-        for (final Block block : blocks.keySet()) {
+        for (Block block : blocks.keySet()) {
             if (block.getBlockData().equals(blocks.get(block))) {
                 continue;
             }
@@ -139,8 +139,8 @@ public abstract class Shell implements ShellData {
 
     public final void placeInitially() {
         place();
-        final Map<Block, BlockData> initialBlocks = getInitialBlocks();
-        for (final Block block : initialBlocks.keySet()) {
+        Map<Block, BlockData> initialBlocks = getInitialBlocks();
+        for (Block block : initialBlocks.keySet()) {
             block.setBlockData(initialBlocks.get(block));
         }
     }
@@ -176,7 +176,7 @@ public abstract class Shell implements ShellData {
     }
 
     public boolean isMenuBlock(Block block) {
-        return block.equals(position.getCornerBlock().getRelative(1, 0, 1));
+        return block != null && block.getType() == Material.CRAFTING_TABLE && getBlocks().containsKey(block);
     }
 
     public final ItemStack createItem() {
@@ -238,7 +238,7 @@ public abstract class Shell implements ShellData {
                 // item without id to prevent the animation system from messing with it
                 ItemStack item = getFactory().createItem(Shell.this);
                 item.editMeta(meta -> {
-                    List<Component> lore = new ArrayList<>(meta.lore());
+                    List<Component> lore = new ArrayList<>(meta.hasLore() ? meta.lore() : List.of());
                     if (Permission.CREATE_SNAIL_SHELL_COPIES.check(player)) {
                         lore.add(Message.CLICK_TO_CREATE_SHELL_COPY.asComponent(NamedTextColor.YELLOW));
                     }

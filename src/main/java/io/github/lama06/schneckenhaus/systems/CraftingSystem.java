@@ -5,6 +5,7 @@ import io.github.lama06.schneckenhaus.config.ShellInstanceSyncConfig;
 import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.*;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionMode;
+import io.github.lama06.schneckenhaus.util.ConcurrencyUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,14 +66,22 @@ public final class CraftingSystem extends System {
             return;
         }
 
-        event.setCancelled(true);
-        Shell shell = result.shellBuilder.build();
-        if (shell == null) {
-            return;
-        }
-
         inventory.setMatrix(result.remainingInput().getMatrix());
-        player.getOpenInventory().setCursor(shell.createItem());
+        event.setCancelled(true);
+
+        result.shellBuilder.build().thenAcceptAsync(
+            shell -> {
+                if (shell == null) {
+                    return;
+                }
+
+                player.getOpenInventory().setCursor(shell.createItem());
+            },
+            ConcurrencyUtils::runOnMainThread
+        ).exceptionally(e -> {
+            logger.error("failed to craft item", e);
+            throw new RuntimeException();
+        });
     }
 
     private CraftingResult getCraftingResult(CraftingInventory inventory, Player player) {

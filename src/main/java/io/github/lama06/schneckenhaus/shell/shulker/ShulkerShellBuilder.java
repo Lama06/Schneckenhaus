@@ -19,8 +19,8 @@ public final class ShulkerShellBuilder extends SizedShellBuilder implements Shul
     }
 
     @Override
-    protected int buildDuringTransaction() throws SQLException {
-        int id = super.buildDuringTransaction();
+    protected int buildDuringTransaction(Object prepared) throws SQLException {
+        int id = super.buildDuringTransaction(prepared);
 
         String sql = """
             INSERT INTO shulker_shells(id, color, rainbow)

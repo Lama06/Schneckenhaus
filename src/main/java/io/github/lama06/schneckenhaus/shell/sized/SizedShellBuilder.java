@@ -14,8 +14,8 @@ public abstract class SizedShellBuilder extends BuiltinShellBuilder implements S
     public abstract SizedShellFactory getFactory();
 
     @Override
-    protected int buildDuringTransaction() throws SQLException {
-        int id = super.buildDuringTransaction();
+    protected int buildDuringTransaction(Object prepared) throws SQLException {
+        int id = super.buildDuringTransaction(prepared);
 
         Connection connection = SchneckenPlugin.INSTANCE.getDBConnection();
         String sql = """

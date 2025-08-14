@@ -9,10 +9,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Orientable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public final class ChestShell extends SizedShell implements ChestShellData {
     public ChestShell(int id) {
@@ -39,16 +36,9 @@ public final class ChestShell extends SizedShell implements ChestShellData {
 
     @Override
     public Map<Block, BlockData> getInitialBlocks() {
-        Block corner = position.getCornerBlock();
-        int size = getSize();
-        int y = corner.getY() + 1;
-        List<Block> blocks = List.of(
-                world.getBlockAt(corner.getX() + 1, y, corner.getZ() + 1),
-                world.getBlockAt(corner.getX() + size, y, corner.getZ() + 1),
-                world.getBlockAt(corner.getX() + 1, y, corner.getZ() + size),
-                world.getBlockAt(corner.getX() + size, y, corner.getZ() + size)
-        );
-        return blocks.stream().collect(Collectors.toMap(Function.identity(), position -> Material.TORCH.createBlockData()));
+        Map<Block, BlockData> blocks = new HashMap<>();
+        addCornerTorches(blocks, getSize());
+        return blocks;
     }
 
     private void addSideBlocks(BlockFace side, Map<Block, BlockData> blocks) {

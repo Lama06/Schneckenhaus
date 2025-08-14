@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus.config;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.shell.chest.GlobalChestShellConfig;
 import io.github.lama06.schneckenhaus.shell.custom.GlobalCustomShellConfig;
+import io.github.lama06.schneckenhaus.shell.head.GlobalHeadShellConfig;
 import io.github.lama06.schneckenhaus.shell.shulker.GlobalShulkerShellConfig;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import java.util.*;
 public final class SchneckenhausConfig {
     private final GlobalShulkerShellConfig shulker = new GlobalShulkerShellConfig();
     private final GlobalChestShellConfig chest = new GlobalChestShellConfig();
+    private final GlobalHeadShellConfig head = new GlobalHeadShellConfig();
     private final Map<String, GlobalCustomShellConfig> custom = new LinkedHashMap<>();
 
     private Map<?, ?> homeShell = Map.of(
@@ -41,6 +43,10 @@ public final class SchneckenhausConfig {
 
         if (config.get("chest") instanceof Map<?, ?> chest) {
             this.chest.deserialize(chest);
+        }
+
+        if (config.get("head") instanceof Map<?, ?> head) {
+            this.head.deserialize(head);
         }
 
         if (config.get("custom") instanceof Map<?, ?> customShellConfigs) {
@@ -112,6 +118,7 @@ public final class SchneckenhausConfig {
 
         config.put("shulker", shulker.serialize());
         config.put("chest", chest.serialize());
+        config.put("head", head.serialize());
 
         Map<String, Object> custom = new LinkedHashMap<>();
         for (String name : this.custom.keySet()) {
@@ -146,6 +153,10 @@ public final class SchneckenhausConfig {
 
     public GlobalChestShellConfig getChest() {
         return chest;
+    }
+
+    public GlobalHeadShellConfig getHead() {
+        return head;
     }
 
     public Map<String, GlobalCustomShellConfig> getCustom() {

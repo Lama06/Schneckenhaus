@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus.systems;
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.shell.*;
+import io.github.lama06.schneckenhaus.util.ConcurrencyUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -44,12 +45,17 @@ public final class HomeShellSystem extends System {
         builder.setCreationType(ShellCreationType.HOME);
         builder.setCreator(player.getUniqueId());
         builder.setOwner(player.getUniqueId());
-        Shell shell = builder.build();
-        if (shell == null) {
-            return;
-        }
-        player.give(shell.createItem());
-        schneckenhausPlayer.setHomeShell(shell.getId());
+        builder.build().thenAcceptAsync(
+            shell -> {
+                if (shell == null) {
+                    return;
+                }
+
+                player.give(shell.createItem());
+                schneckenhausPlayer.setHomeShell(shell.getId());
+            },
+            ConcurrencyUtils::runOnMainThread
+        );
     }
 
     @EventHandler

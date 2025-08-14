@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus.shell;
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.config.WorldConfig;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionMode;
+import io.github.lama06.schneckenhaus.util.ConcurrencyUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import java.sql.*;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class ShellBuilder implements ShellData {
     protected final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
@@ -28,34 +30,56 @@ public abstract class ShellBuilder implements ShellData {
 
     public abstract ShellFactory getFactory();
 
-    public final Shell build() {
-        Connection connection = SchneckenPlugin.INSTANCE.getDBConnection();
-        int id;
-        try {
-            connection.setAutoCommit(false);
-            id = buildDuringTransaction();
-            connection.commit();
-        } catch (Exception e) {
-            logger.error("failed to build snail shell", e);
-            try {
-                connection.rollback();
-            } catch (SQLException rollbackException) {
-                logger.error("failed to rollback failed shell insertion", rollbackException);
-            }
-            return null;
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                logger.error("failed to disable auto commit mode", e);
-            }
-        }
-        Shell shell = plugin.getShellManager().getShell(id);
-        shell.placeInitially();
-        return shell;
+    public final CompletableFuture<Shell> build() {
+        return prepareBuild().handleAsync(
+            (prepared, throwable) -> {
+                if (!Bukkit.isPrimaryThread()) {
+                    throw new IllegalStateException();
+                }
+
+                if (throwable != null) {
+                    logger.error("failed to prepare shell construction", throwable);
+                    return null;
+                }
+
+                int id;
+                try {
+                    connection.setAutoCommit(false);
+                    id = buildDuringTransaction(prepared);
+                    connection.commit();
+                } catch (Exception e) {
+                    logger.error("failed to build snail shell", e);
+                    try {
+                        connection.rollback();
+                    } catch (SQLException rollbackException) {
+                        logger.error("failed to rollback failed shell insertion", rollbackException);
+                    }
+                    return null;
+                } finally {
+                    try {
+                        connection.setAutoCommit(true);
+                    } catch (SQLException e) {
+                        logger.error("failed to disable auto commit mode", e);
+                    }
+                }
+
+                Shell shell = plugin.getShellManager().getShell(id);
+                shell.placeInitially();
+
+                return shell;
+            },
+            ConcurrencyUtils::runOnMainThread
+        ).exceptionally(e -> {
+            logger.error("failed to build shell", e);
+            throw new RuntimeException();
+        });
     }
 
-    protected int buildDuringTransaction() throws SQLException {
+    protected CompletableFuture<Object> prepareBuild() {
+        return CompletableFuture.completedFuture(null);
+    }
+
+    protected int buildDuringTransaction(Object prepared) throws SQLException {
         Map<String, WorldConfig> worlds = plugin.getPluginConfig().getWorlds();
         if (world == null) {
             for (String name : worlds.keySet()) {

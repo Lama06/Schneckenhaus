@@ -1,9 +1,12 @@
 package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.sized.GlobalSizedShellConfig;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShellFactory;
+import io.github.lama06.schneckenhaus.util.WoodType;
 import org.bukkit.Material;
 
 public final class ChestShellFactory extends SizedShellFactory {
@@ -29,6 +32,16 @@ public final class ChestShellFactory extends SizedShellFactory {
     @Override
     public ChestShellBuilder newBuilder() {
         return new ChestShellBuilder();
+    }
+
+    @Override
+    public boolean getCraftingResult(ShellBuilder builder, CraftingInput input) {
+        if (!super.getCraftingResult(builder, input)) {
+            return false;
+        }
+        ChestShellBuilder chestBuilder = (ChestShellBuilder) builder;
+        chestBuilder.setWood(WoodType.OAK);
+        return true;
     }
 
     @Override

@@ -39,6 +39,7 @@ public enum Permission {
     CHANGE_SNAIL_SHELL_COLOR(PermissionDefault.TRUE),
     TOGGLE_RAINBOW_MODE(PermissionDefault.TRUE),
     UPGRADE_SNAIL_SHELL_SIZE(PermissionDefault.TRUE),
+    CHANGE_SHELL_WOOD(PermissionDefault.TRUE),
 
     BYPASS_ESCAPE_PREVENTION;
 

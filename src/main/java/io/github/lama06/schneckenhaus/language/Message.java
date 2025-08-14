@@ -28,6 +28,7 @@ public enum Message implements ComponentLike {
     RAINBOW("Rainbow", "Regenbogen"),
     RAINBOW_MODE("Rainbow Mode", "Regenbogenmodus"),
     RAINBOW_COLORS("Rainbow Colors", "Regenbogenfarben"),
+    WOOD("Wood", "Holz"),
     TEMPLATE("Template", "Vorlage"),
 
     ON("on", "an"),
@@ -80,6 +81,18 @@ public enum Message implements ComponentLike {
     SIZE_AFTER_UPGRADE("Upgraded size", "Neue Größe"),
     SIZE_UPGRADE_SUCCESS("Successfully upgraded size!", "Schneckenhaus erfolgreich vergrößert!"),
 
+    OAK("Oak", "Eiche"),
+    SPRUCE("Spruce", "Fichte"),
+    BIRCH("Birch", "Birke"),
+    JUNGLE("Jungle", "Tropen"),
+    ACACIA("Acacia", "Akazie"),
+    DARK_OAK("Dark Oak", "Schwarzeiche"),
+    MANGROVE("Mangrove", "Mangrove"),
+    CHERRY("Cherry", "Kirsche"),
+    PALE_OAK("Pale Oak", "Blasseiche"),
+    CRIMSON("Crimson", "Karmesin"),
+    WARPED("Warped", "Wirr"),
+
     WHITE("white", "weiß"),
     ORANGE("orange", "orange"),
     MAGENTA("magenta", "magenta"),
@@ -95,7 +108,7 @@ public enum Message implements ComponentLike {
     BROWN("brown", "brown"),
     GREEN("green", "grün"),
     RED("red", "rot"),
-    BLACK("black", "black"),;
+    BLACK("black", "black");
 
     public static Message getDyeColor(DyeColor color) {
         return valueOf(color.name());

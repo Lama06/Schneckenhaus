@@ -48,6 +48,14 @@ CREATE TABLE shulker_shell_rainbow_colors (
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;
 
+CREATE TABLE chest_shells (
+    id INTEGER PRIMARY KEY,
+
+    wood TEXT NOT NULL,
+
+    FOREIGN KEY (id) REFERENCES shells(id)
+) STRICT;
+
 CREATE TABLE custom_shells (
     id INTEGER PRIMARY KEY,
 

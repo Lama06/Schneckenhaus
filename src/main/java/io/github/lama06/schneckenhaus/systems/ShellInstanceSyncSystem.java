@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.config.ShellInstanceSyncConfig;
-import io.github.lama06.schneckenhaus.shell.PlacedShell;
+import io.github.lama06.schneckenhaus.shell.ShellPlacement;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
@@ -74,13 +74,13 @@ public final class ShellInstanceSyncSystem extends System {
 
     private void syncPlacedShells() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            Set<PlacedShell> nearbyShells = plugin.getShellManager().getShells(
+            Set<ShellPlacement> nearbyShells = plugin.getShellManager().getShellPlacements(
                 player.getLocation().getBlock(),
                 syncConfig.getPlacedShellsRange()
             );
-            for (PlacedShell placedShell : nearbyShells) {
-                Shell shell = placedShell.shell();
-                Block block = placedShell.block();
+            for (ShellPlacement shellPlacement : nearbyShells) {
+                Shell shell = shellPlacement.shell();
+                Block block = shellPlacement.block();
                 if (!shouldSyncPlacedShell(shell, block)) {
                     continue;
                 }

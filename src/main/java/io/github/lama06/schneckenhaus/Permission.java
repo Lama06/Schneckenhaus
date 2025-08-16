@@ -45,9 +45,13 @@ public enum Permission {
     BYPASS_ESCAPE_PREVENTION,
 
     COMMAND_SELECT("command.select"),
-    COMMAND_LIST("command.list"),
+    COMMAND_SELECTION("command.list"),
     COMMAND_CREATE("command.create"),
     COMMAND_INFO("command.info"),
+    COMMAND_TAG("command.tag"),
+    COMMAND_ITEM("command.item"),
+    COMMAND_COUNT("command.count"),
+    COMMAND_DELETE("command.delete"),
     COMMAND_DEBUG("command.debug", PermissionDefault.FALSE),
     COMMAND_TP("command.tp");
 

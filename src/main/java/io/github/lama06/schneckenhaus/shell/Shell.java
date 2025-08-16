@@ -2,6 +2,7 @@ package io.github.lama06.schneckenhaus.shell;
 
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
+import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.position.Position;
 import io.github.lama06.schneckenhaus.screen.InputScreen;
 import io.github.lama06.schneckenhaus.screen.PermissionScreen;
@@ -394,6 +395,34 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         List<ShellMenuAction> actions = new ArrayList<>();
         addMenuActions(player, actions);
         return actions;
+    }
+
+    public final void delete() {
+        for (Player player : getWorld().getPlayers()) {
+            if (!getPosition().equals(Position.location(player.getLocation()))) {
+                continue;
+            }
+            if (player.isFlying()) {
+                continue;
+            }
+            new SchneckenhausPlayer(player).leave();
+        }
+        for (BlockPosition position : getArea()) {
+            position.getBlock(getWorld()).setType(Material.AIR);
+        }
+        for (ShellPlacement placement : plugin.getShellManager().getShellPlacements(this)) {
+            placement.block().setType(Material.AIR);
+        }
+        String sql = """
+            DELETE FROM shells
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("failed to delete shell {}", id, e);
+        }
     }
 
     @Override

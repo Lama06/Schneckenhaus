@@ -16,10 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public final class ShellManager extends ConstantsHolder {
@@ -237,8 +234,8 @@ public final class ShellManager extends ConstantsHolder {
         return getShellIds(chunk).stream().map(this::getShell).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
-    public Set<PlacedShell> getShells(Block center, int range) {
-        Set<PlacedShell> shells = new HashSet<>();
+    public Set<ShellPlacement> getShellPlacements(Block center, int range) {
+        Set<ShellPlacement> shells = new HashSet<>();
         String sql = """
             SELECT id, world, x, y, z
             FROM shell_placements
@@ -263,11 +260,36 @@ public final class ShellManager extends ConstantsHolder {
                     continue;
                 }
                 Block block = world.getBlockAt(result.getInt(3), result.getInt(4), result.getInt(5));
-                shells.add(new PlacedShell(shell, block));
+                shells.add(new ShellPlacement(shell, block));
             }
             return shells;
         } catch (SQLException e) {
             logger.error("failed to query nearby shells: {} {}", center, range, e);
+            return Set.of();
+        }
+    }
+
+    public Set<ShellPlacement> getShellPlacements(Shell shell) {
+        Set<ShellPlacement> shells = new HashSet<>();
+        String sql = """
+            SELECT world, x, y, z
+            FROM shell_placements
+            WHERE id = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, shell.getId());
+            ResultSet result = statement.executeQuery();
+            while (result.next()) {
+                World world = Bukkit.getWorld(result.getString(1));
+                if (world == null) {
+                    continue;
+                }
+                Block block = world.getBlockAt(result.getInt(2), result.getInt(3), result.getInt(4));
+                shells.add(new ShellPlacement(shell, block));
+            }
+            return shells;
+        } catch (SQLException e) {
+            logger.error("failed to query shell placements: {}", shell.getId(), e);
             return Set.of();
         }
     }
@@ -308,7 +330,25 @@ public final class ShellManager extends ConstantsHolder {
         }
     }
 
-    public Integer getTotalShellCount() {
+    public int getAllTimeShellCount() {
+        String sql = """
+            SELECT seq
+            FROM sqlite_sequence
+            WHERE name = 'shells'
+            """;
+        try (Statement statement = connection.createStatement()) {
+            ResultSet result = statement.executeQuery(sql);
+            if (!result.next()) {
+                return 0;
+            }
+            return result.getInt(1);
+        } catch (SQLException e) {
+            logger.error("failed to get all time shell count", e);
+            return 0;
+        }
+    }
+
+    public int getCurrentShellCount() {
         String sql = """
             SELECT COUNT(*)
             FROM shells
@@ -316,12 +356,28 @@ public final class ShellManager extends ConstantsHolder {
         try (Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(sql);
             if (!result.next()) {
-                return null;
+                return 0;
             }
             return result.getInt(1);
         } catch (SQLException e) {
             logger.error("failed to get total shell count", e);
-            return null;
+            return 0;
+        }
+    }
+
+    public int getWorldShellCount(String world) {
+        String sql = """
+            SELECT COUNT(*)
+            FROM shells
+            WHERE world = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, world);
+            ResultSet result = statement.executeQuery();
+            return result.getInt(1);
+        } catch (SQLException e) {
+            logger.error("failed to get shell count for world {}", world, e);
+            return 0;
         }
     }
 }

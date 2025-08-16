@@ -53,16 +53,23 @@ public final class InfoCommand extends ConstantsHolder {
 
         builder.appendNewline();
         builder.append(MiniMessage.miniMessage().deserialize("> <1> <", Placeholder.unparsed("1", Message.TELEPORT.toString()))
-            .color(NamedTextColor.LIGHT_PURPLE)
+            .color(NamedTextColor.YELLOW)
             .hoverEvent(HoverEvent.showText(Message.CLICK_HERE.asComponent(NamedTextColor.YELLOW)))
             .clickEvent(ClickEvent.runCommand("/sh tp " + shell.getId()))
         );
 
         builder.appendNewline();
         builder.append(MiniMessage.miniMessage().deserialize("> <1> <", Placeholder.unparsed("1", Message.OPEN_MENU.toString()))
-            .color(NamedTextColor.LIGHT_PURPLE)
+            .color(NamedTextColor.YELLOW)
             .hoverEvent(HoverEvent.showText(Message.CLICK_HERE.asComponent(NamedTextColor.YELLOW)))
             .clickEvent(ClickEvent.runCommand("/sh menu " + shell.getId()))
+        );
+
+        builder.appendNewline();
+        builder.append(MiniMessage.miniMessage().deserialize("> <1> <", Placeholder.unparsed("1", Message.GET_ITEM.toString()))
+            .color(NamedTextColor.YELLOW)
+            .hoverEvent(HoverEvent.showText(Message.CLICK_HERE.asComponent(NamedTextColor.YELLOW)))
+            .clickEvent(ClickEvent.runCommand("/sh item " + shell.getId()))
         );
 
         context.getSource().getSender().sendMessage(builder);

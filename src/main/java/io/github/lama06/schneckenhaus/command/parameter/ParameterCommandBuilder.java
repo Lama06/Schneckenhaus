@@ -102,8 +102,10 @@ public final class ParameterCommandBuilder {
     }
 
     private int executeWithArguments(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        int result = command.run(context, argumentCache);
-        argumentCache.clear();
-        return result;
+        try {
+            return command.run(context, argumentCache);
+        } finally {
+            argumentCache.clear();
+        }
     }
 }

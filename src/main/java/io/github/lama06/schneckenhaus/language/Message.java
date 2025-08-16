@@ -47,10 +47,12 @@ public enum Message implements ComponentLike {
     CLICK_TO_COPY("Click to copy", "Zum Kopieren klicken"),
     CLICK_FOR_DETAILS("Click for details", "Zum Anzeigen von Details klicken"),
     CLICK_TO_REMOVE("Click to remove", "Zum Entfernen klicken"),
+    CLICK_TO_ADD("Click to add", "Zum Hinzufügen klicken"),
     CLICK_TO_EDIT("Click to edit", "Zum Bearbeiten klicken"),
     CLICK_HERE("Click here", "Hier klicken"),
     TELEPORT("Teleport", "Teleportieren"),
     OPEN_MENU("Open menu", "Menü öffnen"),
+    GET_ITEM("Get item", "Item erstellen"),
     BACK("Back", "Zurück"),
     CONFIRM_ACTION("Confirm: {1}", "Bestätigen: {1}"),
     CANCEL("Cancel", "Abbrechen"),
@@ -106,6 +108,16 @@ public enum Message implements ComponentLike {
     SELECTOR_ERROR_INVALID_ID("Shell not found: {1}", "Schneckenhaus nicht gefunden: {1}"),
 
     SELECTION("Selection", "Auswahl"),
+    CLEAR_SELECTION_SUCCESS("Your selection was cleared", "Deine Auswahl wurde gelöscht"),
+
+    TAG_ADD_SUCCESS("Tag {1} was added to {2} shells", "{2} Schneckenhäuser wurden mit {1} verschlagwortet"),
+    TAG_REMOVE_SUCCESS("Tag {1} was removed from {2} shells", "Schlagwort {1} von {2} Schneckenhäusern entfernt"),
+
+    ALL_TIME_COUNT("All time snail shell count", "Gesamtzahl aller jemals erstellter Schneckenhäuser"),
+    CURRENT_COUNT("Current snail shell count", "Aktuelle Anzahl an Schneckenhäusern"),
+    WORLD_COUNT("There are {1} snail shells in {2}", "Es gibt {1} Schneckenhäuser in {2}"),
+
+    DELETE_SUCCESS("Successfully deleted {1} snail shell(s)", "{1} Schneckenhaus/-häuser erfolgreich gelöscht"),
 
     OAK("Oak", "Eiche"),
     SPRUCE("Spruce", "Fichte"),

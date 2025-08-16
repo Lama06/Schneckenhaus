@@ -19,7 +19,7 @@ public final class DatabaseManager {
 
     public boolean connect() {
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:plugins/Schneckenhaus/schneckenhaus.sqlite");
+            connection = DriverManager.getConnection("jdbc:sqlite:plugins/Schneckenhaus/schneckenhaus.sqlite?foreign_keys=true");
         } catch (SQLException e) {
             logger.error("failed to open sqlite database", e);
             return false;

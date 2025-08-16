@@ -97,7 +97,7 @@ public final class SelectCommand extends ConstantsHolder {
                 WHEN 'size' THEN sized_shells.size
                 ELSE NULL
             END AS sort_criterion_value -- different name than params.sort_criterion, otherwise buggy ambiguity in ORDER BY clause
-                                        -- even the SQL Discord server was confused about this
+                                        -- even the SQL Discord server was confused about this 15.08.2025
         FROM params JOIN shells
             LEFT JOIN sized_shells ON shells.id = sized_shells.id
             LEFT JOIN shulker_shells ON shells.id = shulker_shells.id
@@ -143,8 +143,8 @@ public final class SelectCommand extends ConstantsHolder {
                 WHERE shell_permissions.id = shells.id AND shell_permissions.player = params.owner
             ), FALSE))
         ORDER BY
-            CASE WHEN params.sort_criterion = 'ascending' THEN sort_criterion_value ELSE NULL END ASC NULLS LAST,
-            CASE WHEN params.sort_criterion = 'descending' THEN sort_criterion_value ELSE NULL END DESC NULLS LAST
+            CASE WHEN params.sort_order = 'ascending' THEN sort_criterion_value ELSE 1 END ASC NULLS LAST,
+            CASE WHEN params.sort_order = 'descending' THEN sort_criterion_value ELSE 1 END DESC NULLS LAST
         LIMIT coalesce((SELECT "limit" FROM params), -1)  -- -1 means no limit
         OFFSET coalesce((SELECT "offset" FROM params), 0)
         """;
@@ -310,13 +310,13 @@ public final class SelectCommand extends ConstantsHolder {
             }
             i++;
 
-            if (params.get("sortCriterion") instanceof String sortCriterion) {
-                statement.setString(i, sortCriterion);
+            if (params.get("sortCriterion") instanceof SortCriterion sortCriterion) {
+                statement.setString(i, sortCriterion.name().toLowerCase(Locale.ROOT));
             }
             i++;
 
-            if (params.get("sortOrder") instanceof String sortOrder) {
-                statement.setString(i, sortOrder);
+            if (params.get("sortOrder") instanceof SortOrder sortOrder) {
+                statement.setString(i, sortOrder.name().toLowerCase(Locale.ROOT));
             }
             i++;
 

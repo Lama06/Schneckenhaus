@@ -2,4 +2,4 @@ package io.github.lama06.schneckenhaus.shell;
 
 import org.bukkit.block.Block;
 
-public record PlacedShell(Shell shell, Block block) { }
+public record ShellPlacement(Shell shell, Block block) { }

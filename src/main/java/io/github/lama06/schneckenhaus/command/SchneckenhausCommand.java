@@ -1,6 +1,7 @@
 package io.github.lama06.schneckenhaus.command;
 
 import io.github.lama06.schneckenhaus.command.debug.DebugCommand;
+import io.github.lama06.schneckenhaus.command.select.SelectionCommand;
 import io.github.lama06.schneckenhaus.command.select.SelectCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -18,9 +19,13 @@ public final class SchneckenhausCommand {
                 .then(new SelectCommand().create())
                 .then(new CreateCommand().create())
                 .then(new InfoCommand().create())
-                .then(new ListCommand().create())
+                .then(new SelectionCommand().create())
                 .then(new MenuCommand().create())
                 .then(new TeleportCommand().create())
+                .then(new TagCommand().create())
+                .then(new ItemCommand().create())
+                .then(new CountCommand().create())
+                .then(new DeleteCommand().create())
                 .then(new DebugCommand().create())
                 .build(),
             Set.of("sh")

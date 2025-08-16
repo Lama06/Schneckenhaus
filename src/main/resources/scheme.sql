@@ -22,6 +22,10 @@ CREATE TABLE shells (
     UNIQUE (position, world)
 ) STRICT;
 
+CREATE TABLE unused_shell_positions (
+    id INTEGER PRIMARY KEY
+) STRICT;
+
 CREATE TABLE sized_shells (
     id INTEGER PRIMARY KEY,
 
@@ -53,7 +57,7 @@ CREATE TABLE chest_shells (
 
     wood TEXT NOT NULL,
 
-    FOREIGN KEY (id) REFERENCES shells(id)
+    FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;
 
 CREATE TABLE custom_shells (
@@ -70,7 +74,7 @@ CREATE TABLE head_shells (
     head_owner TEXT NOT NULL,
     texture INTEGER Not NULL,
 
-    FOREIGN KEY (id) REFERENCES shells(id),
+    FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE,
     FOREIGN KEY (texture) REFERENCES head_shell_textures(id)
 ) STRICT;
 

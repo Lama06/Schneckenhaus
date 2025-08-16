@@ -86,7 +86,7 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
     private void startBstats() {
         Metrics metrics = new Metrics(this, BSTATS_ID);
         metrics.addCustomChart(new SimplePie("custom_shell_types", () -> getPluginConfig().getCustom().isEmpty() ? "no" : "yes"));
-        metrics.addCustomChart(new SingleLineChart("shells", shellManager::getTotalShellCount));
+        metrics.addCustomChart(new SingleLineChart("shells", shellManager::getCurrentShellCount));
         metrics.addCustomChart(new SimplePie("language", () -> {
             Language language = getTranslator().getLanguage();
             if (language == null) {

@@ -15,8 +15,13 @@ enum CombinationMode {
     APPEND {
         @Override
         List<Integer> combine(List<Integer> oldSelection, List<Integer> newSelection) {
+            Set<Integer> oldSelectionSet = new HashSet<>(oldSelection);
             List<Integer> selection = new ArrayList<>(oldSelection);
-            selection.addAll(newSelection);
+            for (Integer id : newSelection) {
+                if (!oldSelectionSet.contains(id)) {
+                    selection.add(id);
+                }
+            }
             return selection;
         }
     },

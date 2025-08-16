@@ -1,6 +1,7 @@
 package io.github.lama06.schneckenhaus;
 
 import io.github.lama06.schneckenhaus.language.Message;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -41,7 +42,14 @@ public enum Permission {
     UPGRADE_SNAIL_SHELL_SIZE(PermissionDefault.TRUE),
     CHANGE_SHELL_WOOD(PermissionDefault.TRUE),
 
-    BYPASS_ESCAPE_PREVENTION;
+    BYPASS_ESCAPE_PREVENTION,
+
+    COMMAND_SELECT("command.select"),
+    COMMAND_LIST("command.list"),
+    COMMAND_CREATE("command.create"),
+    COMMAND_INFO("command.info"),
+    COMMAND_DEBUG("command.debug", PermissionDefault.FALSE),
+    COMMAND_TP("command.tp");
 
     public static void register() {
         for (Permission permission : Permission.values()) {
@@ -83,6 +91,10 @@ public enum Permission {
 
     public boolean require(Permissible permissible) {
         return require(permissible, name);
+    }
+
+    public boolean check(CommandSourceStack source) {
+        return check(source.getSender());
     }
 
     public static boolean require(Permissible permissible, String permission) {

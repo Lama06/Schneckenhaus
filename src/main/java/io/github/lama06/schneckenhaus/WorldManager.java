@@ -19,7 +19,7 @@ public final class WorldManager {
          }
          """;
 
-    private final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
+    private final SchneckenhausPlugin plugin = SchneckenhausPlugin.INSTANCE;
     private final Logger logger = plugin.getSLF4JLogger();
 
     private final Map<String, World> worlds = new HashMap<>();

@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.screen;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.shell.ShellMenuAction;
@@ -58,7 +58,7 @@ public class ShellScreen extends Screen {
             return;
         }
         Bukkit.getScheduler().runTaskLater(
-            SchneckenPlugin.INSTANCE,
+            SchneckenhausPlugin.INSTANCE,
             () -> {
                 if (isOpen()) {
                     redraw();

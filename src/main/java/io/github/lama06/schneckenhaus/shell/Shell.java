@@ -1,8 +1,6 @@
 package io.github.lama06.schneckenhaus.shell;
 
 import io.github.lama06.schneckenhaus.Permission;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.config.SchneckenhausConfig;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.position.Position;
 import io.github.lama06.schneckenhaus.screen.InputScreen;
@@ -13,6 +11,7 @@ import io.github.lama06.schneckenhaus.shell.permission.ShellPermission;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionPlayerList;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
@@ -25,21 +24,14 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
-import org.slf4j.Logger;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
-public abstract class Shell implements ShellData {
+public abstract class Shell extends ConstantsHolder implements ShellData {
     public static String ITEM_ID = "id";
-
-    protected final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
-    protected final SchneckenhausConfig config = plugin.getPluginConfig();
-    protected final Connection connection = plugin.getDBConnection();
-    protected final Logger logger = plugin.getSLF4JLogger();
 
     protected final int id;
     protected World world;
@@ -190,7 +182,9 @@ public abstract class Shell implements ShellData {
 
     protected void addInformation(List<ShellInformation> information) {
         information.add(new ShellInformation(Message.ID.asComponent(), Component.text(id)));
-        information.add(new ShellInformation(Message.TYPE.asComponent(), Component.text(getFactory().getName()))); // TODO translatable
+        information.add(new ShellInformation(Message.TAGS.asComponent(), Component.text(getTags().toString())));
+
+        information.add(new ShellInformation(Message.TYPE.asComponent(), getFactory().getName().asComponent()));
 
         information.add(new ShellInformation(
             Message.GRID_POSITION.asComponent(),
@@ -209,6 +203,7 @@ public abstract class Shell implements ShellData {
             Message.POSITION_2.asComponent(),
             Component.text(area.position2().toString())
         ));
+        information.add(new ShellInformation(Message.AREA.asComponent(), Component.text(area.toString())));
 
         information.add(new ShellInformation(
             Message.CREATOR.asComponent(),
@@ -474,8 +469,8 @@ public abstract class Shell implements ShellData {
         }
         String sql = """
             SELECT player
-            FROM homes
-            WHERE shell_id = ?
+            FROM home_shells
+            WHERE id = ?
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql))  {
             statement.setInt(1, id);

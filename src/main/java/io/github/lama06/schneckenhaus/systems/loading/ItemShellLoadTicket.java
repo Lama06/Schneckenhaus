@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.systems.loading;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +18,7 @@ record ItemShellLoadTicket(UUID playerUuid, int shellId) implements ShellLoadTic
             if (item == null) {
                 continue;
             }
-            Integer id = SchneckenPlugin.INSTANCE.getShellManager().getShellId(item);
+            Integer id = SchneckenhausPlugin.INSTANCE.getShellManager().getShellId(item);
             if (id != null && id == shellId) {
                 return true;
             }

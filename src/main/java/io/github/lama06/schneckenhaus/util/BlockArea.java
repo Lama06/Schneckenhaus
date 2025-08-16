@@ -3,18 +3,19 @@ package io.github.lama06.schneckenhaus.util;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 
 public record BlockArea(BlockPosition position1, BlockPosition position2) implements Iterable<BlockPosition> {
-    public static BlockArea fromString(final String string) {
-        final String[] parts = string.split(" - ");
-        if (parts.length != 2) {
+    public static BlockArea fromString(String string) {
+        String[] parts = string.split(" ");
+        if (parts.length != 6) {
             return null;
         }
-        final BlockPosition position1 = BlockPosition.fromString(parts[0]);
-        final BlockPosition position2 = BlockPosition.fromString(parts[1]);
+        BlockPosition position1 = BlockPosition.fromString(String.join(" ", Arrays.copyOfRange(parts, 0, 3)));
+        BlockPosition position2 = BlockPosition.fromString(String.join(" ", Arrays.copyOfRange(parts, 3, 6)));
         if (position1 == null || position2 == null) {
             return null;
         }
@@ -139,6 +140,6 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
 
     @Override
     public String toString() {
-        return position1 + " - " + position2;
+        return position1 + " " + position2;
     }
 }

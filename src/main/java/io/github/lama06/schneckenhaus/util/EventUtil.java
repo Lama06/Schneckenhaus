@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.util;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventException;
@@ -47,7 +47,7 @@ public final class EventUtil {
                     try {
                         method.invoke(listener, event);
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        SchneckenPlugin.INSTANCE.getLogger().log(Level.SEVERE, "", e);
+                        SchneckenhausPlugin.INSTANCE.getLogger().log(Level.SEVERE, "", e);
                     }
                 }
             };
@@ -56,7 +56,7 @@ public final class EventUtil {
                 listener,
                 annotation.priority(),
                 executor,
-                SchneckenPlugin.INSTANCE,
+                SchneckenhausPlugin.INSTANCE,
                 annotation.ignoreCancelled()
             );
         }

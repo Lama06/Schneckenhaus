@@ -3,14 +3,15 @@ package io.github.lama06.schneckenhaus.shell.shulker;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.command.EnumArgumentType;
-import io.github.lama06.schneckenhaus.command.parameter.CommandParameter;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
+import io.github.lama06.schneckenhaus.command.argument.EnumArgumentType;
+import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShellFactory;
+import io.github.lama06.schneckenhaus.util.EnumUtil;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import net.kyori.adventure.text.Component;
@@ -21,7 +22,6 @@ import org.bukkit.DyeColor;
 import org.bukkit.Material;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public final class ShulkerShellFactory extends SizedShellFactory {
@@ -30,8 +30,13 @@ public final class ShulkerShellFactory extends SizedShellFactory {
     private ShulkerShellFactory() { }
 
     @Override
-    public String getName() {
+    public String getId() {
         return "shulker";
+    }
+
+    @Override
+    public Message getName() {
+        return Message.SHULKER;
     }
 
     @Override
@@ -73,29 +78,29 @@ public final class ShulkerShellFactory extends SizedShellFactory {
     }
 
     @Override
-    protected void addCommandParameters(List<CommandParameter> parameters) {
-        super.addCommandParameters(parameters);
-        parameters.add(CommandParameter.optional("color", new EnumArgumentType<>(DyeColor.class)));
-        parameters.add(CommandParameter.optional("rainbow", BoolArgumentType.bool()));
+    public void addCommandParameters(ParameterCommandBuilder builder) {
+        super.addCommandParameters(builder);
+        builder.parameter("color", new EnumArgumentType<>(DyeColor.class));
+        builder.parameter("rainbow", BoolArgumentType.bool());
     }
 
     @Override
-    public ShulkerShellBuilder parseCommandParameters(
+    public void parseCommandParameters(
+        ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
-        Map<String, ?> parameters
+        Map<String, Object> parameters
     ) throws CommandSyntaxException {
-        ShulkerShellBuilder builder = (ShulkerShellBuilder) super.parseCommandParameters(context, parameters);
+        super.parseCommandParameters(builder, context, parameters);
+        ShulkerShellBuilder shulkerBuilder = (ShulkerShellBuilder) builder;
         if (parameters.get("color") instanceof DyeColor color) {
-            builder.setColor(color);
+            shulkerBuilder.setColor(color);
         } else {
-            DyeColor[] colors = DyeColor.values();
-            builder.setColor(colors[ThreadLocalRandom.current().nextInt(colors.length)]);
+            shulkerBuilder.setColor(EnumUtil.getRandom(DyeColor.class));
         }
-        if (parameters.get("rainbow") instanceof Boolean bool) {
-            builder.setRainbow(bool);
+        if (parameters.get("rainbow") instanceof Boolean rainbow) {
+            shulkerBuilder.setRainbow(rainbow);
         }
-        builder.setRainbowColors(Arrays.stream(DyeColor.values()).collect(Collectors.toSet()));
-        return builder;
+        shulkerBuilder.setRainbowColors(Arrays.stream(DyeColor.values()).collect(Collectors.toSet()));
     }
 
     @Override
@@ -138,7 +143,7 @@ public final class ShulkerShellFactory extends SizedShellFactory {
 
     @Override
     public GlobalShulkerShellConfig getGlobalConfig() {
-        return SchneckenPlugin.INSTANCE.getPluginConfig().getShulker();
+        return SchneckenhausPlugin.INSTANCE.getPluginConfig().getShulker();
     }
 
     @Override

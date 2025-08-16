@@ -1,5 +1,7 @@
 package io.github.lama06.schneckenhaus.util;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public final class EnumUtil {
     private EnumUtil() { }
 
@@ -35,5 +37,10 @@ public final class EnumUtil {
             builder.append(Character.toLowerCase(letter));
         }
         return builder.toString();
+    }
+
+    public static <T extends Enum<T>> T getRandom(Class<T> type) {
+        T[] constants = type.getEnumConstants();
+        return constants[ThreadLocalRandom.current().nextInt(constants.length)];
     }
 }

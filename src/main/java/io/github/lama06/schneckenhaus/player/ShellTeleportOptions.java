@@ -1,8 +1,9 @@
 package io.github.lama06.schneckenhaus.player;
 
-public class ShellTeleportOptions {
+public final class ShellTeleportOptions {
     private boolean playSound = true;
     private boolean storePreviousPositionWhenNesting = true;
+    private boolean checkGeneralEnterPermission = true;
 
     public void setPlaySound(boolean playSound) {
         this.playSound = playSound;
@@ -18,5 +19,13 @@ public class ShellTeleportOptions {
 
     public boolean isStorePreviousPositionWhenNesting() {
         return storePreviousPositionWhenNesting;
+    }
+
+    public boolean isCheckGeneralEnterPermission() {
+        return checkGeneralEnterPermission;
+    }
+
+    public void setCheckGeneralEnterPermission(boolean checkGeneralEnterPermission) {
+        this.checkGeneralEnterPermission = checkGeneralEnterPermission;
     }
 }

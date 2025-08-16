@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.systems.loading;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.event.ShellPlaceEvent;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.systems.System;
@@ -23,8 +23,8 @@ public final class LoadShellSystem extends System {
 
     @Override
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::loadShellsInInventory, ADD_ITEM_TICKETS_DELAY, ADD_ITEM_TICKETS_DELAY);
-        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::removeInvalidTickets, CHECK_TICKETS_DELAY, CHECK_TICKETS_DELAY);
+        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::loadShellsInInventory, ADD_ITEM_TICKETS_DELAY, ADD_ITEM_TICKETS_DELAY);
+        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::removeInvalidTickets, CHECK_TICKETS_DELAY, CHECK_TICKETS_DELAY);
     }
 
     @EventHandler

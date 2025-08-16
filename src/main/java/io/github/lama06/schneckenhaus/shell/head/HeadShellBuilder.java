@@ -30,6 +30,10 @@ public final class HeadShellBuilder extends BuiltinShellBuilder implements HeadS
 
     @Override
     protected CompletableFuture<Object> prepareBuild() {
+        if (headOwner == null) {
+            headOwner = getCreator();
+        }
+
         PlayerProfile profile = Bukkit.getOfflinePlayer(headOwner).getPlayerProfile();
         return profile.update().thenApplyAsync(updatedProfile -> {
             URL skin = updatedProfile.getTextures().getSkin();
@@ -85,8 +89,12 @@ public final class HeadShellBuilder extends BuiltinShellBuilder implements HeadS
 
     @Override
     protected int buildDuringTransaction(Object prepared) throws SQLException {
-        int id = super.buildDuringTransaction(prepared);
+        if (prepared == null) {
+            throw new IllegalStateException("cannot build head shell");
+        }
         byte[] texture = (byte[]) prepared;
+
+        int id = super.buildDuringTransaction(prepared);
 
         Integer textureId = null;
 

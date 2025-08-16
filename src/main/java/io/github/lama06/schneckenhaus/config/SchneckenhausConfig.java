@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.config;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.shell.chest.GlobalChestShellConfig;
 import io.github.lama06.schneckenhaus.shell.custom.GlobalCustomShellConfig;
 import io.github.lama06.schneckenhaus.shell.head.GlobalHeadShellConfig;
@@ -142,7 +142,7 @@ public final class SchneckenhausConfig {
         config.put("repair_system", repairSystem.serialize());
         config.put("fallback_exit_location", fallbackExitLocation == null ? null : fallbackExitLocation.serialize());
 
-        config.put("data_version", SchneckenPlugin.INSTANCE.getPluginMeta().getVersion());
+        config.put("data_version", SchneckenhausPlugin.INSTANCE.getPluginMeta().getVersion());
 
         return config;
     }

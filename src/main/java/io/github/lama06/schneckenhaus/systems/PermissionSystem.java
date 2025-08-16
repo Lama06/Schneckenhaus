@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.Permission;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.shell.Shell;
@@ -22,7 +22,7 @@ public final class PermissionSystem extends System {
     @Override
     public void start() {
         Bukkit.getScheduler().runTaskTimer(
-            SchneckenPlugin.INSTANCE,
+            SchneckenhausPlugin.INSTANCE,
             this::enforceEnterPermissions,
             ENFORCE_ENTER_PERMISSIONS_DELAY,
             ENFORCE_ENTER_PERMISSIONS_DELAY

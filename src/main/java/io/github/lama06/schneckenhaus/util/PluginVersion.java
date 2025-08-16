@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.util;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import org.bukkit.persistence.PersistentDataAdapterContext;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -30,7 +30,7 @@ public record PluginVersion(int major, int minor, int patch) implements Comparab
     };
 
     public static PluginVersion current() {
-        return fromString(SchneckenPlugin.INSTANCE.getPluginMeta().getVersion());
+        return fromString(SchneckenhausPlugin.INSTANCE.getPluginMeta().getVersion());
     }
 
     public static PluginVersion fromString(final String string) {

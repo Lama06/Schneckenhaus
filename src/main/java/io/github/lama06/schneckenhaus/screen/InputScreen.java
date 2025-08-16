@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.screen;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.language.Message;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -47,7 +47,7 @@ public final class InputScreen implements Listener {
         ).open();
     }
 
-    private final NamespacedKey anvilInputItemKey = new NamespacedKey(SchneckenPlugin.INSTANCE, "anvil_input_item");
+    private final NamespacedKey anvilInputItemKey = new NamespacedKey(SchneckenhausPlugin.INSTANCE, "anvil_input_item");
 
     private final Player player;
     private final Component title;
@@ -88,7 +88,7 @@ public final class InputScreen implements Listener {
         });
         inventory.setFirstItem(firstItem);
 
-        Bukkit.getPluginManager().registerEvents(this, SchneckenPlugin.INSTANCE);
+        Bukkit.getPluginManager().registerEvents(this, SchneckenhausPlugin.INSTANCE);
     }
 
     @EventHandler
@@ -102,7 +102,8 @@ public final class InputScreen implements Listener {
         }
         String input = view.getRenameText();
         HandlerList.unregisterAll(this);
-        Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, () -> {
+        Bukkit.getScheduler().runTask(
+            SchneckenhausPlugin.INSTANCE, () -> {
             player.closeInventory();
             callback.accept(input);
 
@@ -116,8 +117,8 @@ public final class InputScreen implements Listener {
             return;
         }
         HandlerList.unregisterAll(this);
-        Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, cancelCallback);
-        Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, this::removePaperFromInventory);
+        Bukkit.getScheduler().runTask(SchneckenhausPlugin.INSTANCE, cancelCallback);
+        Bukkit.getScheduler().runTask(SchneckenhausPlugin.INSTANCE, this::removePaperFromInventory);
     }
 
     @EventHandler

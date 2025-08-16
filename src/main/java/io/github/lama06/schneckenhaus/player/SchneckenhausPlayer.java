@@ -1,11 +1,10 @@
 package io.github.lama06.schneckenhaus.player;
 
 import io.github.lama06.schneckenhaus.Permission;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.config.SchneckenhausConfig;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.position.Position;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.title.Title;
@@ -15,21 +14,14 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.slf4j.Logger;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class SchneckenhausPlayer {
-    private final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
-    private final SchneckenhausConfig config = plugin.getPluginConfig();
-    private final Connection connection = plugin.getDBConnection();
-    private final Logger logger = plugin.getSLF4JLogger();
-
+public final class SchneckenhausPlayer extends ConstantsHolder {
     private final Player player;
 
     public SchneckenhausPlayer(Player player) {
@@ -66,7 +58,7 @@ public final class SchneckenhausPlayer {
         if (isInside(shell)) {
             return;
         }
-        if (!Permission.ENTER_SHELL.require(player)) {
+        if (options.isCheckGeneralEnterPermission() && !Permission.ENTER_SHELL.require(player)) {
             return;
         }
         List<Location> previousLocations = getPreviousLocations();
@@ -92,9 +84,9 @@ public final class SchneckenhausPlayer {
         }
 
         String incrementStatisticsSql = """
-            INSERT INTO shell_access_statistics(shell, player, amount)
+            INSERT INTO shell_access_statistics(id, player, amount)
             VALUES (?, ?, 1)
-            ON CONFLICT (shell, player) DO UPDATE SET amount = amount + 1
+            ON CONFLICT (id, player) DO UPDATE SET amount = amount + 1
             """;
         try (PreparedStatement statement = connection.prepareStatement(incrementStatisticsSql)) {
             statement.setInt(1, shell.getId());
@@ -294,7 +286,7 @@ public final class SchneckenhausPlayer {
 
     public Shell getHomeShell() {
         String sql = """
-            SELECT home_id
+            SELECT id
             FROM home_shells
             WHERE player = ?
             """;
@@ -304,7 +296,7 @@ public final class SchneckenhausPlayer {
             if (!result.next()) {
                 return null;
             }
-            return plugin.getShellManager().getShell(result.getInt("home_id"));
+            return plugin.getShellManager().getShell(result.getInt("id"));
         } catch (SQLException e) {
             logger.error("failed to query player's home shell: {}", player, e);
             return null;
@@ -313,9 +305,9 @@ public final class SchneckenhausPlayer {
 
     public void setHomeShell(int id) {
         String sql = """
-            INSERT INTO home_shells(player, home_id)
+            INSERT INTO home_shells(player, id)
             VALUES (?, ?)
-            ON CONFLICT (player) DO UPDATE home_id = excluded.home_id
+            ON CONFLICT (player) DO UPDATE id = excluded.id
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, player.getUniqueId().toString());

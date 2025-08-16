@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.shell.permission;
 
 import io.github.lama06.schneckenhaus.Permission;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import net.kyori.adventure.text.Component;
@@ -16,8 +16,8 @@ import java.sql.SQLException;
 import java.util.Locale;
 
 public final class ShellPermission {
-    private final Connection connection = SchneckenPlugin.INSTANCE.getDBConnection();
-    private final Logger logger = SchneckenPlugin.INSTANCE.getSLF4JLogger();
+    private final Connection connection = SchneckenhausPlugin.INSTANCE.getDBConnection();
+    private final Logger logger = SchneckenhausPlugin.INSTANCE.getSLF4JLogger();
 
     private final Shell shell;
     private final String attribute;
@@ -90,7 +90,7 @@ public final class ShellPermission {
 
     public Component toComponent() {
         TextComponent.Builder builder = Component.text();
-        builder.append(mode.getName());
+        builder.append(getMode().getName());
         ShellPermissionPlayerList players = switch (mode) {
             case WHITELIST -> whitelist;
             case BLACKLIST -> blacklist;

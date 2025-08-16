@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.systems.loading.LoadShellSystem;
 import org.bukkit.Bukkit;
 
@@ -27,7 +27,7 @@ public final class Systems {
 
     private static void start(System system) {
         if (system.isEnabled()) {
-            Bukkit.getPluginManager().registerEvents(system, SchneckenPlugin.INSTANCE);
+            Bukkit.getPluginManager().registerEvents(system, SchneckenhausPlugin.INSTANCE);
             system.start();
         }
     }

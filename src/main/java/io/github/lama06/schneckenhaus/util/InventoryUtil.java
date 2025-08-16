@@ -47,10 +47,8 @@ public final class InventoryUtil {
     }
 
     private static Component removeDefaultFormatting(Component component) {
-        if (component.decoration(TextDecoration.ITALIC) == TextDecoration.State.NOT_SET) {
-            component = component.decoration(TextDecoration.ITALIC, false);
-        }
-        return component.colorIfAbsent(NamedTextColor.WHITE);
+        return component.decorationIfAbsent(TextDecoration.ITALIC, TextDecoration.State.FALSE)
+            .colorIfAbsent(NamedTextColor.WHITE);
     }
 
     public static void removeDefaultFormatting(ItemStack item) {

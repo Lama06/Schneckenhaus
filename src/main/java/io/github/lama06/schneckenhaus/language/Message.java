@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.language;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.format.TextColor;
@@ -11,7 +11,12 @@ import java.util.Locale;
 public enum Message implements ComponentLike {
     SNAIL_SHELL("Snail Shell", "Schneckenhaus"),
     ID("ID", "ID"),
+    TAGS("Tags", "Schlagwörter"),
     TYPE("Type", "Typ"),
+    CHEST("Chest", "Truhe"),
+    SHULKER("Shulker Box", "Shulker-Kiste"),
+    HEAD("Head", "Kopf"),
+    CUSTOM("Custom", "Benutzerdefiniert"),
     CREATOR("Creator", "Ersteller"),
     CREATION_TIME("Creation Time", "Erstellungsdatum"),
     OWNERS("Owners", "Eigentümer"),
@@ -20,6 +25,7 @@ public enum Message implements ComponentLike {
     GRID_POSITION("Grid Position", "Position im Häuserraster"),
     POSITION_1("Position 1", "Position 1"),
     POSITION_2("Position 2", "Position 2"),
+    AREA("Area", "Bereich"),
     ENTER_PERMISSION("Enter Permission", "Zutrittsrecht"),
     BUILD_PERMISSION("Build Permission", "Baurecht"),
     ACCESS_COUNT("Access Count", "Zutrittszahl"),
@@ -33,12 +39,18 @@ public enum Message implements ComponentLike {
 
     ON("on", "an"),
     OFF("off", "aus"),
+    EMPTY("empty", "leer"),
     SELECTED("Selected", "Ausgewählt"),
     CLICK_TO_ENABLE("Click to enable", "Zum Einschalten klicken"),
     CLICK_TO_DISABLE("Click to disable", "Zum Ausschalten klicken"),
     CLICK_TO_SELECT("Click to select", "Zum Auswählen klicken"),
+    CLICK_TO_COPY("Click to copy", "Zum Kopieren klicken"),
+    CLICK_FOR_DETAILS("Click for details", "Zum Anzeigen von Details klicken"),
     CLICK_TO_REMOVE("Click to remove", "Zum Entfernen klicken"),
     CLICK_TO_EDIT("Click to edit", "Zum Bearbeiten klicken"),
+    CLICK_HERE("Click here", "Hier klicken"),
+    TELEPORT("Teleport", "Teleportieren"),
+    OPEN_MENU("Open menu", "Menü öffnen"),
     BACK("Back", "Zurück"),
     CONFIRM_ACTION("Confirm: {1}", "Bestätigen: {1}"),
     CANCEL("Cancel", "Abbrechen"),
@@ -80,6 +92,20 @@ public enum Message implements ComponentLike {
     CURRENT_SIZE("Current size", "Aktuelle Größe"),
     SIZE_AFTER_UPGRADE("Upgraded size", "Neue Größe"),
     SIZE_UPGRADE_SUCCESS("Successfully upgraded size!", "Schneckenhaus erfolgreich vergrößert!"),
+
+    COMMAND_ERROR_NOT_PLAYER("Only players can use this command", "Nur Spieler können diesen Befehl verwenden"),
+    INVALID_SHELL_TYPE("Invalid shell type: {1}", "Unbekannter Schneckenhaustyp: {1}"),
+    SELECT_SHELLS_SUCCESS("Selected {1} shells", "{1} Schneckenhäuser ausgewählt"),
+    CREATE_SHELL_SUCCESS("Successfully created shell with ID {1}", "Schneckenhaus mit der ID {1} erfolgreich erstellt"),
+
+    SELECTOR_SELECTION_DESCRIPTION("Result of /sh select ...", "Ergbnis von /sh select ..."),
+    SELECTOR_HERE_DESCRIPTION("Refers to the shell at your location", "Bezieht sich auf das Schneckenhaus bei deiner Position"),
+    INVALID_SELECTOR("Invalid shell selector: {1}", "Ungültige Schneckenhausauswahl: {1}"),
+    SELECTOR_ERROR_NOT_AT_SHELL("There is no shell at your location", "Du befindest dich nicht in einem Schneckenhaus"),
+    SELECTOR_ERROR_EMPTY_SELECTION("Your selection is empty. Use /sh select ...", "Keine Schneckenhäuser sind ausgewählt. Verwende /sh select ..."),
+    SELECTOR_ERROR_INVALID_ID("Shell not found: {1}", "Schneckenhaus nicht gefunden: {1}"),
+
+    SELECTION("Selection", "Auswahl"),
 
     OAK("Oak", "Eiche"),
     SPRUCE("Spruce", "Fichte"),
@@ -136,13 +162,13 @@ public enum Message implements ComponentLike {
         this.german = german;
     }
 
-    public String toString(String... args) {
-        return SchneckenPlugin.INSTANCE.getTranslator().translate(this, args);
+    public String toString(Object... args) {
+        return SchneckenhausPlugin.INSTANCE.getTranslator().translate(this, args);
     }
 
     @Override
     public String toString() {
-        return SchneckenPlugin.INSTANCE.getTranslator().translate(this);
+        return SchneckenhausPlugin.INSTANCE.getTranslator().translate(this);
     }
 
     @Override
@@ -150,11 +176,11 @@ public enum Message implements ComponentLike {
         return Component.text(toString());
     }
 
-    public Component asComponent(String... args) {
+    public Component asComponent(Object... args) {
         return Component.text(toString(args));
     }
 
-    public Component asComponent(TextColor color, String... args) {
+    public Component asComponent(TextColor color, Object... args) {
         return Component.text(toString(args), color);
     }
 

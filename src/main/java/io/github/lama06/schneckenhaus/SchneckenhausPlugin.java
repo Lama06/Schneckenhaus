@@ -1,11 +1,13 @@
 package io.github.lama06.schneckenhaus;
 
+import io.github.lama06.schneckenhaus.command.SchneckenhausCommand;
 import io.github.lama06.schneckenhaus.config.ConfigManager;
 import io.github.lama06.schneckenhaus.config.SchneckenhausConfig;
 import io.github.lama06.schneckenhaus.language.Language;
 import io.github.lama06.schneckenhaus.language.Translator;
 import io.github.lama06.schneckenhaus.shell.ShellManager;
 import io.github.lama06.schneckenhaus.systems.Systems;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bstats.charts.SingleLineChart;
@@ -18,18 +20,19 @@ import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.logging.Level;
 
-public final class SchneckenPlugin extends JavaPlugin implements Listener {
+public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
     private static final int BSTATS_ID = 21674;
-    public static SchneckenPlugin INSTANCE;
+    public static SchneckenhausPlugin INSTANCE;
 
     private ConfigManager config;
     private Translator translator;
     private DatabaseManager database;
     private WorldManager worlds;
     private ShellManager shellManager;
+    private SchneckenhausCommand command;
 
 
-    public SchneckenPlugin() {
+    public SchneckenhausPlugin() {
         INSTANCE = this;
     }
 
@@ -61,6 +64,9 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
             Permission.register();
 
             Systems.start();
+
+            command = new SchneckenhausCommand();
+            getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> command.register(event.registrar()));
 
             try {
                 startBstats();
@@ -104,5 +110,9 @@ public final class SchneckenPlugin extends JavaPlugin implements Listener {
 
     public Connection getDBConnection() {
         return database.getConnection();
+    }
+
+    public SchneckenhausCommand getCommand() {
+        return command;
     }
 }

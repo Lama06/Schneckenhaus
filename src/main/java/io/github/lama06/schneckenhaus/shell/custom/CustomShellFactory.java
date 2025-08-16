@@ -3,9 +3,10 @@ package io.github.lama06.schneckenhaus.shell.custom;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.command.parameter.CommandParameter;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
+import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.config.ItemConfig;
+import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
@@ -14,7 +15,6 @@ import io.github.lama06.schneckenhaus.shell.ShellFactory;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.Material;
 
-import java.util.List;
 import java.util.Map;
 
 public final class CustomShellFactory extends ShellFactory {
@@ -23,8 +23,13 @@ public final class CustomShellFactory extends ShellFactory {
     private CustomShellFactory() { }
 
     @Override
-    public String getName() {
+    public String getId() {
         return "custom";
+    }
+
+    @Override
+    public Message getName() {
+        return Message.CUSTOM;
     }
 
     @Override
@@ -35,7 +40,7 @@ public final class CustomShellFactory extends ShellFactory {
     @Override
     public boolean getCraftingResult(ShellBuilder builder, CraftingInput input) {
         CustomShellBuilder customBuilder = (CustomShellBuilder) builder;
-        Map<String, GlobalCustomShellConfig> customConfigs = SchneckenPlugin.INSTANCE.getPluginConfig().getCustom();
+        Map<String, GlobalCustomShellConfig> customConfigs = SchneckenhausPlugin.INSTANCE.getPluginConfig().getCustom();
 
         customConfigs:
         for (String name : customConfigs.keySet()) {
@@ -64,19 +69,23 @@ public final class CustomShellFactory extends ShellFactory {
     }
 
     @Override
-    protected void addCommandParameters(List<CommandParameter> parameters) {
-        super.addCommandParameters(parameters);
-        parameters.add(CommandParameter.required("template", StringArgumentType.string()));
+    public void addCommandParameters(ParameterCommandBuilder builder) {
+        super.addCommandParameters(builder);
+        builder.parameter("template", StringArgumentType.string());
     }
 
     @Override
-    public CustomShellBuilder parseCommandParameters(
+    public void parseCommandParameters(
+        ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
-        Map<String, ?> parameters
+        Map<String, Object> parameters
     ) throws CommandSyntaxException {
-        CustomShellBuilder builder = (CustomShellBuilder) super.parseCommandParameters(context, parameters);
-        builder.setTemplate((String) parameters.get("template"));
-        return builder;
+        super.parseCommandParameters(builder, context, parameters);
+
+        CustomShellBuilder customBuilder = (CustomShellBuilder) builder;
+        if (parameters.get("template") instanceof String template) {
+            customBuilder.setTemplate(template);
+        }
     }
 
     @Override
@@ -92,7 +101,7 @@ public final class CustomShellFactory extends ShellFactory {
     @Override
     protected Material getItemType(ShellData data) {
         CustomShellData customData = (CustomShellData) data;
-        return SchneckenPlugin.INSTANCE.getPluginConfig().getCustom().get(customData.getTemplate()).getItem();
+        return SchneckenhausPlugin.INSTANCE.getPluginConfig().getCustom().get(customData.getTemplate()).getItem();
     }
 
     @Override

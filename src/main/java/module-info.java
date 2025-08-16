@@ -15,4 +15,5 @@ module io.github.lama06.schneckenhaus {
     requires bstats.base;
     requires java.net.http;
     requires java.desktop;
+    requires com.google.common;
 }

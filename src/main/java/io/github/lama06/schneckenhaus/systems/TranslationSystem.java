@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.systems;
 
 import com.destroystokyo.paper.ClientOption;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.language.Language;
 import io.github.lama06.schneckenhaus.language.Translator;
 import org.bukkit.event.EventHandler;
@@ -12,7 +12,7 @@ import java.util.Locale;
 public final class TranslationSystem extends System {
     @EventHandler
     private void setupLanguage(PlayerJoinEvent event) {
-        Translator translator = SchneckenPlugin.INSTANCE.getTranslator();
+        Translator translator = SchneckenhausPlugin.INSTANCE.getTranslator();
         if (translator.getLanguage() != null) {
             return;
         }

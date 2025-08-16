@@ -1,24 +1,22 @@
 package io.github.lama06.schneckenhaus.shell;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
 import io.github.lama06.schneckenhaus.config.WorldConfig;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionMode;
 import io.github.lama06.schneckenhaus.util.ConcurrencyUtils;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.slf4j.Logger;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class ShellBuilder implements ShellData {
-    protected final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
-    protected final Connection connection = SchneckenPlugin.INSTANCE.getDBConnection();
-    protected final Logger logger = SchneckenPlugin.INSTANCE.getSLF4JLogger();
-
+public abstract class ShellBuilder extends ConstantsHolder implements ShellData {
     private ShellCreationType creationType;
     private World world;
     private int position;
@@ -64,6 +62,9 @@ public abstract class ShellBuilder implements ShellData {
                 }
 
                 Shell shell = plugin.getShellManager().getShell(id);
+                if (shell == null) {
+                    return null;
+                }
                 shell.placeInitially();
 
                 return shell;
@@ -124,6 +125,10 @@ public abstract class ShellBuilder implements ShellData {
             }
         }
 
+        if (owner == null) {
+            owner = creator;
+        }
+
         String insertSql = """
             INSERT INTO shells(world, position, creator, creation_type, type, name, enter_permission_mode, build_permission_mode)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
@@ -134,7 +139,7 @@ public abstract class ShellBuilder implements ShellData {
             statement.setInt(i++, position);
             statement.setString(i++, creator == null ? null : creator.toString());
             statement.setString(i++, creationType.name().toLowerCase(Locale.ROOT));
-            statement.setString(i++, getFactory().getName());
+            statement.setString(i++, getFactory().getId());
             statement.setString(i++, name);
             statement.setString(i++, enterPermissionMode.name().toLowerCase(Locale.ROOT));
             statement.setString(i++, buildPermissionMode.name().toLowerCase(Locale.ROOT));

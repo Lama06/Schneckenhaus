@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
 
@@ -12,7 +12,7 @@ public final class ShellRepairSystem extends System {
 
     @Override
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::repairShells, 0, config.getRepairSystem().getDelay());
+        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::repairShells, 0, config.getRepairSystem().getDelay());
     }
 
     private void repairShells() {

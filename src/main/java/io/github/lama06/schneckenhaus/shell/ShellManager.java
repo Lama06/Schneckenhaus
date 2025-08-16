@@ -1,8 +1,7 @@
 package io.github.lama06.schneckenhaus.shell;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
-import io.github.lama06.schneckenhaus.config.SchneckenhausConfig;
 import io.github.lama06.schneckenhaus.position.Position;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -12,21 +11,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import org.slf4j.Logger;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public final class ShellManager {
-    private final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
-    private final SchneckenhausConfig config = plugin.getPluginConfig();
-    private final Logger logger = plugin.getSLF4JLogger();
-    private final Connection connection = plugin.getDBConnection();
-
+public final class ShellManager extends ConstantsHolder {
     public boolean isShellWorld(World world) {
         return config.getWorlds().containsKey(world.getName());
     }

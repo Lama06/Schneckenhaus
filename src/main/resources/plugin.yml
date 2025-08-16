@@ -1,12 +1,7 @@
 name: Schneckenhaus
-main: io.github.lama06.schneckenhaus.SchneckenPlugin
-description: Makes it possible to enter shulker boxes and carry your house around with you like a snail.
+main: io.github.lama06.schneckenhaus.SchneckenhausPlugin
+description: Enter shulker boxes, chests, player heads and much more!
 version: ${project.version}
 api-version: 1.21
 website: https://github.com/Lama06/Schneckenhaus
 author: Lama06
-commands:
-  schneckenhaus:
-    description: The main command of the Schneckenhaus plugin.
-    usage: /sh help
-    aliases: sh

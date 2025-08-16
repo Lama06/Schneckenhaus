@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.screen;
 
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.github.lama06.schneckenhaus.util.EventUtil;
 import io.github.lama06.schneckenhaus.util.InventoryUtil;
 import net.kyori.adventure.text.Component;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class Screen implements Listener {
+public abstract class Screen extends ConstantsHolder implements Listener {
     protected final Player player;
     protected Inventory inventory;
     protected InventoryView view;

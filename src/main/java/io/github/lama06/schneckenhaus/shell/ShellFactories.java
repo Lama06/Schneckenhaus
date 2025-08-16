@@ -20,7 +20,7 @@ public final class ShellFactories {
     }
 
     private static void registerFactory(ShellFactory factory) {
-        FACTORIES.put(factory.getName(), factory);
+        FACTORIES.put(factory.getId(), factory);
     }
 
     public static ShellFactory getByName(String name) {

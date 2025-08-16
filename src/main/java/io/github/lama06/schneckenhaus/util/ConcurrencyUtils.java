@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.util;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import org.bukkit.Bukkit;
 
 public final class ConcurrencyUtils {
@@ -8,7 +8,7 @@ public final class ConcurrencyUtils {
         if (Bukkit.isPrimaryThread()) {
             runnable.run();
         } else {
-            Bukkit.getScheduler().runTask(SchneckenPlugin.INSTANCE, runnable);
+            Bukkit.getScheduler().runTask(SchneckenhausPlugin.INSTANCE, runnable);
         }
     }
 }

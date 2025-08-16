@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.shell.permission;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.language.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -17,8 +17,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class ShellPermissionPlayerList {
-    private final Connection connection = SchneckenPlugin.INSTANCE.getDBConnection();
-    private final Logger logger = SchneckenPlugin.INSTANCE.getSLF4JLogger();
+    private final Connection connection = SchneckenhausPlugin.INSTANCE.getDBConnection();
+    private final Logger logger = SchneckenhausPlugin.INSTANCE.getSLF4JLogger();
 
     private final int id;
     private final String name;
@@ -105,7 +105,7 @@ public final class ShellPermissionPlayerList {
 
     @Override
     public String toString() {
-        return players.stream()
+        return get().stream()
             .map(Bukkit::getOfflinePlayer)
             .map(OfflinePlayer::getName)
             .map(name -> Objects.requireNonNullElse(name, Message.UNKNOWN_PLAYER.toString()))

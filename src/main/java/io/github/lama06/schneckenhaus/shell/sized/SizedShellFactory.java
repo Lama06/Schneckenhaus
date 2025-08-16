@@ -3,7 +3,7 @@ package io.github.lama06.schneckenhaus.shell.sized;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.lama06.schneckenhaus.command.parameter.CommandParameter;
+import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.position.Position;
 import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
@@ -15,6 +15,7 @@ import net.kyori.adventure.text.format.TextDecoration;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 public abstract class SizedShellFactory extends BuiltinShellFactory {
     public abstract int getMinSize();
@@ -50,21 +51,24 @@ public abstract class SizedShellFactory extends BuiltinShellFactory {
     }
 
     @Override
-    protected void addCommandParameters(List<CommandParameter> parameters) {
-        super.addCommandParameters(parameters);
-        parameters.add(CommandParameter.optional("size", IntegerArgumentType.integer(getMinSize(), getMaxSize())));
+    public void addCommandParameters(ParameterCommandBuilder builder) {
+        super.addCommandParameters(builder);
+        builder.parameter("size", IntegerArgumentType.integer(getMinSize(), getMaxSize()));
     }
 
     @Override
-    public SizedShellBuilder parseCommandParameters(
+    public void parseCommandParameters(
+        ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
-        Map<String, ?> parameters
+        Map<String, Object> parameters
     ) throws CommandSyntaxException {
-        SizedShellBuilder builder = (SizedShellBuilder) super.parseCommandParameters(context, parameters);
+        super.parseCommandParameters(builder, context, parameters);
+        SizedShellBuilder sizedBuilder = (SizedShellBuilder) builder;
         if (parameters.get("size") instanceof Integer size) {
-            builder.setSize(size);
+            sizedBuilder.setSize(size);
+        } else {
+            sizedBuilder.setSize(getMinSize() + ThreadLocalRandom.current().nextInt(Math.min(getMaxSize(), 32) - getMinSize() + 1));
         }
-        return builder;
     }
 
     @Override

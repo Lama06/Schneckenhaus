@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.shell.sized;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellBuilder;
 
 import java.sql.Connection;
@@ -17,7 +17,7 @@ public abstract class SizedShellBuilder extends BuiltinShellBuilder implements S
     protected int buildDuringTransaction(Object prepared) throws SQLException {
         int id = super.buildDuringTransaction(prepared);
 
-        Connection connection = SchneckenPlugin.INSTANCE.getDBConnection();
+        Connection connection = SchneckenhausPlugin.INSTANCE.getDBConnection();
         String sql = """
             INSERT INTO sized_shells(id, size)
             VALUES (?, ?)

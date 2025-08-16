@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.systems.loading;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -19,6 +19,6 @@ record BlockShellLoadTicket(
         if (!world.isChunkLoaded(chunkX, chunkZ)) {
             return false;
         }
-        return SchneckenPlugin.INSTANCE.getShellManager().getShellIds(worldName, chunkX, chunkZ).contains(shellId);
+        return SchneckenhausPlugin.INSTANCE.getShellManager().getShellIds(worldName, chunkX, chunkZ).contains(shellId);
     }
 }

@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.language;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import org.slf4j.Logger;
 import org.yaml.snakeyaml.Yaml;
 
@@ -26,7 +26,7 @@ public final class Translator {
         # Remove the hash symbol # if you change a message.
         """;
 
-    private final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
+    private final SchneckenhausPlugin plugin = SchneckenhausPlugin.INSTANCE;
     private final Logger logger = plugin.getSLF4JLogger();
 
     private Language language; // null if default
@@ -116,10 +116,10 @@ public final class Translator {
         };
     }
 
-    public String translate(Message message, String... args) {
+    public String translate(Message message, Object... args) {
         String translation = translate(message);
         for (int i = 0; i < args.length; i++) {
-            translation = translation.replace("{" + (i + 1) + "}", args[i]);
+            translation = translation.replace("{" + (i + 1) + "}", args[i].toString());
         }
         return translation;
     }

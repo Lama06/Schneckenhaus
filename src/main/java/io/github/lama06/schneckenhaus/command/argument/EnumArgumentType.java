@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.command;
+package io.github.lama06.schneckenhaus.command.argument;
 
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;

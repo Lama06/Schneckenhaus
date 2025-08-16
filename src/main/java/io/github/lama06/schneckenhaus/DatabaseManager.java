@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class DatabaseManager {
-    private final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
+    private final SchneckenhausPlugin plugin = SchneckenhausPlugin.INSTANCE;
     private final Logger logger = plugin.getSLF4JLogger();
     private Connection connection;
 

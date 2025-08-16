@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.config;
 
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import org.slf4j.Logger;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -23,7 +23,7 @@ public final class ConfigManager {
         
         """;
 
-    private final SchneckenPlugin plugin = SchneckenPlugin.INSTANCE;
+    private final SchneckenhausPlugin plugin = SchneckenhausPlugin.INSTANCE;
     private final Logger logger = plugin.getSLF4JLogger();
 
     private SchneckenhausConfig config;

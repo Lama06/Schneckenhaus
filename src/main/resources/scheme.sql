@@ -121,21 +121,21 @@ CREATE TABLE shell_placements(
 
 CREATE TABLE home_shells (
     player TEXT PRIMARY KEY,
-    home_id INTEGER,
+    id INTEGER,
 
-    UNIQUE (home_id),
-    FOREIGN KEY (home_id) REFERENCES shells(id) ON DELETE CASCADE
+    UNIQUE (id),
+    FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;
 
 CREATE TABLE shell_access_statistics (
-    shell INTEGER NOT NULL,
+    id INTEGER NOT NULL,
     player TEXT NOT NULL,
 
     amount INTEGER NOT NULL CHECK (amount >= 0),
     last_time TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    PRIMARY KEY (shell, player),
-    FOREIGN KEY (shell) REFERENCES shells(id) ON DELETE CASCADE
+    PRIMARY KEY (id, player),
+    FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;
 
 CREATE TABLE previous_player_locations (

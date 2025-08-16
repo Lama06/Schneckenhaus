@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.Permission;
-import io.github.lama06.schneckenhaus.SchneckenPlugin;
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 public final class LeaveShellSystem extends System {
     public LeaveShellSystem() {
-        Bukkit.getScheduler().runTaskTimer(SchneckenPlugin.INSTANCE, this::detectPlayerLeaveSnailShellUnexpectedly, 0, 10);
+        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::detectPlayerLeaveSnailShellUnexpectedly, 0, 10);
     }
 
     @EventHandler

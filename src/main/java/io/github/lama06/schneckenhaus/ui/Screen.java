@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.screen;
+package io.github.lama06.schneckenhaus.ui;
 
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.github.lama06.schneckenhaus.util.EventUtil;
@@ -9,25 +9,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public abstract class Screen extends ConstantsHolder implements Listener {
     protected final Player player;
     protected Inventory inventory;
     protected InventoryView view;
 
-    private boolean open;
-    private final Map<InventoryPosition, Consumer<ClickType>> callbacks = new HashMap<>();
+    private final Map<InventoryPosition, ItemRegistration> items = new HashMap<>();
+    private BukkitTask tickTask;
 
     public Screen(Player player) {
         this.player = player;
@@ -39,94 +39,69 @@ public abstract class Screen extends ConstantsHolder implements Listener {
 
     protected abstract void draw();
 
-    protected void onClick(int x, int y, ClickType type) { }
-
     protected void onOpen() { }
 
     protected void onClose() { }
 
     public final void open() {
-        if (open) {
-            return;
-        }
-        open = true;
-
         inventory = Bukkit.createInventory(player, 9*getHeight(), getTitle());
         draw();
         view = player.openInventory(inventory);
 
         EventUtil.registerAll(this);
+        tickTask = Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 1, 1);
 
         onOpen();
     }
 
     public final void close() {
-        if (!open) {
-            return;
-        }
-        open = false;
-
         onClose();
 
         view.close();
-        view = null;
-        inventory = null;
-        callbacks.clear();
+        items.clear();
+        tickTask.cancel();
         HandlerList.unregisterAll(this);
     }
 
     public final void redraw() {
-        if (!open) {
-            return;
-        }
         inventory.clear();
-        callbacks.clear();
+        items.clear();
         draw();
     }
 
-    protected final void setItem(int x, int y, ItemStack item, Consumer<ClickType> callback) {
-        InventoryUtil.removeDefaultFormatting(item);
-        inventory.setItem(9*y + x, item);
-        callbacks.put(new InventoryPosition(x, y), callback);
+    protected final void setItem(InventoryPosition position, Supplier<ItemStack> item, Integer animationDelay, Runnable callback) {
+        inventory.setItem(position.getSlot(), InventoryUtil.removeDefaultFormatting(item.get()));
+        items.put(position, new ItemRegistration(callback, item, animationDelay));
     }
 
-    protected final void setItem(int x, int y, ItemStack item) {
-        setItem(x, y, item, () -> { });
-    }
-
-    protected final void setItem(int x, int y, ItemStack item, Runnable callback) {
-        setItem(x, y, item, click -> callback.run());
-    }
-
-    protected final void setItem(int x, int y, ScreenItem item) {
-        if (item == null) {
-            return;
-        }
-        setItem(x, y, item.item(), item.callback());
+    protected final void setItem(InventoryPosition position, Supplier<ItemStack> item, Integer animationDelay) {
+        setItem(position, item, animationDelay, () -> { });
     }
 
     protected final void setItem(InventoryPosition position, ItemStack item, Runnable callback) {
-        setItem(position.x(), position.y(), item, callback);
+        setItem(position, () -> item, null, callback);
     }
 
-    protected final void setItem(InventoryPosition position, ItemStack item, Consumer<ClickType> callback) {
-        setItem(position.x(), position.y(), item, callback);
+    protected final void setItem(InventoryPosition position, ItemStack item) {
+        setItem(position, item, () -> { });
     }
 
-    protected final void setItem(int slot, ItemStack item, Runnable callback) {
-        setItem(InventoryPosition.fromSlot(slot), item, callback);
-    }
-
-    protected final void setItem(int slot, ItemStack item, Consumer<ClickType> callback) {
-        setItem(InventoryPosition.fromSlot(slot), item, callback);
-    }
-
-    protected final void setItem(int slot, ScreenItem item) {
-        setItem(slot, item.item(), item.callback());
-    }
-
-    public boolean isOpen() {
-        return open;
+    private void tick() {
+        if (!player.isConnected() || !player.getOpenInventory().getTopInventory().equals(inventory)) {
+            HandlerList.unregisterAll(this);
+            tickTask.cancel();
+            return;
+        }
+        for (InventoryPosition position : items.keySet()) {
+            ItemRegistration item = items.get(position);
+            if (item.animationDelay == null) {
+                continue;
+            }
+            if (Bukkit.getCurrentTick() % item.animationDelay != 0) {
+                continue;
+            }
+            inventory.setItem(position.getSlot(), InventoryUtil.removeDefaultFormatting(item.item().get()));
+        }
     }
 
     @EventHandler
@@ -134,7 +109,8 @@ public abstract class Screen extends ConstantsHolder implements Listener {
         if (!event.getPlayer().equals(player)) {
             return;
         }
-        close();
+        HandlerList.unregisterAll(this);
+        tickTask.cancel();
     }
 
     @EventHandler
@@ -142,7 +118,8 @@ public abstract class Screen extends ConstantsHolder implements Listener {
         if (!event.getPlayer().equals(player)) {
             return;
         }
-        close();
+        HandlerList.unregisterAll(this);
+        tickTask.cancel();
     }
 
     @EventHandler
@@ -153,14 +130,18 @@ public abstract class Screen extends ConstantsHolder implements Listener {
         if (!inventory.equals(event.getClickedInventory())) {
             return;
         }
-        int slot = event.getSlot();
-        int y = slot / 9;
-        int x = slot % 9;
-        onClick(x, y, event.getClick());
-        Consumer<ClickType> callback = callbacks.get(new InventoryPosition(x, y));
-        if (callback != null) {
-            callback.accept(event.getClick());
-        }
         event.setCancelled(true);
+        InventoryPosition position = InventoryPosition.fromSlot(event.getSlot());
+        ItemRegistration item = items.get(position);
+        if (item == null) {
+            return;
+        }
+        item.callback.run();
     }
+
+    private record ItemRegistration(
+        Runnable callback,
+        Supplier<ItemStack> item,
+        Integer animationDelay
+    ) { }
 }

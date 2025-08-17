@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus.systems.loading;
 import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
 
 record BlockShellLoadTicket(
     String worldName,
@@ -20,5 +21,10 @@ record BlockShellLoadTicket(
             return false;
         }
         return SchneckenhausPlugin.INSTANCE.getShellManager().getShellIds(worldName, chunkX, chunkZ).contains(shellId);
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return "block in world %s in chunk %s %s".formatted(worldName, chunkX, chunkZ);
     }
 }

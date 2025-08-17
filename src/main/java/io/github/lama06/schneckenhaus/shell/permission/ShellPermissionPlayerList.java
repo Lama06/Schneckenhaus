@@ -17,7 +17,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public final class ShellPermissionPlayerList {
-    private final Connection connection = SchneckenhausPlugin.INSTANCE.getDBConnection();
+    private final Connection connection = SchneckenhausPlugin.INSTANCE.getDatabaseConnection();
     private final Logger logger = SchneckenhausPlugin.INSTANCE.getSLF4JLogger();
 
     private final int id;

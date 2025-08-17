@@ -1,18 +1,9 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
-import io.github.lama06.schneckenhaus.config.SchneckenhausConfig;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import org.bukkit.event.Listener;
-import org.slf4j.Logger;
 
-import java.sql.Connection;
-
-public abstract class System implements Listener {
-    protected final SchneckenhausPlugin plugin = SchneckenhausPlugin.INSTANCE;
-    protected final SchneckenhausConfig config = plugin.getPluginConfig();
-    protected final Connection connection = plugin.getDBConnection();
-    protected final Logger logger = plugin.getSLF4JLogger();
-
+public abstract class System extends ConstantsHolder implements Listener {
     public boolean isEnabled() {
         return true;
     }

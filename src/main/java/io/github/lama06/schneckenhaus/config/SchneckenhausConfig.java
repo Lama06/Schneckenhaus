@@ -24,7 +24,7 @@ public final class SchneckenhausConfig {
 
     private final Map<String, WorldConfig> worlds = new HashMap<>();
 
-    private final ConditionalFeatureConfig chunkLoading = new ConditionalFeatureConfig();
+    private final ConditionalTaskFeatureConfig chunkLoading = new ConditionalTaskFeatureConfig(100);
     private final ConditionalFeatureConfig hoppers = new ConditionalFeatureConfig();
     private final ShellInstanceSyncConfig shellInstancesSync = new ShellInstanceSyncConfig();
     private final ConditionalFeatureConfig theftPrevention = new ConditionalFeatureConfig();
@@ -171,7 +171,7 @@ public final class SchneckenhausConfig {
         return worlds;
     }
 
-    public ConditionalFeatureConfig getChunkLoading() {
+    public ConditionalTaskFeatureConfig getChunkLoading() {
         return chunkLoading;
     }
 

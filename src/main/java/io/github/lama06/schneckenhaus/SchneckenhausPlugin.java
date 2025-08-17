@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus;
 import io.github.lama06.schneckenhaus.command.SchneckenhausCommand;
 import io.github.lama06.schneckenhaus.config.ConfigManager;
 import io.github.lama06.schneckenhaus.config.SchneckenhausConfig;
+import io.github.lama06.schneckenhaus.database.DatabaseManager;
 import io.github.lama06.schneckenhaus.language.Language;
 import io.github.lama06.schneckenhaus.language.Translator;
 import io.github.lama06.schneckenhaus.shell.ShellManager;
@@ -30,6 +31,7 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
     private WorldManager worlds;
     private ShellManager shellManager;
     private SchneckenhausCommand command;
+    private Systems systems;
 
 
     public SchneckenhausPlugin() {
@@ -63,7 +65,8 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
 
             Permission.register();
 
-            Systems.start();
+            systems = new Systems();
+            systems.start();
 
             command = new SchneckenhausCommand();
             getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> command.register(event.registrar()));
@@ -108,11 +111,19 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
         return translator;
     }
 
-    public Connection getDBConnection() {
+    public DatabaseManager getDatabase() {
+        return database;
+    }
+
+    public Connection getDatabaseConnection() {
         return database.getConnection();
     }
 
     public SchneckenhausCommand getCommand() {
         return command;
+    }
+
+    public Systems getSystems() {
+        return systems;
     }
 }

@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.screen;
+package io.github.lama06.schneckenhaus.ui;
 
 import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.language.Message;

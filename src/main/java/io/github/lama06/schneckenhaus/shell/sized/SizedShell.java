@@ -2,7 +2,7 @@ package io.github.lama06.schneckenhaus.shell.sized;
 
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.ShellInformation;
-import io.github.lama06.schneckenhaus.shell.ShellMenuAction;
+import io.github.lama06.schneckenhaus.shell.ShellScreenAction;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShell;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import net.kyori.adventure.text.Component;
@@ -78,10 +78,10 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
     }
 
     @Override
-    protected void addMenuActions(Player player, List<ShellMenuAction> actions) {
-        super.addMenuActions(player, actions);
+    protected void addShellScreenActions(Player player, List<ShellScreenAction> actions) {
+        super.addShellScreenActions(player, actions);
 
-        actions.add(new ShellMenuAction() {
+        actions.add(new ShellScreenAction() {
             private static final int ANIMATION_DELAY = 20;
 
             private static final List<Material> ICONS = List.of(

@@ -2,9 +2,8 @@ package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.screen.ChestShellWoodScreen;
 import io.github.lama06.schneckenhaus.shell.ShellInformation;
-import io.github.lama06.schneckenhaus.shell.ShellMenuAction;
+import io.github.lama06.schneckenhaus.shell.ShellScreenAction;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShell;
 import io.github.lama06.schneckenhaus.util.WoodType;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -162,9 +161,9 @@ public final class ChestShell extends SizedShell implements ChestShellData {
     }
 
     @Override
-    protected void addMenuActions(Player player, List<ShellMenuAction> actions) {
-        super.addMenuActions(player, actions);
-        actions.add(new ShellMenuAction() {
+    protected void addShellScreenActions(Player player, List<ShellScreenAction> actions) {
+        super.addShellScreenActions(player, actions);
+        actions.add(new ShellScreenAction() {
             @Override
             public ItemStack getItem() {
                 if (!Permission.CHANGE_SHELL_WOOD.check(player)) {

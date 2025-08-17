@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.screen;
+package io.github.lama06.schneckenhaus.ui;
 
 import io.github.lama06.schneckenhaus.language.Message;
 import net.kyori.adventure.text.Component;
@@ -49,7 +49,7 @@ public final class PlayerListEditScreen extends Screen {
         addPlayerItem.editMeta(meta -> {
             meta.customName(Message.ADD_PLAYER.asComponent(NamedTextColor.GREEN));
         });
-        setItem(0, 0, addPlayerItem, () -> InputScreen.openPlayerNameInput(
+        setItem(new InventoryPosition(0, 0), addPlayerItem, () -> InputScreen.openPlayerNameInput(
             player, "", addedPlayer -> {
                 if (!players.contains(addedPlayer.getUniqueId())) {
                     players.add(addedPlayer.getUniqueId());
@@ -65,7 +65,7 @@ public final class PlayerListEditScreen extends Screen {
         back.editMeta(meta -> {
             meta.customName(Message.BACK.asComponent(NamedTextColor.GREEN));
         });
-        setItem(8, 0, back, closeCallback);
+        setItem(new InventoryPosition(8, 0), back, closeCallback);
 
         for (int i = 0; i < players.size(); i++) {
             OfflinePlayer listPlayer = Bukkit.getOfflinePlayer(players.get(i));
@@ -79,7 +79,7 @@ public final class PlayerListEditScreen extends Screen {
                 meta.lore(List.of(Message.CLICK_TO_REMOVE.asComponent(NamedTextColor.YELLOW)));
                 meta.setOwningPlayer(listPlayer);
             });
-            setItem(9 + i, head, () -> {
+            setItem(InventoryPosition.fromSlot(9 + i), head, () -> {
                 players.remove(listPlayer.getUniqueId());
                 callback.accept(listPlayer.getUniqueId(), false);
                 redraw();

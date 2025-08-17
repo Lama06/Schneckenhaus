@@ -15,16 +15,18 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 import java.util.function.Predicate;
 
-public final class LoadShellSystem extends System {
-    private static final int ADD_ITEM_TICKETS_DELAY = 5 * 20;
-    private static final int CHECK_TICKETS_DELAY = 5 * 20;
-
+public final class ShellLoadingSystem extends System {
     private final Map<Integer, Set<ShellLoadTicket>> tickets = new HashMap<>();
 
     @Override
+    public boolean isEnabled() {
+        return config.getChunkLoading().isEnabled();
+    }
+
+    @Override
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::loadShellsInInventory, ADD_ITEM_TICKETS_DELAY, ADD_ITEM_TICKETS_DELAY);
-        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::removeInvalidTickets, CHECK_TICKETS_DELAY, CHECK_TICKETS_DELAY);
+        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::loadShellsInInventory, 0, config.getChunkLoading().getDelay());
+        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::removeInvalidTickets, 0, config.getChunkLoading().getDelay());
     }
 
     @EventHandler
@@ -114,5 +116,9 @@ public final class LoadShellSystem extends System {
         for (Chunk chunk : shell.getPosition().getChunks()) {
             chunk.removePluginChunkTicket(plugin);
         }
+    }
+
+    public String getDebugMessage() {
+        return tickets.toString();
     }
 }

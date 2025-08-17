@@ -26,6 +26,7 @@ public final class SchneckenhausCommand {
                 .then(new ItemCommand().create())
                 .then(new CountCommand().create())
                 .then(new DeleteCommand().create())
+                .then(new LanguageCommand().create())
                 .then(new DebugCommand().create())
                 .build(),
             Set.of("sh")

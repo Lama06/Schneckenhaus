@@ -51,7 +51,7 @@ public final class InventoryUtil {
             .colorIfAbsent(NamedTextColor.WHITE);
     }
 
-    public static void removeDefaultFormatting(ItemStack item) {
+    public static ItemStack removeDefaultFormatting(ItemStack item) {
         item.editMeta(meta -> {
             if (meta.hasCustomName()) {
                 meta.customName(removeDefaultFormatting(meta.customName()));
@@ -63,5 +63,6 @@ public final class InventoryUtil {
                 );
             }
         });
+        return item;
     }
 }

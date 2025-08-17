@@ -1,6 +1,8 @@
-package io.github.lama06.schneckenhaus;
+package io.github.lama06.schneckenhaus.database;
 
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
+import org.bukkit.Bukkit;
 import org.slf4j.Logger;
 
 import java.io.BufferedReader;
@@ -26,37 +28,26 @@ public final class DatabaseManager {
         }
 
         try {
-            connection.setAutoCommit(false);
+            return executeTransaction(() -> {
+                ResultSet dataVersionTable = connection.getMetaData().getTables(null, null, "data_version", null);
+                if (!dataVersionTable.next()) {
+                    createScheme();
+                    connection.commit();
+                    return true;
+                }
 
-            ResultSet dataVersionTable = connection.getMetaData().getTables(null, null, "data_version", null);
-            if (!dataVersionTable.next()) {
-                createScheme();
-                connection.commit();
-                return true;
-            }
-
-            try (Statement statement = connection.createStatement()) {
-                ResultSet result = statement.executeQuery("SELECT data_version FROM data_version");
-                result.next();
-                PluginVersion version = PluginVersion.fromString(result.getString("data_version"));
-                upgrade(version);
-                connection.commit();
-                return true;
-            }
+                try (Statement statement = connection.createStatement()) {
+                    ResultSet result = statement.executeQuery("SELECT data_version FROM data_version");
+                    result.next();
+                    PluginVersion version = PluginVersion.fromString(result.getString("data_version"));
+                    upgrade(version);
+                    connection.commit();
+                    return true;
+                }
+            });
         } catch (Exception e) {
             logger.error("failed to init database", e);
-            try {
-                connection.rollback();
-            } catch (SQLException sqlException) {
-                logger.error("failed to rollback", sqlException);
-            }
             return false;
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException e) {
-                logger.error("failed to enable auto commit mode", e);
-            }
         }
     }
 
@@ -104,6 +95,31 @@ public final class DatabaseManager {
         try (PreparedStatement statement = connection.prepareStatement(updateVersionSql)) {
             statement.setString(1, PluginVersion.current().toString());
             statement.executeUpdate();
+        }
+    }
+
+    public <T> T executeTransaction(Transaction<T> transaction) throws Exception {
+        if (!Bukkit.isPrimaryThread()) {
+            throw new IllegalStateException();
+        }
+
+        try {
+            connection.setAutoCommit(false);
+            return transaction.run();
+        } catch (Exception e) {
+            logger.error("exception during database transaction", e);
+            try {
+                connection.rollback();
+            } catch (SQLException rollbackException) {
+                logger.error("failed to rollback database");
+            }
+            throw e;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                logger.error("failed to enable auto commit mode", e);
+            }
         }
     }
 

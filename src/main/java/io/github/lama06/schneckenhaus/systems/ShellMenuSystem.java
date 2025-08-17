@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.Permission;
-import io.github.lama06.schneckenhaus.screen.ShellScreen;
+import io.github.lama06.schneckenhaus.ui.ShellScreen;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

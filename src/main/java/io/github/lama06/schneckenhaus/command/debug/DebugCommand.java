@@ -10,6 +10,7 @@ public final class DebugCommand {
         return Commands.literal("debug")
             .requires(Permission.COMMAND_DEBUG::check)
             .then(new BatchCreateCommand().create())
+            .then(new LoadingCommand().create())
             .build();
     }
 }

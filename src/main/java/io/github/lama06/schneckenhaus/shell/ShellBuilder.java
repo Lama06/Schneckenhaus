@@ -31,10 +31,6 @@ public abstract class ShellBuilder extends ConstantsHolder implements ShellData 
     public final CompletableFuture<Shell> build() {
         return prepareBuild().handleAsync(
             (prepared, throwable) -> {
-                if (!Bukkit.isPrimaryThread()) {
-                    throw new IllegalStateException();
-                }
-
                 if (throwable != null) {
                     logger.error("failed to prepare shell construction", throwable);
                     return null;
@@ -42,23 +38,10 @@ public abstract class ShellBuilder extends ConstantsHolder implements ShellData 
 
                 int id;
                 try {
-                    connection.setAutoCommit(false);
-                    id = buildDuringTransaction(prepared);
-                    connection.commit();
+                    id = plugin.getDatabase().executeTransaction(() -> buildDuringTransaction(prepared));
                 } catch (Exception e) {
-                    logger.error("failed to build snail shell", e);
-                    try {
-                        connection.rollback();
-                    } catch (SQLException rollbackException) {
-                        logger.error("failed to rollback failed shell insertion", rollbackException);
-                    }
+                    logger.error("failed to build shell", e);
                     return null;
-                } finally {
-                    try {
-                        connection.setAutoCommit(true);
-                    } catch (SQLException e) {
-                        logger.error("failed to disable auto commit mode", e);
-                    }
                 }
 
                 Shell shell = plugin.getShellManager().getShell(id);
@@ -105,28 +88,46 @@ public abstract class ShellBuilder extends ConstantsHolder implements ShellData 
 
         if (position == 0) {
             String findPositionSql = """
-                SELECT position + 1 AS position
-                FROM shells AS x
-                WHERE world = ? AND NOT EXISTS (
-                    SELECT 1
-                    FROM shells
-                    WHERE world = ? AND position = x.position + 1
-                )
+                SELECT 1 AS priority, MIN(position)
+                FROM unused_shell_positions
+                WHERE world = ?
+                UNION ALL
+                SELECT 2 AS priority, MAX(position) + 1
+                FROM shells
+                WHERE world = ?
+                UNION ALL
+                SELECT 3 AS priority, 1
+                ORDER BY priority
                 """;
             try (PreparedStatement statement = connection.prepareStatement(findPositionSql)) {
                 statement.setString(1, world.getName());
                 statement.setString(2, world.getName());
                 ResultSet result = statement.executeQuery();
-                if (result.next()) {
-                    position = result.getInt("position");
-                } else {
-                    position = 1;
+                while (position == 0 && result.next()) {
+                    position = result.getInt(2); // will return 0 if no position was found
                 }
             }
+        }
+        String removeUnusedPositionSql = """
+            DELETE FROM unused_shell_positions
+            WHERE world = ? AND position = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(removeUnusedPositionSql)) {
+            statement.setString(1, world.getName());
+            statement.setInt(2, position);
+            statement.executeUpdate();
         }
 
         if (owner == null) {
             owner = creator;
+        }
+
+        if (enterPermissionMode == null) {
+            enterPermissionMode = ShellPermissionMode.EVERYBODY;
+        }
+
+        if (buildPermissionMode == null) {
+            buildPermissionMode = ShellPermissionMode.EVERYBODY;
         }
 
         String insertSql = """

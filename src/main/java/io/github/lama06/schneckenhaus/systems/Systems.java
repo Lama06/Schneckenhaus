@@ -1,12 +1,14 @@
 package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
-import io.github.lama06.schneckenhaus.systems.loading.LoadShellSystem;
+import io.github.lama06.schneckenhaus.systems.loading.ShellLoadingSystem;
 import org.bukkit.Bukkit;
 
 public final class Systems {
-    public static void start() {
-        start(new LoadShellSystem());
+    private final ShellLoadingSystem loadingSystem = new ShellLoadingSystem();
+
+    public void start() {
+        start(loadingSystem);
         start(new BreakShellSystem());
         start(new CraftingSystem());
         start(new EnterShellSystem());
@@ -23,12 +25,17 @@ public final class Systems {
         start(new TranslationSystem());
         start(new ShellRepairSystem());
         start(new TimeSystem());
+        start(new RemoveInvalidShellItemsSystem());
     }
 
-    private static void start(System system) {
+    private void start(System system) {
         if (system.isEnabled()) {
             Bukkit.getPluginManager().registerEvents(system, SchneckenhausPlugin.INSTANCE);
             system.start();
         }
+    }
+
+    public ShellLoadingSystem getLoadingSystem() {
+        return loadingSystem;
     }
 }

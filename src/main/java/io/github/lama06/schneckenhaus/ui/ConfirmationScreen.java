@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.screen;
+package io.github.lama06.schneckenhaus.ui;
 
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.util.InventoryUtil;
@@ -36,20 +36,20 @@ public final class ConfirmationScreen extends Screen {
         cancel.editMeta(meta -> {
             meta.customName(Message.CANCEL.asComponent(NamedTextColor.RED));
         });
-        setItem(0, 0, cancel, () -> {
+        setItem(new InventoryPosition(0, 0), cancel, () -> {
             close();
             cancelCallback.run();
         });
 
         for (int x = 1; x < 8; x++) {
-            setItem(x, 0, InventoryUtil.createMarginItem());
+            setItem(new InventoryPosition(x, 0), InventoryUtil.createMarginItem());
         }
 
         ItemStack confirm = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
         confirm.editMeta(meta -> {
             meta.customName(Message.CONFIRM.asComponent(NamedTextColor.GREEN));
         });
-        setItem(8, 0, confirm, () -> {
+        setItem(new InventoryPosition(8, 0), confirm, () -> {
             close();
             confirmCallback.run();
         });

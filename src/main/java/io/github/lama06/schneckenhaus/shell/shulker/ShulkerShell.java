@@ -2,9 +2,8 @@ package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.screen.ShulkerColorScreen;
 import io.github.lama06.schneckenhaus.shell.ShellInformation;
-import io.github.lama06.schneckenhaus.shell.ShellMenuAction;
+import io.github.lama06.schneckenhaus.shell.ShellScreenAction;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShell;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.kyori.adventure.text.Component;
@@ -183,9 +182,9 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
     }
 
     @Override
-    protected void addMenuActions(Player player, List<ShellMenuAction> actions) {
-        super.addMenuActions(player, actions);
-        actions.add(new ShellMenuAction() {
+    protected void addShellScreenActions(Player player, List<ShellScreenAction> actions) {
+        super.addShellScreenActions(player, actions);
+        actions.add(new ShellScreenAction() {
 
 
             @Override

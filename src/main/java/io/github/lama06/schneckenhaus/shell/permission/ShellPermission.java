@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.Locale;
 
 public final class ShellPermission {
-    private final Connection connection = SchneckenhausPlugin.INSTANCE.getDBConnection();
+    private final Connection connection = SchneckenhausPlugin.INSTANCE.getDatabaseConnection();
     private final Logger logger = SchneckenhausPlugin.INSTANCE.getSLF4JLogger();
 
     private final Shell shell;

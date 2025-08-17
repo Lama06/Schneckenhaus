@@ -4,10 +4,7 @@ import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.position.Position;
-import io.github.lama06.schneckenhaus.screen.InputScreen;
-import io.github.lama06.schneckenhaus.screen.PermissionScreen;
-import io.github.lama06.schneckenhaus.screen.PlayerListEditScreen;
-import io.github.lama06.schneckenhaus.screen.ShellScreen;
+import io.github.lama06.schneckenhaus.ui.*;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermission;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionPlayerList;
 import io.github.lama06.schneckenhaus.util.BlockArea;
@@ -227,8 +224,8 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         return information;
     }
 
-    protected void addMenuActions(Player player, List<ShellMenuAction> actions) {
-        actions.add(new ShellMenuAction() {
+    protected void addShellScreenActions(Player player, List<ShellScreenAction> actions) {
+        actions.add(new ShellScreenAction() {
             @Override
             public ItemStack getItem() {
                 // item without id to prevent the animation system from messing with it
@@ -258,7 +255,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         });
 
         // Name
-        actions.add(new ShellMenuAction() {
+        actions.add(new ShellScreenAction() {
             @Override
             public ItemStack getItem() {
                 ItemStack item = new ItemStack(Material.NAME_TAG);
@@ -294,7 +291,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         });
 
         // Owners
-        actions.add(new ShellMenuAction() {
+        actions.add(new ShellScreenAction() {
             private static final int ANIMATION_DELAY = 20;
 
             private final List<UUID> ownerUuids = owners.get().stream().sorted().toList();
@@ -349,7 +346,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         });
 
         // Enter Permissions
-        actions.add(new ShellMenuAction() {
+        actions.add(new ShellScreenAction() {
             @Override
             public ItemStack getItem() {
                 if (!Permission.CHANGE_ENTER_PERMISSION.check(player)) {
@@ -370,7 +367,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         });
 
         // Build Permissions
-        actions.add(new ShellMenuAction() {
+        actions.add(new ShellScreenAction() {
             @Override
             public ItemStack getItem() {
                 if (!Permission.CHANGE_BUILD_PERMISSION.check(player)) {
@@ -389,11 +386,44 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
                 new PermissionScreen(player, buildPermission).open();
             }
         });
+
+        // Delete
+        actions.add(new ShellScreenAction() {
+            @Override
+            public ItemStack getItem() {
+                if (!Permission.DELETE_SHELL.check(player)) {
+                    return null;
+                }
+                ItemStack item = new ItemStack(Material.TNT);
+                item.editMeta(meta -> {
+                    meta.customName(Message.DELETE.asComponent(NamedTextColor.RED));
+                });
+                return item;
+            }
+
+            @Override
+            public void onClick() {
+                new ConfirmationScreen(
+                    player,
+                    Message.DELETE.toString(),
+                    () -> { },
+                    () -> {
+                        delete();
+                        player.sendMessage(Message.DELETE_SUCCESS.asComponent(NamedTextColor.GREEN, 1));
+                    }
+                ).open();
+            }
+
+            @Override
+            public boolean isAlignedRight() {
+                return true;
+            }
+        });
     }
 
-    public final List<ShellMenuAction> getShellMenuActions(Player player) {
-        List<ShellMenuAction> actions = new ArrayList<>();
-        addMenuActions(player, actions);
+    public final List<ShellScreenAction> getShellScreenActions(Player player) {
+        List<ShellScreenAction> actions = new ArrayList<>();
+        addShellScreenActions(player, actions);
         return actions;
     }
 
@@ -413,15 +443,32 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         for (ShellPlacement placement : plugin.getShellManager().getShellPlacements(this)) {
             placement.block().setType(Material.AIR);
         }
-        String sql = """
-            DELETE FROM shells
-            WHERE id = ?
-            """;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error("failed to delete shell {}", id, e);
+
+        try {
+            plugin.getDatabase().executeTransaction(() -> {
+                String deleteSql = """
+                    DELETE FROM shells
+                    WHERE id = ?
+                    """;
+                try (PreparedStatement statement = connection.prepareStatement(deleteSql)) {
+                    statement.setInt(1, id);
+                    statement.executeUpdate();
+                }
+
+                String insertUnusedPositionSql = """
+                    INSERT INTO unused_shell_positions(world, position)
+                    VALUES (?, ?)
+                    """;
+                try (PreparedStatement statement = connection.prepareStatement(insertUnusedPositionSql)) {
+                    statement.setString(1, world.getName());
+                    statement.setInt(2, position.getId());
+                    statement.executeUpdate();
+                }
+
+                return null;
+            });
+        } catch (Exception e) {
+            logger.error("failed to delete snail shell {}", id, e);
         }
     }
 

@@ -117,7 +117,10 @@ public enum Message implements ComponentLike {
     CURRENT_COUNT("Current snail shell count", "Aktuelle Anzahl an Schneckenhäusern"),
     WORLD_COUNT("There are {1} snail shells in {2}", "Es gibt {1} Schneckenhäuser in {2}"),
 
+    DELETE("Delete", "Löschen"),
     DELETE_SUCCESS("Successfully deleted {1} snail shell(s)", "{1} Schneckenhaus/-häuser erfolgreich gelöscht"),
+
+    LANGUAGE_CHANGE_SUCCESSFUL("Changed language to {1}", "Sprache geändert auf {1}"),
 
     OAK("Oak", "Eiche"),
     SPRUCE("Spruce", "Fichte"),

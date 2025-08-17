@@ -23,7 +23,10 @@ CREATE TABLE shells (
 ) STRICT;
 
 CREATE TABLE unused_shell_positions (
-    id INTEGER PRIMARY KEY
+    world TEXT NOT NULL,
+    position INTEGER NOT NULL,
+
+    PRIMARY KEY (world, position)
 ) STRICT;
 
 CREATE TABLE sized_shells (

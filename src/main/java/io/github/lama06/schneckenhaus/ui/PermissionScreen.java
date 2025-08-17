@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.screen;
+package io.github.lama06.schneckenhaus.ui;
 
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermission;
@@ -46,7 +46,7 @@ public final class PermissionScreen extends Screen {
                     meta.lore(List.of(Message.CLICK_TO_SELECT.asComponent(NamedTextColor.YELLOW)));
                 }
             });
-            setItem(i, item, () -> {
+            setItem(InventoryPosition.fromSlot(i), item, () -> {
                 permission.setMode(mode);
                 redraw();
             });
@@ -59,7 +59,7 @@ public final class PermissionScreen extends Screen {
                 meta.lore(List.of(Message.BLACKLIST_DISABLED.asComponent(NamedTextColor.RED)));
             }
         });
-        setItem(7, 0, blacklist, () -> new PlayerListEditScreen(
+        setItem(new InventoryPosition(7, 0), blacklist, () -> new PlayerListEditScreen(
             player,
             Message.EDIT_BLACKLIST.asComponent(NamedTextColor.YELLOW),
             permission.getBlacklist().get(),
@@ -74,7 +74,7 @@ public final class PermissionScreen extends Screen {
                 meta.lore(List.of(Message.WHITELIST_DISABLED.asComponent(NamedTextColor.RED)));
             }
         });
-        setItem(8, 0, whitelist, () -> new PlayerListEditScreen(
+        setItem(new InventoryPosition(8, 0), whitelist, () -> new PlayerListEditScreen(
             player,
             Message.WHITELIST.asComponent(NamedTextColor.YELLOW),
             permission.getWhitelist().get(),

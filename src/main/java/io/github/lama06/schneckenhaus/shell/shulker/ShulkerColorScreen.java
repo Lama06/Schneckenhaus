@@ -1,8 +1,9 @@
-package io.github.lama06.schneckenhaus.screen;
+package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShell;
+import io.github.lama06.schneckenhaus.ui.InventoryPosition;
+import io.github.lama06.schneckenhaus.ui.Screen;
 import io.github.lama06.schneckenhaus.util.InventoryUtil;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.kyori.adventure.text.Component;
@@ -40,12 +41,12 @@ public final class ShulkerColorScreen extends Screen {
     @Override
     protected void draw() {
         for (int x = 0; x < 9; x++) {
-            setItem(x, 0, InventoryUtil.createMarginItem());
+            setItem(new InventoryPosition(x, 0), InventoryUtil.createMarginItem());
         }
 
         addRainbowToggle();
 
-        List<ScreenItem> items = new ArrayList<>();
+        List<ClickableItem> items = new ArrayList<>();
         if (shell.isRainbow()) {
             addRainbowColorSelectionItems(items);
         } else {
@@ -53,11 +54,11 @@ public final class ShulkerColorScreen extends Screen {
         }
 
         int slot = 9;
-        for (ScreenItem item : items) {
+        for (ClickableItem item : items) {
             if (slot == 18) {
                 slot++;
             }
-            setItem(slot++, item);
+            setItem(InventoryPosition.fromSlot(slot++), item.item(), item.callback());
         }
     }
 
@@ -77,13 +78,13 @@ public final class ShulkerColorScreen extends Screen {
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
         });
-        setItem(4, 0, rainbowToggle, () -> {
+        setItem(new InventoryPosition(4, 0), rainbowToggle, () -> {
             shell.setRainbow(!shell.isRainbow());
             redraw();
         });
     }
 
-    private void addColorSelectionItems(List<ScreenItem> items) {
+    private void addColorSelectionItems(List<ClickableItem> items) {
         for (DyeColor color : DyeColor.values()) {
             ItemStack item = new ItemStack(MaterialUtil.getColoredDye(color));
             item.editMeta(meta -> {
@@ -92,14 +93,14 @@ public final class ShulkerColorScreen extends Screen {
                     Message.getSelectedOrClickToSelect(color == shell.getColor()).asComponent()
                 ));
             });
-            items.add(new ScreenItem(item, () -> {
+            items.add(new ClickableItem(item, () -> {
                 shell.setColor(color);
                 redraw();
             }));
         }
     }
 
-    private void addRainbowColorSelectionItems(List<ScreenItem> items) {
+    private void addRainbowColorSelectionItems(List<ClickableItem> items) {
         Set<DyeColor> rainbowColors = shell.getRainbowColors();
         for (DyeColor color : DyeColor.values()) {
             boolean enabled = rainbowColors.contains(color);
@@ -109,10 +110,12 @@ public final class ShulkerColorScreen extends Screen {
                 meta.customName(Message.getDyeColor(color).asComponent(enabled ? NamedTextColor.GREEN : NamedTextColor.RED));
                 meta.lore(List.of(Message.getClickToEnableDisable(!enabled).asComponent(NamedTextColor.YELLOW)));
             });
-            items.add(new ScreenItem(item, () -> {
+            items.add(new ClickableItem(item, () -> {
                 shell.setRainbowColor(color, !enabled);
                 redraw();
             }));
         }
     }
+
+    private record ClickableItem(ItemStack item, Runnable callback) { }
 }

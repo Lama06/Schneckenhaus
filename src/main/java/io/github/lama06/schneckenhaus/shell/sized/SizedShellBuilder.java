@@ -17,7 +17,7 @@ public abstract class SizedShellBuilder extends BuiltinShellBuilder implements S
     protected int buildDuringTransaction(Object prepared) throws SQLException {
         int id = super.buildDuringTransaction(prepared);
 
-        Connection connection = SchneckenhausPlugin.INSTANCE.getDBConnection();
+        Connection connection = SchneckenhausPlugin.INSTANCE.getDatabaseConnection();
         String sql = """
             INSERT INTO sized_shells(id, size)
             VALUES (?, ?)

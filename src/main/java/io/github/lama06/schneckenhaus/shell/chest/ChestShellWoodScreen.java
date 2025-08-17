@@ -1,7 +1,8 @@
-package io.github.lama06.schneckenhaus.screen;
+package io.github.lama06.schneckenhaus.shell.chest;
 
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.shell.chest.ChestShell;
+import io.github.lama06.schneckenhaus.ui.InventoryPosition;
+import io.github.lama06.schneckenhaus.ui.Screen;
 import io.github.lama06.schneckenhaus.util.WoodType;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -38,7 +39,7 @@ public final class ChestShellWoodScreen extends Screen {
                 meta.customName(wood.getMessage().asComponent(selected ? NamedTextColor.GREEN : NamedTextColor.WHITE));
                 meta.lore(List.of(Message.getSelectedOrClickToSelect(selected).asComponent(NamedTextColor.YELLOW)));
             });
-            setItem(slot++, item, () -> {
+            setItem(InventoryPosition.fromSlot(slot++), item, () -> {
                 shell.setWood(wood);
                 redraw();
             });

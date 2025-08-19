@@ -136,11 +136,11 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
     }
 
     public int getHeight() {
-        return getUpperX() - getLowerX() + 1;
+        return getUpperY() - getLowerY() + 1;
     }
 
     public int getWidthX() {
-        return getUpperY() - getLowerY() + 1;
+        return getUpperX() - getLowerX() + 1;
     }
 
     public int getWidthZ() {

@@ -129,6 +129,12 @@ public enum Message implements ComponentLike {
 
     JOIN_DISCORD("Join the plugin's Discord server: {1}", "Tritt dem Discord-Server des Plugins bei: {1}"),
 
+    CUSTOM_SHELL_EXPORT_SUCCESS("Successfully exported custom shell type", "Schneckenhaustyp erfolgreich exportiert"),
+    CUSTOM_SHELL_EXPORT_FAIL("Error white exporting, look in the console", "Fehler beim Exportieren, schau in der Konsole nach"),
+
+    CUSTOM_SHELL_IMPORT_SUCCESS("Successfully imported custom shell type", "Schneckenhaustyp erfolgreich importiert"),
+    CUSTOM_SHELL_IMPORT_FAIL("Error white importing, look in the console", "Fehler beim Importieren, schau in der Konsole nach"),
+
     LANGUAGE_CHANGE_SUCCESSFUL("Changed language to {1}", "Sprache geändert auf {1}"),
 
     OAK("Oak", "Eiche"),

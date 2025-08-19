@@ -21,6 +21,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public final class CustomShell extends Shell implements CustomShellData {
+    public static final String IMPORT_DIRECTORY = "import";
+    public static final String EXPORT_DIRECTORY = "export";
+    public static final String FILE_EXTENSION = ".haus";
+
     private String template;
     private CustomShellConfig config;
     private World templateWorld;

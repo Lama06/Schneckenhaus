@@ -7,6 +7,7 @@ import io.github.lama06.schneckenhaus.database.DatabaseManager;
 import io.github.lama06.schneckenhaus.language.Language;
 import io.github.lama06.schneckenhaus.language.Translator;
 import io.github.lama06.schneckenhaus.shell.ShellManager;
+import io.github.lama06.schneckenhaus.shell.custom.CustomShell;
 import io.github.lama06.schneckenhaus.systems.Systems;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import org.bstats.bukkit.Metrics;
@@ -41,7 +42,8 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         try {
-            Files.createDirectories(getDataPath());
+            Files.createDirectories(getDataPath().resolve(CustomShell.IMPORT_DIRECTORY));
+            Files.createDirectories(getDataPath().resolve(CustomShell.EXPORT_DIRECTORY));
 
             config = new ConfigManager();
             if (!config.load()) {

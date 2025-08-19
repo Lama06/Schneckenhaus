@@ -44,9 +44,9 @@ public final class ItemConfig implements ComponentLike {
         return new ItemConfig(item, amount, model);
     }
 
-    public Material item;
-    public int amount;
-    public Integer model;
+    private final Material item;
+    private final int amount;
+    private final Integer model;
 
     public ItemConfig(Material item, int amount, Integer model) {
         this.item = item;
@@ -139,5 +139,17 @@ public final class ItemConfig implements ComponentLike {
         result.put("amount", amount);
         result.put("model", model);
         return result;
+    }
+
+    public Material getItem() {
+        return item;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public Integer getModel() {
+        return model;
     }
 }

@@ -7,10 +7,14 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.lama06.schneckenhaus.Permission;
+import io.github.lama06.schneckenhaus.command.CommandUtils;
 import io.github.lama06.schneckenhaus.command.argument.CustomShellTypeArgument;
 import io.github.lama06.schneckenhaus.config.ItemConfig;
 import io.github.lama06.schneckenhaus.language.Message;
+import io.github.lama06.schneckenhaus.shell.custom.CustomShell;
 import io.github.lama06.schneckenhaus.shell.custom.CustomShellConfig;
+import io.github.lama06.schneckenhaus.shell.custom.CustomShellExporter;
+import io.github.lama06.schneckenhaus.shell.custom.CustomShellImporter;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
@@ -22,6 +26,7 @@ import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Registry;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ItemType;
 
@@ -62,10 +67,22 @@ public final class CustomCommand extends ConstantsHolder {
                         }
                         return builder.buildFuture();
                     })
+                    .then(Commands.literal("as")
+                        .then(Commands.argument("name", StringArgumentType.string())
+                            .suggests((context, builder) -> {
+                                try {
+                                    builder.suggest(StringArgumentType.getString(context, "file").replace(CustomShell.FILE_EXTENSION, ""));
+                                } catch (IllegalArgumentException ignored) { }
+                                return builder.buildFuture();
+                            })
+                            .executes(this::importShell)
+                        )
+                    )
                 )
             )
             .then(Commands.literal("export")
                 .then(Commands.argument("type", CustomShellTypeArgument.INSTANCE)
+                    .executes(this::exportShell)
                 )
             )
             .build();
@@ -93,5 +110,35 @@ public final class CustomCommand extends ConstantsHolder {
         context.getSource().getSender().sendMessage(Message.ADD_CUSTOM_SHELL_TYPE_SUCCESS.asComponent(NamedTextColor.GREEN));
 
         return Command.SINGLE_SUCCESS;
+    }
+
+    private int exportShell(CommandContext<CommandSourceStack> context) {
+        String name = context.getArgument("type", String.class);
+        CustomShellConfig config = this.config.getCustom().get(name);
+        try (CustomShellExporter exporter = new CustomShellExporter(name, config)) {
+            if (exporter.export()) {
+                context.getSource().getSender().sendMessage(Message.CUSTOM_SHELL_EXPORT_SUCCESS.asComponent(NamedTextColor.GREEN));
+                return Command.SINGLE_SUCCESS;
+            } else {
+                context.getSource().getSender().sendMessage(Message.CUSTOM_SHELL_EXPORT_FAIL.asComponent(NamedTextColor.RED));
+                return 0;
+            }
+        }
+    }
+
+    private int importShell(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        String file = StringArgumentType.getString(context, "file");
+        String name = StringArgumentType.getString(context, "name");
+        Player player = CommandUtils.requirePlayer(context.getSource());
+
+        try (CustomShellImporter exporter = new CustomShellImporter(file, name, player.getWorld(), new BlockPosition(player.getLocation()))) {
+            if (exporter.importShell()) {
+                context.getSource().getSender().sendMessage(Message.CUSTOM_SHELL_IMPORT_SUCCESS.asComponent(NamedTextColor.GREEN));
+                return Command.SINGLE_SUCCESS;
+            } else {
+                context.getSource().getSender().sendMessage(Message.CUSTOM_SHELL_IMPORT_FAIL.asComponent(NamedTextColor.RED));
+                return 0;
+            }
+        }
     }
 }

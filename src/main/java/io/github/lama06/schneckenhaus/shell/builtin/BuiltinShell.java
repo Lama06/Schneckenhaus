@@ -53,7 +53,7 @@ public abstract class BuiltinShell extends Shell implements BuiltinShellData {
     }
 
     @Override
-    public boolean isDoorBlock(Block block) {
+    public boolean isExitBlock(Block block) {
         return getLowerDoorBlock().equals(block) || getUpperDoorBlock().equals(block);
     }
 

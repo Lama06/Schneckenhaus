@@ -2,7 +2,7 @@ package io.github.lama06.schneckenhaus.player;
 
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.position.Position;
+import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import net.kyori.adventure.text.Component;
@@ -29,7 +29,7 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
     }
 
     public boolean isInside(Shell shell, boolean direct, boolean nesting) {
-        Position position = Position.location(player.getLocation());
+        ShellPosition position = ShellPosition.location(player.getLocation());
         if (position == null) {
             return false;
         }
@@ -37,7 +37,7 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
         if (nesting) {
             List<Location> previousLocations = getPreviousLocations();
             for (Location previousLocation : previousLocations) {
-                Position previousPosition = Position.location(previousLocation);
+                ShellPosition previousPosition = ShellPosition.location(previousLocation);
                 if (previousPosition == null) {
                     continue;
                 }

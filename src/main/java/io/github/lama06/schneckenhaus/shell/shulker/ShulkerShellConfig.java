@@ -1,14 +1,14 @@
 package io.github.lama06.schneckenhaus.shell.shulker;
 
 import io.github.lama06.schneckenhaus.config.ItemConfig;
-import io.github.lama06.schneckenhaus.shell.sized.GlobalSizedShellConfig;
+import io.github.lama06.schneckenhaus.shell.sized.SizedShellConfig;
 import org.bukkit.Material;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public final class GlobalShulkerShellConfig extends GlobalSizedShellConfig {
+public final class ShulkerShellConfig extends SizedShellConfig {
     private boolean rainbowMode = true;
     private int rainbowDelay = 3 * 20;
     private ItemConfig rainbowIngredient = new ItemConfig(Material.CLOCK);

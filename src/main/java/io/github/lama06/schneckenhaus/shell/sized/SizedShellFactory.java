@@ -4,7 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
-import io.github.lama06.schneckenhaus.position.Position;
+import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
@@ -21,10 +21,10 @@ public abstract class SizedShellFactory extends BuiltinShellFactory {
     public abstract int getMinSize();
 
     public int getMaxSize() {
-        return Position.CELL_SIZE - 2;
+        return ShellPosition.CELL_SIZE - 2;
     }
 
-    public abstract GlobalSizedShellConfig getGlobalConfig();
+    public abstract SizedShellConfig getConfig();
 
     @Override
     public abstract SizedShellBuilder newBuilder();
@@ -36,7 +36,7 @@ public abstract class SizedShellFactory extends BuiltinShellFactory {
         }
         SizedShellBuilder sizedBuilder = (SizedShellBuilder) builder;
 
-        GlobalSizedShellConfig config = getGlobalConfig();
+        SizedShellConfig config = getConfig();
 
         int sizeIngredients = 0;
         while (input.remove(config.getSizeIngredient())) {

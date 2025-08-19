@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.shell;
 
-import io.github.lama06.schneckenhaus.position.Position;
+import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.papermc.paper.persistence.PersistentDataContainerView;
 import org.bukkit.*;
@@ -41,7 +41,7 @@ public final class ShellManager extends ConstantsHolder {
     public Set<Shell> getInhabitedShells() {
         return getPlayersInShellWorlds().stream()
             .map(Entity::getLocation)
-            .map(Position::location)
+            .map(ShellPosition::location)
             .filter(Objects::nonNull)
             .map(this::getShell)
             .filter(Objects::nonNull)
@@ -74,7 +74,7 @@ public final class ShellManager extends ConstantsHolder {
         return factory.loadShell(id);
     }
 
-    public Shell getShell(Position position) {
+    public Shell getShell(ShellPosition position) {
         if (position == null) {
             return null;
         }
@@ -102,7 +102,7 @@ public final class ShellManager extends ConstantsHolder {
     }
 
     public Shell getShell(Location location) {
-        Position position = Position.location(location);
+        ShellPosition position = ShellPosition.location(location);
         if (position == null) {
             return null;
         }
@@ -197,7 +197,7 @@ public final class ShellManager extends ConstantsHolder {
     }
 
     public Shell getShellAt(Block block) {
-        return getShell(Position.block(block));
+        return getShell(ShellPosition.block(block));
     }
 
     public Set<Integer> getShellIds(String world, int chunkX, int chunkZ) {

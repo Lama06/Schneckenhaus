@@ -103,6 +103,10 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
         return config.getConfig();
     }
 
+    public ConfigManager getConfigManager() {
+        return config;
+    }
+
     public ShellManager getShellManager() {
         return shellManager;
     }

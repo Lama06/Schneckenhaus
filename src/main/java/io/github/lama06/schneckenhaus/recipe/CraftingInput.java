@@ -42,7 +42,7 @@ public final class CraftingInput {
     }
 
     public CraftingInput copy() {
-        return new CraftingInput(Arrays.stream(matrix).map(ItemStack::clone).toArray(ItemStack[]::new));
+        return new CraftingInput(Arrays.stream(matrix).map(item -> item == null ? null : item.clone()).toArray(ItemStack[]::new));
     }
 
     public ItemStack[] getMatrix() {

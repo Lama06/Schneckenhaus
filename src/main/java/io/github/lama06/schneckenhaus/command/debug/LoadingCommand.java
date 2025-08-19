@@ -3,7 +3,7 @@ package io.github.lama06.schneckenhaus.command.debug;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
-import io.github.lama06.schneckenhaus.position.Position;
+import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -33,7 +33,7 @@ public final class LoadingCommand extends ConstantsHolder {
                             continue;
                         }
                         for (Chunk chunk : tickets) {
-                            Position position = Position.location(chunk.getBlock(1, 1, 1).getLocation());
+                            ShellPosition position = ShellPosition.location(chunk.getBlock(1, 1, 1).getLocation());
                             if (position == null) {
                                 continue;
                             }

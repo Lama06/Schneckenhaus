@@ -76,7 +76,7 @@ public final class PermissionSystem extends System {
         if (shell == null) {
             return;
         }
-        if (!shell.isDoorBlock(block)) {
+        if (!shell.isExitBlock(block)) {
             return;
         }
 

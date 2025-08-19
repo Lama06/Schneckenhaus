@@ -53,8 +53,10 @@ public enum Permission {
     COMMAND_ITEM("command.item"),
     COMMAND_COUNT("command.count"),
     COMMAND_DELETE("command.delete"),
-    COMMAND_DEBUG("command.debug", PermissionDefault.FALSE),
-    COMMAND_TP("command.tp");
+    COMMAND_TP("command.tp"),
+    COMMAND_DISCORD("command.discord"),
+    COMMAND_CUSTOM("command.custom"),
+    COMMAND_DEBUG("command.debug", PermissionDefault.FALSE);
 
     public static void register() {
         for (Permission permission : Permission.values()) {

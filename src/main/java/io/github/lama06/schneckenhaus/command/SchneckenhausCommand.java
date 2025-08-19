@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.command;
 
+import io.github.lama06.schneckenhaus.command.custom.CustomCommand;
 import io.github.lama06.schneckenhaus.command.debug.DebugCommand;
 import io.github.lama06.schneckenhaus.command.select.SelectionCommand;
 import io.github.lama06.schneckenhaus.command.select.SelectCommand;
@@ -27,6 +28,8 @@ public final class SchneckenhausCommand {
                 .then(new CountCommand().create())
                 .then(new DeleteCommand().create())
                 .then(new LanguageCommand().create())
+                .then(new CustomCommand().create())
+                .then(new DiscordCommand().create())
                 .then(new DebugCommand().create())
                 .build(),
             Set.of("sh")

@@ -1,9 +1,8 @@
 package io.github.lama06.schneckenhaus.shell.custom;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
+import io.github.lama06.schneckenhaus.command.argument.CustomShellTypeArgument;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.config.ItemConfig;
 import io.github.lama06.schneckenhaus.language.Message;
@@ -40,11 +39,10 @@ public final class CustomShellFactory extends ShellFactory {
     @Override
     public boolean getCraftingResult(ShellBuilder builder, CraftingInput input) {
         CustomShellBuilder customBuilder = (CustomShellBuilder) builder;
-        Map<String, GlobalCustomShellConfig> customConfigs = SchneckenhausPlugin.INSTANCE.getPluginConfig().getCustom();
 
         customConfigs:
-        for (String name : customConfigs.keySet()) {
-            GlobalCustomShellConfig customConfig = customConfigs.get(name);
+        for (String name : config.getCustom().keySet()) {
+            CustomShellConfig customConfig = config.getCustom().get(name);
             if (!customConfig.isCrafting()) {
                 continue;
             }
@@ -71,7 +69,7 @@ public final class CustomShellFactory extends ShellFactory {
     @Override
     public void addCommandParameters(ParameterCommandBuilder builder) {
         super.addCommandParameters(builder);
-        builder.parameter("template", StringArgumentType.string());
+        builder.parameter("template", CustomShellTypeArgument.INSTANCE);
     }
 
     @Override
@@ -101,7 +99,7 @@ public final class CustomShellFactory extends ShellFactory {
     @Override
     protected Material getItemType(ShellData data) {
         CustomShellData customData = (CustomShellData) data;
-        return SchneckenhausPlugin.INSTANCE.getPluginConfig().getCustom().get(customData.getTemplate()).getItem();
+        return config.getCustom().get(customData.getTemplate()).getItem();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.position;
+package io.github.lama06.schneckenhaus.shell.position;
 
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Represents the position of a cell in the grid of snail shells.
  */
-public sealed abstract class Position permits GridPosition, IdPosition {
+public sealed abstract class ShellPosition permits GridShellPosition, IdShellPosition {
     public static final int CELL_SIZE_CHUNKS = 4;
 
     /**
@@ -21,28 +21,28 @@ public sealed abstract class Position permits GridPosition, IdPosition {
      */
     public static final int CELL_SIZE = 16 * CELL_SIZE_CHUNKS;
 
-    public static Position id(World world, int id) {
-        return new IdPosition(world, id);
+    public static ShellPosition id(World world, int id) {
+        return new IdShellPosition(world, id);
     }
 
-    public static Position grid(World world, int x, int y) {
-        return new GridPosition(world, x, y);
+    public static ShellPosition grid(World world, int x, int y) {
+        return new GridShellPosition(world, x, y);
     }
 
-    public static Position location(World world, double x, double z) {
+    public static ShellPosition location(World world, double x, double z) {
         int cellX = (int) x / CELL_SIZE;
         int cellZ = (int) z / CELL_SIZE;
         if (cellX < 0 || cellZ < 0) {
             return null;
         }
-        return new GridPosition(world, cellX, cellZ);
+        return new GridShellPosition(world, cellX, cellZ);
     }
 
-    public static Position location(Location location) {
+    public static ShellPosition location(Location location) {
         return location(location.getWorld(), location.getX(), location.getZ());
     }
 
-    public static Position block(Block block) {
+    public static ShellPosition block(Block block) {
         if (block == null) {
             return null;
         }
@@ -51,12 +51,12 @@ public sealed abstract class Position permits GridPosition, IdPosition {
         if (cellX < 0 || cellZ < 0) {
             return null;
         }
-        return new GridPosition(block.getWorld(), cellX, cellZ);
+        return new GridShellPosition(block.getWorld(), cellX, cellZ);
     }
 
     protected final World world;
 
-    protected Position(World world) {
+    protected ShellPosition(World world) {
         this.world = world;
     }
 
@@ -103,6 +103,10 @@ public sealed abstract class Position permits GridPosition, IdPosition {
         return world.getBlockAt(getX() * CELL_SIZE, 0, getZ() * CELL_SIZE);
     }
 
+    public final BlockPosition getCornerBlockPosition() {
+        return new BlockPosition(getCornerBlock());
+    }
+
     public final BlockArea getArea() {
         return new BlockArea(
             new BlockPosition(getX() * CELL_SIZE, world.getMinHeight(), getZ() * CELL_SIZE),
@@ -129,7 +133,7 @@ public sealed abstract class Position permits GridPosition, IdPosition {
 
     @Override
     public final boolean equals(final Object other) {
-        if (!(other instanceof final Position otherPosition)) {
+        if (!(other instanceof final ShellPosition otherPosition)) {
             return false;
         }
         return getId() == otherPosition.getId();

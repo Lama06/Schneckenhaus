@@ -67,7 +67,7 @@ public final class ShulkerShellFactory extends SizedShellFactory {
         }
         shulkerBuilder.setColor(color);
 
-        GlobalShulkerShellConfig config = getGlobalConfig();
+        ShulkerShellConfig config = getConfig();
         if (config.isRainbowMode() && input.remove(config.getRainbowIngredient())) {
             shulkerBuilder.setRainbow(true);
         }
@@ -142,7 +142,7 @@ public final class ShulkerShellFactory extends SizedShellFactory {
     }
 
     @Override
-    public GlobalShulkerShellConfig getGlobalConfig() {
+    public ShulkerShellConfig getConfig() {
         return SchneckenhausPlugin.INSTANCE.getPluginConfig().getShulker();
     }
 

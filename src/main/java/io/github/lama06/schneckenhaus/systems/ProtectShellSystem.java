@@ -1,6 +1,6 @@
 package io.github.lama06.schneckenhaus.systems;
 
-import io.github.lama06.schneckenhaus.position.Position;
+import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -14,7 +14,7 @@ public final class ProtectShellSystem extends System {
     @EventHandler
     private void preventBlockBreaking(BlockBreakEvent event) {
         Block block = event.getBlock();
-        Position position = Position.block(event.getBlock());
+        ShellPosition position = ShellPosition.block(event.getBlock());
         if (position == null) {
             return;
         }
@@ -41,7 +41,7 @@ public final class ProtectShellSystem extends System {
 
     private void preventPistonMoveShell(BlockPistonEvent event, List<Block> movedBlocks) {
         Block piston = event.getBlock();
-        Position position = Position.block(piston);
+        ShellPosition position = ShellPosition.block(piston);
         if (position == null) {
             return;
         }
@@ -69,11 +69,11 @@ public final class ProtectShellSystem extends System {
     }
 
     private void preventExplosion(List<Block> destroyedBlocks) {
-        Map<Position, Set<Block>> shellBlocks = new HashMap<>();
+        Map<ShellPosition, Set<Block>> shellBlocks = new HashMap<>();
         Iterator<Block> iterator = destroyedBlocks.iterator();
         while (iterator.hasNext()) {
             Block destroyedBlock = iterator.next();
-            Position position = Position.block(destroyedBlock);
+            ShellPosition position = ShellPosition.block(destroyedBlock);
             if (position == null) {
                 continue;
             }

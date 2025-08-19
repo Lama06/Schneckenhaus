@@ -9,7 +9,7 @@ import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
-import io.github.lama06.schneckenhaus.shell.sized.GlobalSizedShellConfig;
+import io.github.lama06.schneckenhaus.shell.sized.SizedShellConfig;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShellFactory;
 import io.github.lama06.schneckenhaus.util.EnumUtil;
 import io.github.lama06.schneckenhaus.util.WoodType;
@@ -39,7 +39,7 @@ public final class ChestShellFactory extends SizedShellFactory {
     }
 
     @Override
-    public GlobalSizedShellConfig getGlobalConfig() {
+    public SizedShellConfig getConfig() {
         return SchneckenhausPlugin.INSTANCE.getPluginConfig().getChest();
     }
 

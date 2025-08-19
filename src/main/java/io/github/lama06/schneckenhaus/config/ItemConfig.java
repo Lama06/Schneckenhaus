@@ -58,6 +58,10 @@ public final class ItemConfig implements ComponentLike {
         this(item, 1, null);
     }
 
+    public ItemConfig(ItemStack item) {
+        this(item.getType(), item.getAmount(), null);
+    }
+
     public boolean canRemoveFrom(int size, Function<Integer, ItemStack> get) {
         int remainingAmount = amount;
         for (int i = 0; i < size; i++) {

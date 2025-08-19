@@ -1,17 +1,17 @@
-package io.github.lama06.schneckenhaus.position;
+package io.github.lama06.schneckenhaus.shell.position;
 
 import org.bukkit.World;
 
 /**
  * Stores a grid position as its id.
  */
-final class IdPosition extends Position {
+final class IdShellPosition extends ShellPosition {
     private final int id;
 
     /**
      * @throws IllegalArgumentException if the id is not positive.
      */
-    IdPosition(World world, int id) {
+    IdShellPosition(World world, int id) {
         super(world);
         if (id <= 0) {
             throw new IllegalArgumentException();

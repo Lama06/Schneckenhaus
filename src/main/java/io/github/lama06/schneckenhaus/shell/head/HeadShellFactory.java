@@ -9,7 +9,7 @@ import io.github.lama06.schneckenhaus.recipe.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
-import io.github.lama06.schneckenhaus.shell.builtin.GlobalBuiltinShellConfig;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellConfig;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.PlayerProfileListResolver;
@@ -24,7 +24,7 @@ public final class HeadShellFactory extends BuiltinShellFactory {
     public static final HeadShellFactory INSTANCE = new HeadShellFactory();
 
     @Override
-    public GlobalBuiltinShellConfig getGlobalConfig() {
+    public BuiltinShellConfig getConfig() {
         return config.getHead();
     }
 

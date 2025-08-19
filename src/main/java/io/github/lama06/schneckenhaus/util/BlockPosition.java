@@ -3,38 +3,59 @@ package io.github.lama06.schneckenhaus.util;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.util.Vector;
 
 public record BlockPosition(int x, int y, int z) {
-    public static BlockPosition fromString(final String string) {
-        final String[] parts = string.strip().split(" ");
+    public static BlockPosition fromString(String string) {
+        String[] parts = string.strip().split(" ");
         if (parts.length != 3) {
             return null;
         }
-        final int x, y, z;
+        int x, y, z;
         try {
             x = Integer.parseInt(parts[0]);
             y = Integer.parseInt(parts[1]);
             z = Integer.parseInt(parts[2]);
-        } catch (final NumberFormatException e) {
+        } catch (NumberFormatException e) {
             return null;
         }
         return new BlockPosition(x, y, z);
     }
 
-    public BlockPosition(final Block block) {
+    public BlockPosition(Block block) {
         this(block.getX(), block.getY(), block.getZ());
     }
 
-    public BlockPosition(final Location location) {
+    public BlockPosition(io.papermc.paper.math.BlockPosition paper) {
+        this(paper.blockX(), paper.blockY(), paper.blockZ());
+    }
+
+    public BlockPosition(Location location) {
         this(location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
-    public BlockPosition subtract(final BlockPosition other) {
+    public BlockPosition subtract(BlockPosition other) {
         return new BlockPosition(x - other.x(), y - other.y(), z - other.z());
     }
 
-    public Block getBlock(final World world) {
+    public BlockPosition subtract(int x, int y, int z) {
+        return new BlockPosition(this.x - x, this.y - y, this.z - z);
+    }
+
+    public BlockPosition add(BlockPosition other) {
+        return new BlockPosition(x + other.x(), y + other.y(), z + other.z());
+    }
+
+    public BlockPosition add(int x, int y, int z) {
+        return new BlockPosition(this.x + x, this.y + y, this.z + z);
+    }
+
+    public Block getBlock(World world) {
         return world.getBlockAt(x, y, z);
+    }
+
+    public Vector toVector() {
+        return new Vector(x, y, z);
     }
 
     @Override

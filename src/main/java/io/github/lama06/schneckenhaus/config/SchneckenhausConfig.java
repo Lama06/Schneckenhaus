@@ -1,20 +1,20 @@
 package io.github.lama06.schneckenhaus.config;
 
 import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
-import io.github.lama06.schneckenhaus.shell.chest.GlobalChestShellConfig;
-import io.github.lama06.schneckenhaus.shell.custom.GlobalCustomShellConfig;
-import io.github.lama06.schneckenhaus.shell.head.GlobalHeadShellConfig;
-import io.github.lama06.schneckenhaus.shell.shulker.GlobalShulkerShellConfig;
+import io.github.lama06.schneckenhaus.shell.chest.ChestShellConfig;
+import io.github.lama06.schneckenhaus.shell.custom.CustomShellConfig;
+import io.github.lama06.schneckenhaus.shell.head.HeadShellConfig;
+import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellConfig;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 
 import java.util.*;
 
 public final class SchneckenhausConfig {
-    private final GlobalShulkerShellConfig shulker = new GlobalShulkerShellConfig();
-    private final GlobalChestShellConfig chest = new GlobalChestShellConfig();
-    private final GlobalHeadShellConfig head = new GlobalHeadShellConfig();
-    private final Map<String, GlobalCustomShellConfig> custom = new LinkedHashMap<>();
+    private final ShulkerShellConfig shulker = new ShulkerShellConfig();
+    private final ChestShellConfig chest = new ChestShellConfig();
+    private final HeadShellConfig head = new HeadShellConfig();
+    private final Map<String, CustomShellConfig> custom = new LinkedHashMap<>();
 
     private Map<?, ?> homeShell = Map.of(
         "type", "shulker",
@@ -54,10 +54,10 @@ public final class SchneckenhausConfig {
                 if (!(key instanceof String name)) {
                     continue;
                 }
-                if (!(config.get(name) instanceof Map<?, ?> customShellConfig)) {
+                if (!(customShellConfigs.get(name) instanceof Map<?, ?> customShellConfig)) {
                     continue;
                 }
-                GlobalCustomShellConfig customShell = GlobalCustomShellConfig.deserialize(customShellConfig);
+                CustomShellConfig customShell = CustomShellConfig.deserialize(customShellConfig);
                 if (customShell == null) {
                     continue;
                 }
@@ -108,8 +108,7 @@ public final class SchneckenhausConfig {
             this.repairSystem.deserialize(repairSystem);
 
         if (config.get("fallback_exit_location") instanceof Map<?, ?> fallbackExitLocation) {
-            //noinspection unchecked
-            this.fallbackExitLocation = Location.deserialize((Map<String, Object>) fallbackExitLocation);
+            this.fallbackExitLocation = ConfigUtil.deserializeLocation(fallbackExitLocation);
         }
     }
 
@@ -140,26 +139,26 @@ public final class SchneckenhausConfig {
         config.put("theft_prevention", theftPrevention.serialize());
         config.put("escape_prevention", escapePrevention.serialize());
         config.put("repair_system", repairSystem.serialize());
-        config.put("fallback_exit_location", fallbackExitLocation == null ? null : fallbackExitLocation.serialize());
+        config.put("fallback_exit_location", ConfigUtil.serializeLocation(fallbackExitLocation, true));
 
         config.put("data_version", SchneckenhausPlugin.INSTANCE.getPluginMeta().getVersion());
 
         return config;
     }
 
-    public GlobalShulkerShellConfig getShulker() {
+    public ShulkerShellConfig getShulker() {
         return shulker;
     }
 
-    public GlobalChestShellConfig getChest() {
+    public ChestShellConfig getChest() {
         return chest;
     }
 
-    public GlobalHeadShellConfig getHead() {
+    public HeadShellConfig getHead() {
         return head;
     }
 
-    public Map<String, GlobalCustomShellConfig> getCustom() {
+    public Map<String, CustomShellConfig> getCustom() {
         return custom;
     }
 

@@ -93,12 +93,6 @@ public final class HeadShell extends BuiltinShell implements HeadShellData {
     }
 
     @Override
-    public BlockArea getFloor() {
-        Block corner = getPosition().getCornerBlock();
-        return new BlockArea(corner.getRelative(1, 0, 1), corner.getRelative(SIZE, 0, SIZE));
-    }
-
-    @Override
     public UUID getHeadOwner() {
         return headOwner;
     }

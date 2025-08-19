@@ -57,14 +57,6 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
     }
 
     @Override
-    public final BlockArea getFloor() {
-        return new BlockArea(
-            position.getCornerBlock().getRelative(1, 0, 1),
-            position.getCornerBlock().getRelative(getSize(), 0, getSize())
-        );
-    }
-
-    @Override
     public BlockArea getArea() {
         return new BlockArea(
             position.getCornerBlock(), position.getCornerBlock().getRelative(size + 1, size + 1, size + 1)
@@ -95,7 +87,7 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
 
             @Override
             public ItemStack getItem() {
-                GlobalSizedShellConfig config = getFactory().getGlobalConfig();
+                SizedShellConfig config = getFactory().getConfig();
 
                 int maxSize = Math.max(getFactory().getMaxSize(), config.getMaxUpgradeSize());
                 if (size >= maxSize) {
@@ -128,7 +120,7 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
 
             @Override
             public void onClick() {
-                if (!getFactory().getGlobalConfig().getUpgradeIngredient().removeFrom(player.getInventory())) {
+                if (!getFactory().getConfig().getUpgradeIngredient().removeFrom(player.getInventory())) {
                     player.sendMessage(Message.ERROR_NOT_AFFORDABLE.asComponent(NamedTextColor.RED));
                     return;
                 }

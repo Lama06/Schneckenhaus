@@ -1,18 +1,18 @@
-package io.github.lama06.schneckenhaus.position;
+package io.github.lama06.schneckenhaus.shell.position;
 
 import org.bukkit.World;
 
 /**
  * Stores a grid position as its coordinates.
  */
-final class GridPosition extends Position {
+final class GridShellPosition extends ShellPosition {
     private final int x;
     private final int z;
 
     /**
      * @throws IllegalStateException if x or z is negative.
      */
-    GridPosition(World world, int x, int z) {
+    GridShellPosition(World world, int x, int z) {
         super(world);
         if (x < 0 || z < 0) {
             throw new IllegalArgumentException();

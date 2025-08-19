@@ -1,12 +1,12 @@
 package io.github.lama06.schneckenhaus.shell.sized;
 
 import io.github.lama06.schneckenhaus.config.ItemConfig;
-import io.github.lama06.schneckenhaus.shell.builtin.GlobalBuiltinShellConfig;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellConfig;
 
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class GlobalSizedShellConfig extends GlobalBuiltinShellConfig {
+public abstract class SizedShellConfig extends BuiltinShellConfig {
     private int initialCraftingSize = 4;
     private int maxCraftingSize = 30;
     private ItemConfig sizeIngredient = getDefaultSizeIngredient();

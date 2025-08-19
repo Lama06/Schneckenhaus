@@ -94,6 +94,15 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
         );
     }
 
+    public BlockArea shrink(int shrinkX, int shrinkY, int shrinkZ) {
+        BlockPosition lowerCorner = getLowerCorner();
+        BlockPosition upperCorner = getUpperCorner();
+        return new BlockArea(
+            lowerCorner.add(shrinkX, shrinkY, shrinkZ),
+            upperCorner.subtract(shrinkX, shrinkY, shrinkZ)
+        );
+    }
+
     public int getLowerX() {
         return Math.min(position1.x(), position2.x());
     }

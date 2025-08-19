@@ -120,6 +120,15 @@ public enum Message implements ComponentLike {
     DELETE("Delete", "Löschen"),
     DELETE_SUCCESS("Successfully deleted {1} snail shell(s)", "{1} Schneckenhaus/-häuser erfolgreich gelöscht"),
 
+    INVALID_CUSTOM_SHELL_TYPE("Unknown custom shell type: {1}", "Unbekannter Schneckenhaustyp: {1}"),
+    CUSTOM_SHELL_TYPE_NAME_TAKEN("A custom shell type with this name already exists", "Es gibt bereits einen Schneckenhaustyp mit diesem Namen"),
+    ADD_CUSTOM_SHELL_TYPE_SUCCESS(
+        "Successfully added a new snail shell type! You can edit it in the config file or using /sh custom edit",
+        "Neuen Schneckenhaustyp erfolgreich hinzugefügt! Du kannst ihn in der Konfigurationsdatei oder mit /sh custom edit bearbeiten"
+    ),
+
+    JOIN_DISCORD("Join the plugin's Discord server: {1}", "Tritt dem Discord-Server des Plugins bei: {1}"),
+
     LANGUAGE_CHANGE_SUCCESSFUL("Changed language to {1}", "Sprache geändert auf {1}"),
 
     OAK("Oak", "Eiche"),

@@ -6,10 +6,10 @@ import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellFactory;
 
 public abstract class BuiltinShellFactory extends ShellFactory {
-    public abstract GlobalBuiltinShellConfig getGlobalConfig();
+    public abstract BuiltinShellConfig getConfig();
 
     public boolean getCraftingResult(ShellBuilder builder, CraftingInput input) {
-        GlobalBuiltinShellConfig config = getGlobalConfig();
+        BuiltinShellConfig config = getConfig();
         if (!config.isCrafting()) {
             return false;
         }

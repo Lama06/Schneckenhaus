@@ -19,7 +19,7 @@ public final class ConfigManager {
         # GitHub: https://github.com/Lama06/Schneckenhaus
         # Discord: https://discord.com/invite/7cHfHAgGpY
         # PayPal: https://www.paypal.com/paypalme/andreasprues
-        # If you enjoy the plugin, consider making a donation on PayPal.
+        # If you enjoy the plugin, please consider making a donation on PayPal :)
         
         """;
 

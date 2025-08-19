@@ -30,7 +30,7 @@ public final class LeaveShellSystem extends System {
         if (shell == null) {
             return;
         }
-        if (!shell.isDoorBlock(block)) {
+        if (!shell.isExitBlock(block)) {
             return;
         }
 

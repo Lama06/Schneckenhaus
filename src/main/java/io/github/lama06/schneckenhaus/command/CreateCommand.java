@@ -62,7 +62,10 @@ public final class CreateCommand extends ConstantsHolder {
                 }
             },
             ConcurrencyUtils::runOnMainThread
-        );
+        ).exceptionally(e -> {
+            logger.error("failed to create shell", e);
+            return null;
+        });
         return Command.SINGLE_SUCCESS;
     }
 }

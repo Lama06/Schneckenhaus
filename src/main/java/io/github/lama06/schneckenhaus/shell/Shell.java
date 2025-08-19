@@ -3,7 +3,7 @@ package io.github.lama06.schneckenhaus.shell;
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
-import io.github.lama06.schneckenhaus.position.Position;
+import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.ui.*;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermission;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionPlayerList;
@@ -33,7 +33,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
 
     protected final int id;
     protected World world;
-    protected Position position;
+    protected ShellPosition position;
     protected UUID creator;
 
     protected ShellCreationType creationType;
@@ -88,7 +88,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
             if (world == null || !config.getWorlds().containsKey(world.getName())) {
                 return false;
             }
-            position = Position.id(world, result.getInt("position"));
+            position = ShellPosition.id(world, result.getInt("position"));
             String creatorUuid = result.getString("creator");
             if (creatorUuid != null) {
                 creator = UUID.fromString(creatorUuid);
@@ -115,8 +115,6 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
 
     public abstract BlockArea getArea();
 
-    public abstract BlockArea getFloor();
-
     public final void place() {
         Map<Block, BlockData> blocks = getBlocks();
         for (Block block : blocks.keySet()) {
@@ -135,10 +133,11 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         }
     }
 
-    public final Location getSpawnLocation() {
+    public Location getSpawnLocation() {
         Vector direction = BlockFace.SOUTH_EAST.getDirection();
+        BlockArea floor = getArea().getLayer(0).shrink(1, 0, 1);
         floorBlocks:
-        for (BlockPosition floorBlockPos : getFloor()) {
+        for (BlockPosition floorBlockPos : floor) {
             Block floorBlock = floorBlockPos.getBlock(getWorld());
             if (!floorBlock.getType().isSolid()) {
                 continue;
@@ -150,7 +149,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
             }
             return floorBlock.getLocation().add(0.5, 1, 0.5).setDirection(direction);
         }
-        Block floorCorner = getFloor().getLowerCorner().getBlock(getWorld());
+        Block floorCorner = floor.getLowerCorner().getBlock(getWorld());
         if (!floorCorner.getType().isSolid()) {
             floorCorner.setType(Material.STONE);
         }
@@ -161,13 +160,9 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         return floorCorner.getLocation().add(0.5, 1, 0.5).setDirection(direction);
     }
 
-    public boolean isDoorBlock(Block block) {
-        return block != null && Tag.DOORS.isTagged(block.getType()) && getBlocks().containsKey(block);
-    }
+    public abstract boolean isExitBlock(Block block);
 
-    public boolean isMenuBlock(Block block) {
-        return block != null && block.getType() == Material.CRAFTING_TABLE && getBlocks().containsKey(block);
-    }
+    public abstract boolean isMenuBlock(Block block);
 
     public final ItemStack createItem() {
         ItemStack item = getFactory().createItem(this);
@@ -429,7 +424,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
 
     public final void delete() {
         for (Player player : getWorld().getPlayers()) {
-            if (!getPosition().equals(Position.location(player.getLocation()))) {
+            if (!getPosition().equals(ShellPosition.location(player.getLocation()))) {
                 continue;
             }
             if (player.isFlying()) {
@@ -490,7 +485,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         return world;
     }
 
-    public Position getPosition() {
+    public ShellPosition getPosition() {
         return position;
     }
 

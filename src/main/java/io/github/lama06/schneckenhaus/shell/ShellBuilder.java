@@ -55,7 +55,7 @@ public abstract class ShellBuilder extends ConstantsHolder implements ShellData 
             ConcurrencyUtils::runOnMainThread
         ).exceptionally(e -> {
             logger.error("failed to build shell", e);
-            throw new RuntimeException();
+            return null;
         });
     }
 

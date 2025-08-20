@@ -169,6 +169,7 @@ public final class ChestShell extends SizedShell implements ChestShellData {
         information.add(new ShellInformation(Message.WOOD.asComponent(), wood.getMessage().asComponent()));
     }
 
+    @Override
     public WoodType getWood() {
         return wood;
     }

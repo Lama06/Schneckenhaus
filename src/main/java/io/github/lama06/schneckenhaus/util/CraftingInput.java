@@ -1,4 +1,4 @@
-package io.github.lama06.schneckenhaus.recipe;
+package io.github.lama06.schneckenhaus.util;
 
 import io.github.lama06.schneckenhaus.config.ItemConfig;
 import org.bukkit.Material;

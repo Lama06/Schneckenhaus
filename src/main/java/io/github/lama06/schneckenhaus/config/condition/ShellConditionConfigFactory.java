@@ -6,12 +6,12 @@ import java.util.function.Supplier;
 public class ShellConditionConfigFactory {
     private static final Map<String, Supplier<ShellConditionConfig>> CONSTRUCTORS = Map.ofEntries(
         Map.entry(AndShellConditionConfig.TYPE, AndShellConditionConfig::new),
-        Map.entry(NotShellConditionConfig.TYPE, NotShellConditionConfig::new),
-        Map.entry(ShulkerShellConditionConfig.TYPE, ShulkerShellConditionConfig::new),
         Map.entry(ChestShellConditionConfig.TYPE, ChestShellConditionConfig::new),
-        Map.entry(CustomShellConditionConfig.TYPE, CustomShellConditionConfig::new),
         Map.entry(CreatorConditionConfig.TYPE, CreatorConditionConfig::new),
-        Map.entry(HeadShellConditionConfig.TYPE, HeadShellConditionConfig::new)
+        Map.entry(CustomShellConditionConfig.TYPE, CustomShellConditionConfig::new),
+        Map.entry(HeadShellConditionConfig.TYPE, HeadShellConditionConfig::new),
+        Map.entry(NotShellConditionConfig.TYPE, NotShellConditionConfig::new),
+        Map.entry(ShulkerShellConditionConfig.TYPE, ShulkerShellConditionConfig::new)
     );
 
     public static ShellConditionConfig deserialize(Object config) {

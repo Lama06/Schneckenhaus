@@ -48,14 +48,8 @@ public final class CreatorConditionConfig extends ShellConditionConfig {
 
     @Override
     protected void serialize(Map<String, Object> result) {
-        if (creationType != null) {
-            result.put("creation_type", creationType.name().toLowerCase(Locale.ROOT));
-        }
-        if (creator != null) {
-            result.put("creator", creator.toString());
-        }
-        if (permission != null) {
-            result.put("permission", permission);
-        }
+        result.put("creation_type", creationType == null ? null : creationType.name().toLowerCase(Locale.ROOT));
+        result.put("creator", creator == null ? null : creator.toString());
+        result.put("permission", permission);
     }
 }

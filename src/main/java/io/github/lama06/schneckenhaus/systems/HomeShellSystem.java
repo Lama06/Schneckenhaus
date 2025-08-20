@@ -37,8 +37,8 @@ public final class HomeShellSystem extends System {
             logger.error("unknown shell type in home shell config: {}", type);
             return;
         }
-        ShellBuilder builder = factory.deserializeConfig(homeShellConfig);
-        if (builder == null) {
+        ShellBuilder builder = factory.newBuilder();
+        if (!factory.deserializeConfig(builder, homeShellConfig)) {
             logger.error("failed to deserialize home shell config");
             return;
         }
@@ -55,7 +55,10 @@ public final class HomeShellSystem extends System {
                 schneckenhausPlayer.setHomeShell(shell.getId());
             },
             ConcurrencyUtils::runOnMainThread
-        );
+        ).exceptionally(e -> {
+            logger.error("failed to create home shell", e);
+            return null;
+        });
     }
 
     @EventHandler

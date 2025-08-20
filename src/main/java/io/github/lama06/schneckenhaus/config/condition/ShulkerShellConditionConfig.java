@@ -23,7 +23,8 @@ public final class ShulkerShellConditionConfig extends SizedShellConditionConfig
 
     @Override
     public boolean check(ShellData data) {
-        return data instanceof ShulkerShellData shulkerData &&
+        return super.check(data) &&
+            data instanceof ShulkerShellData shulkerData &&
             (colors == null || colors.contains(shulkerData.getColor())) &&
             (rainbow == null || rainbow == shulkerData.isRainbow());
     }
@@ -35,8 +36,7 @@ public final class ShulkerShellConditionConfig extends SizedShellConditionConfig
         }
         if (config.get("colors") instanceof List<?> colors) {
             this.colors = colors.stream()
-                .filter(name -> name instanceof String)
-                .map(name -> (String) name)
+                .filter(name -> name instanceof String).map(name -> (String) name)
                 .map(String::toUpperCase)
                 .map(String::strip)
                 .map(name -> {
@@ -58,11 +58,7 @@ public final class ShulkerShellConditionConfig extends SizedShellConditionConfig
     @Override
     public void serialize(Map<String, Object> result) {
         super.serialize(result);
-        if (colors != null) {
-            result.put("colors", colors.stream().sorted().map(Enum::name).map(String::toLowerCase).toList());
-        }
-        if (rainbow != null) {
-            result.put("rainbow", rainbow);
-        }
+        result.put("colors", colors == null ? null : colors.stream().sorted().map(Enum::name).map(String::toLowerCase).toList());
+        result.put("rainbow", rainbow);
     }
 }

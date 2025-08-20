@@ -7,7 +7,7 @@ import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.command.argument.EnumArgumentType;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShellFactory;
@@ -85,12 +85,14 @@ public final class ShulkerShellFactory extends SizedShellFactory {
     }
 
     @Override
-    public void parseCommandParameters(
+    public boolean parseCommandParameters(
         ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
         Map<String, Object> parameters
     ) throws CommandSyntaxException {
-        super.parseCommandParameters(builder, context, parameters);
+        if (!super.parseCommandParameters(builder, context, parameters)) {
+            return false;
+        }
         ShulkerShellBuilder shulkerBuilder = (ShulkerShellBuilder) builder;
         if (parameters.get("color") instanceof DyeColor color) {
             shulkerBuilder.setColor(color);
@@ -101,28 +103,31 @@ public final class ShulkerShellFactory extends SizedShellFactory {
             shulkerBuilder.setRainbow(rainbow);
         }
         shulkerBuilder.setRainbowColors(Arrays.stream(DyeColor.values()).collect(Collectors.toSet()));
+        return true;
     }
 
     @Override
-    public ShulkerShellBuilder deserializeConfig(Map<?, ?> config) {
-        ShulkerShellBuilder builder = (ShulkerShellBuilder) super.deserializeConfig(config);
+    public boolean deserializeConfig(ShellBuilder builder, Map<?, ?> config) {
+        if (!super.deserializeConfig(builder, config)) {
+            return false;
+        }
+        ShulkerShellBuilder shulkerBuilder = (ShulkerShellBuilder) builder;
 
         if (config.get("color") instanceof String colorName) {
             DyeColor color = DyeColor.valueOf(colorName.toUpperCase(Locale.ROOT));
-            builder.setColor(color);
+            shulkerBuilder.setColor(color);
         } else {
-            builder.setColor(DyeColor.WHITE);
+            shulkerBuilder.setColor(DyeColor.WHITE);
         }
 
         if (config.get("rainbow") instanceof Boolean rainbow) {
-            builder.setRainbow(rainbow);
+            shulkerBuilder.setRainbow(rainbow);
         }
 
         Set<DyeColor> rainbowColors = null;
         if (config.get("rainbow_colors") instanceof List<?> rainbowColorNames) {
             rainbowColors = rainbowColorNames.stream()
-                .filter(name -> name instanceof String)
-                .map(name -> (String) name)
+                .filter(name -> name instanceof String).map(name -> (String) name)
                 .map(name -> {
                     try {
                         return DyeColor.valueOf(name.toUpperCase(Locale.ROOT));
@@ -136,9 +141,9 @@ public final class ShulkerShellFactory extends SizedShellFactory {
         if (rainbowColors == null || rainbowColors.isEmpty()) {
             rainbowColors = Arrays.stream(DyeColor.values()).collect(Collectors.toSet());
         }
-        builder.setRainbowColors(rainbowColors);
+        shulkerBuilder.setRainbowColors(rainbowColors);
 
-        return builder;
+        return true;
     }
 
     @Override

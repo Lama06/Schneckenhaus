@@ -22,8 +22,6 @@ public abstract class SizedShellConditionConfig extends ShellConditionConfig {
 
     @Override
     public void serialize(Map<String, Object> result) {
-        if (size != null) {
-            result.put("size", size.serialize());
-        }
+        result.put("size", size == null ? null : size.serialize());
     }
 }

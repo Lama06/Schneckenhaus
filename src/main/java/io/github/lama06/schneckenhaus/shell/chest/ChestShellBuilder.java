@@ -32,6 +32,7 @@ public final class ChestShellBuilder extends SizedShellBuilder implements ChestS
         return id;
     }
 
+    @Override
     public WoodType getWood() {
         return wood;
     }

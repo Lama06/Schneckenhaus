@@ -6,12 +6,13 @@ import io.github.lama06.schneckenhaus.command.argument.CustomShellTypeArgument;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.config.ItemConfig;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.ShellFactory;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 
 import java.util.Map;
@@ -73,7 +74,7 @@ public final class CustomShellFactory extends ShellFactory {
     }
 
     @Override
-    public void parseCommandParameters(
+    public boolean parseCommandParameters(
         ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
         Map<String, Object> parameters
@@ -81,19 +82,33 @@ public final class CustomShellFactory extends ShellFactory {
         super.parseCommandParameters(builder, context, parameters);
 
         CustomShellBuilder customBuilder = (CustomShellBuilder) builder;
-        if (parameters.get("template") instanceof String template) {
-            customBuilder.setTemplate(template);
+        if (!(parameters.get("template") instanceof String template)) {
+            context.getSource().getSender().sendMessage(Message.MISSING_CUSTOM_SHELL_TYPE.asComponent(NamedTextColor.RED));
+            return false;
         }
+
+        if (!config.getCustom().containsKey(template)) {
+            context.getSource().getSender().sendMessage(Message.INVALID_CUSTOM_SHELL_TYPE.asComponent(NamedTextColor.RED, template));
+            return false;
+        }
+
+        customBuilder.setTemplate(template);
+        return true;
     }
 
     @Override
-    public ShellBuilder deserializeConfig(Map<?, ?> config) {
-        CustomShellBuilder builder = new CustomShellBuilder();
+    public boolean deserializeConfig(ShellBuilder builder, Map<?, ?> config) {
+        CustomShellBuilder customBuilder = (CustomShellBuilder) builder;
         if (!(config.get("template") instanceof String template)) {
-            return null;
+            logger.error("missing template in custom shell config");
+            return false;
         }
-        builder.setTemplate(template);
-        return builder;
+        if (!this.config.getCustom().containsKey(template)) {
+            logger.error("invalid template in custom shell config: {}", template);
+            return false;
+        }
+        customBuilder.setTemplate(template);
+        return true;
     }
 
     @Override

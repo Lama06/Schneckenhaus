@@ -23,12 +23,12 @@ final class GridShellPosition extends ShellPosition {
 
     @Override
     public int getId() {
-        final int quadratSideLength = Math.max(x, z) + 1;
+        int quadratSideLength = Math.max(x, z) + 1;
         if (z >= x) {
-            final int quadratCells = quadratSideLength * quadratSideLength;
+            int quadratCells = quadratSideLength * quadratSideLength;
             return quadratCells - x;
         } else {
-            final int smallerQuadratCells = (quadratSideLength - 1) * (quadratSideLength - 1);
+            int smallerQuadratCells = (quadratSideLength - 1) * (quadratSideLength - 1);
             return smallerQuadratCells + 1 + z;
         }
     }

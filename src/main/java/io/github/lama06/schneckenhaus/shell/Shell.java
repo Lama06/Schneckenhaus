@@ -27,13 +27,17 @@ import java.sql.SQLException;
 import java.util.*;
 
 public abstract class Shell extends ConstantsHolder implements ShellData {
-    public static String ITEM_ID = "id";
+    /**
+     * Items are linked to a shell by storing the linked shell's ID in the item's persistent data container.
+     */
+    public static String ITEM_ID_ATTRIBUTE = "id";
 
     protected final int id;
+
     protected World world;
     protected ShellPosition position;
-    protected UUID creator;
 
+    protected UUID creator;
     protected ShellCreationType creationType;
     protected Date creationTime;
 
@@ -43,7 +47,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
     protected final ShellPermission enterPermission;
     protected final ShellPermission buildPermission;
 
-    protected UUID homeOwner;
+    private UUID homeOwner;
 
     protected Shell(int id) {
         this.id = id;
@@ -66,8 +70,10 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         );
     }
 
-    public abstract ShellFactory getFactory();
-
+    /**
+     * Loads this shell's data from the database.
+     * @return whether the shell's data could successfully be loaded.
+     */
     protected boolean load() {
         String sql = """
             SELECT world, position, creator, creation_type, creation_time, name
@@ -100,6 +106,8 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
             return false;
         }
     }
+
+    public abstract ShellFactory getFactory();
 
     public abstract Map<Block, BlockData> getBlocks();
 
@@ -481,4 +489,6 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
             logger.error("failed to clear tags of shell {}", id, e);
         }
     }
+
+    // This is a hidden cat: 🐈
 }

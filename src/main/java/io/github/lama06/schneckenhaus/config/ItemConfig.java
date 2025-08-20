@@ -12,24 +12,33 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.Function;
+import java.util.function.IntFunction;
 
 public final class ItemConfig implements ComponentLike {
     public static ItemConfig parse(Object config) {
         if (config instanceof String string) {
-            Material item = Registry.MATERIAL.get(NamespacedKey.fromString(string));
+            NamespacedKey key = NamespacedKey.fromString(string);
+            if (key == null) {
+                return null;
+            }
+            Material item = Registry.MATERIAL.get(key);
             if (item == null) {
                 return null;
             }
             return new ItemConfig(item);
         }
+
         if (!(config instanceof Map<?, ?> map)) {
             return null;
         }
         if (!(map.get("item") instanceof String itemName)) {
             return null;
         }
-        Material item = Registry.MATERIAL.get(NamespacedKey.fromString(itemName));
+        NamespacedKey itemKey = NamespacedKey.fromString(itemName);
+        if (itemKey == null) {
+            return null;
+        }
+        Material item = Registry.MATERIAL.get(itemKey);
         if (item == null) {
             return null;
         }
@@ -40,12 +49,18 @@ public final class ItemConfig implements ComponentLike {
         int amount = 1;
         if (map.get("amount") instanceof Integer integer) {
             amount = integer;
+            if (amount < 0) {
+                return null;
+            }
         }
         return new ItemConfig(item, amount, model);
     }
 
     private final Material item;
     private final int amount;
+    /**
+     * or null if none is required
+     */
     private final Integer model;
 
     public ItemConfig(Material item, int amount, Integer model) {
@@ -62,7 +77,7 @@ public final class ItemConfig implements ComponentLike {
         this(item.getType(), item.getAmount(), null);
     }
 
-    public boolean canRemoveFrom(int size, Function<Integer, ItemStack> get) {
+    public boolean canRemoveFrom(int size, IntFunction<ItemStack> get) {
         int remainingAmount = amount;
         for (int i = 0; i < size; i++) {
             ItemStack item = get.apply(i);
@@ -73,6 +88,9 @@ public final class ItemConfig implements ComponentLike {
                 continue;
             }
             remainingAmount -= item.getAmount();
+            if (remainingAmount <= 0) {
+                return true;
+            }
         }
         return remainingAmount <= 0;
     }
@@ -81,7 +99,7 @@ public final class ItemConfig implements ComponentLike {
         return canRemoveFrom(inventory.getSize(), inventory::getItem);
     }
 
-    public boolean removeFrom(int size, Function<Integer, ItemStack> get, BiConsumer<Integer, ItemStack> set) {
+    public boolean removeFrom(int size, IntFunction<ItemStack> get, BiConsumer<Integer, ItemStack> set) {
         if (!canRemoveFrom(size, get)) {
             return false;
         }
@@ -113,6 +131,9 @@ public final class ItemConfig implements ComponentLike {
     }
 
     private boolean hasMatchingTypeAndModelData(ItemStack item) {
+        if (item == null) {
+            return false;
+        }
         if (item.getType() != this.item) {
             return false;
         }

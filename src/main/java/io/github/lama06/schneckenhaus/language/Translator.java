@@ -1,7 +1,6 @@
 package io.github.lama06.schneckenhaus.language;
 
-import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
-import org.slf4j.Logger;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -14,7 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public final class Translator {
+public final class Translator extends ConstantsHolder {
     private static final String LANGUAGE_FILE = "language.yml";
     private static final String LANGUAGE_FILE_HEADER = """
         # If you like the plugin, consider making a donation: https://www.paypal.com/paypalme/andreasprues
@@ -25,9 +24,6 @@ public final class Translator {
         # Override individual messages:
         # Remove the hash symbol # if you change a message.
         """;
-
-    private final SchneckenhausPlugin plugin = SchneckenhausPlugin.INSTANCE;
-    private final Logger logger = plugin.getSLF4JLogger();
 
     private Language language; // null if default
     private final Map<Message, String> overrides = new HashMap<>();

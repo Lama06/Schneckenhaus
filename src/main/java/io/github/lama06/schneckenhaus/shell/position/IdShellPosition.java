@@ -20,7 +20,7 @@ final class IdShellPosition extends ShellPosition {
     }
 
     private int getQuadratSideLength() {
-        final int sqrt = (int) Math.sqrt(id);
+        int sqrt = (int) Math.sqrt(id);
         if (sqrt * sqrt == id) {
             return sqrt;
         }
@@ -28,15 +28,15 @@ final class IdShellPosition extends ShellPosition {
     }
 
     private boolean isAboveOrOnDiagonal() {
-        final int quadratSideLength = getQuadratSideLength();
-        final int quadratArea = quadratSideLength * quadratSideLength;
-        final int firstId = quadratArea - (quadratSideLength - 1);
+        int quadratSideLength = getQuadratSideLength();
+        int quadratArea = quadratSideLength * quadratSideLength;
+        int firstId = quadratArea - (quadratSideLength - 1);
         return firstId <= id;
     }
 
     @Override
     public int getX() {
-        final int quadratSideLength = getQuadratSideLength();
+        int quadratSideLength = getQuadratSideLength();
         if (isAboveOrOnDiagonal()) {
             return quadratSideLength * quadratSideLength - id;
         } else {
@@ -46,7 +46,7 @@ final class IdShellPosition extends ShellPosition {
 
     @Override
     public int getZ() {
-        final int quadratSideLength = getQuadratSideLength();
+        int quadratSideLength = getQuadratSideLength();
         if (isAboveOrOnDiagonal()) {
             return quadratSideLength - 1;
         } else {

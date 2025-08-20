@@ -7,17 +7,20 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents the position of a cell in the grid of snail shells.
  */
 public sealed abstract class ShellPosition permits GridShellPosition, IdShellPosition {
+    /**
+     * The width of a grid cell in chunks
+     */
     public static final int CELL_SIZE_CHUNKS = 4;
 
     /**
-     * The width and height of a grid cell.
+     * The width of a grid cell in blocks
      */
     public static final int CELL_SIZE = 16 * CELL_SIZE_CHUNKS;
 
@@ -114,8 +117,8 @@ public sealed abstract class ShellPosition permits GridShellPosition, IdShellPos
         );
     }
 
-    public List<Chunk> getChunks() {
-        List<Chunk> chunks = new ArrayList<>();
+    public final Set<Chunk> getChunks() {
+        Set<Chunk> chunks = new HashSet<>();
         for (int x = 0; x < CELL_SIZE_CHUNKS; x++) {
             for (int z = 0; z < CELL_SIZE_CHUNKS; z++) {
                 chunks.add(world.getChunkAt(
@@ -127,13 +130,9 @@ public sealed abstract class ShellPosition permits GridShellPosition, IdShellPos
         return chunks;
     }
 
-    public World getWorld() {
-        return world;
-    }
-
     @Override
-    public final boolean equals(final Object other) {
-        if (!(other instanceof final ShellPosition otherPosition)) {
+    public final boolean equals(Object other) {
+        if (!(other instanceof ShellPosition otherPosition)) {
             return false;
         }
         return getId() == otherPosition.getId();
@@ -142,5 +141,9 @@ public sealed abstract class ShellPosition permits GridShellPosition, IdShellPos
     @Override
     public final int hashCode() {
         return getId();
+    }
+
+    public final World getWorld() {
+        return world;
     }
 }

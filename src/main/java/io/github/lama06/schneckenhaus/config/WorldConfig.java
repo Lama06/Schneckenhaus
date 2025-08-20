@@ -12,9 +12,8 @@ public final class WorldConfig {
 
     public WorldConfig() { }
 
-    public WorldConfig(boolean fallback, List<ShellConditionConfig> conditions) {
+    public WorldConfig(boolean fallback) {
         this.fallback = fallback;
-        this.conditions = conditions;
     }
 
     public void deserialize(Map<?, ?> config) {

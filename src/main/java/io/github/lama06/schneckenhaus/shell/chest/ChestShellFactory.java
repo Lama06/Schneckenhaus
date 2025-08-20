@@ -6,7 +6,7 @@ import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.command.argument.EnumArgumentType;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShellConfig;
@@ -16,6 +16,7 @@ import io.github.lama06.schneckenhaus.util.WoodType;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.Material;
 
+import java.util.Locale;
 import java.util.Map;
 
 public final class ChestShellFactory extends SizedShellFactory {
@@ -49,18 +50,30 @@ public final class ChestShellFactory extends SizedShellFactory {
     }
 
     @Override
+    public boolean getCraftingResult(ShellBuilder builder, CraftingInput input) {
+        if (!super.getCraftingResult(builder, input)) {
+            return false;
+        }
+        ChestShellBuilder chestBuilder = (ChestShellBuilder) builder;
+        chestBuilder.setWood(WoodType.OAK);
+        return true;
+    }
+
+    @Override
     public void addCommandParameters(ParameterCommandBuilder builder) {
         super.addCommandParameters(builder);
         builder.parameter("wood", new EnumArgumentType<>(WoodType.class));
     }
 
     @Override
-    public void parseCommandParameters(
+    public boolean parseCommandParameters(
         ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
         Map<String, Object> parameters
     ) throws CommandSyntaxException {
-        super.parseCommandParameters(builder, context, parameters);
+        if (!super.parseCommandParameters(builder, context, parameters)) {
+            return false;
+        }
 
         ChestShellBuilder chestBuilder = (ChestShellBuilder) builder;
         if (parameters.get("wood") instanceof WoodType wood) {
@@ -68,15 +81,26 @@ public final class ChestShellFactory extends SizedShellFactory {
         } else {
             chestBuilder.setWood(EnumUtil.getRandom(WoodType.class));
         }
+
+        return true;
     }
 
     @Override
-    public boolean getCraftingResult(ShellBuilder builder, CraftingInput input) {
-        if (!super.getCraftingResult(builder, input)) {
+    public boolean deserializeConfig(ShellBuilder builder, Map<?, ?> config) {
+        if (!super.deserializeConfig(builder, config)) {
             return false;
         }
         ChestShellBuilder chestBuilder = (ChestShellBuilder) builder;
-        chestBuilder.setWood(WoodType.OAK);
+        if (config.get("wood") instanceof String wood) {
+            try {
+                chestBuilder.setWood(WoodType.valueOf(wood.toUpperCase(Locale.ROOT)));
+            } catch (IllegalArgumentException e) {
+                logger.error("invalid wood type in chest shell config: {}", wood);
+                chestBuilder.setWood(WoodType.OAK);
+            }
+        } else {
+            chestBuilder.setWood(WoodType.OAK);
+        }
         return true;
     }
 

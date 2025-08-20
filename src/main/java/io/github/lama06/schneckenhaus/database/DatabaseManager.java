@@ -1,11 +1,10 @@
 package io.github.lama06.schneckenhaus.database;
 
-import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.github.lama06.schneckenhaus.util.PluginVersion;
 import org.bukkit.Bukkit;
-import org.slf4j.Logger;
 
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -14,12 +13,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class DatabaseManager {
-    private final SchneckenhausPlugin plugin = SchneckenhausPlugin.INSTANCE;
-    private final Logger logger = plugin.getSLF4JLogger();
+public final class DatabaseManager extends ConstantsHolder {
     private Connection connection;
 
     public boolean connect() {
+        logger.info("opening sqlite database...");
         try {
             connection = DriverManager.getConnection("jdbc:sqlite:plugins/Schneckenhaus/schneckenhaus.sqlite?foreign_keys=true");
         } catch (SQLException e) {
@@ -28,12 +26,11 @@ public final class DatabaseManager {
         }
 
         try {
-            return executeTransaction(() -> {
+            executeTransaction(() -> {
                 ResultSet dataVersionTable = connection.getMetaData().getTables(null, null, "data_version", null);
                 if (!dataVersionTable.next()) {
                     createScheme();
-                    connection.commit();
-                    return true;
+                    return null;
                 }
 
                 try (Statement statement = connection.createStatement()) {
@@ -41,10 +38,10 @@ public final class DatabaseManager {
                     result.next();
                     PluginVersion version = PluginVersion.fromString(result.getString("data_version"));
                     upgrade(version);
-                    connection.commit();
-                    return true;
+                    return null;
                 }
             });
+            return true;
         } catch (Exception e) {
             logger.error("failed to init database", e);
             return false;
@@ -52,11 +49,12 @@ public final class DatabaseManager {
     }
 
     private void createScheme() throws SQLException, IOException {
+        logger.info("creating database scheme...");
+
         List<String> commands = new ArrayList<>();
-        try (Reader reader = new BufferedReader(new InputStreamReader(
-            getClass().getClassLoader().getResourceAsStream("scheme.sql"),
-            StandardCharsets.UTF_8
-        ))) {
+        try (Reader reader = new InputStreamReader(new BufferedInputStream(
+            getClass().getClassLoader().getResourceAsStream("scheme.sql")
+        ), StandardCharsets.UTF_8)) {
             StringBuilder builder = new StringBuilder();
             int read;
             while ((read = reader.read()) != -1) {
@@ -100,12 +98,14 @@ public final class DatabaseManager {
 
     public <T> T executeTransaction(Transaction<T> transaction) throws Exception {
         if (!Bukkit.isPrimaryThread()) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("tried to execute database transaction async");
         }
 
         try {
             connection.setAutoCommit(false);
-            return transaction.run();
+            T result = transaction.run();
+            connection.commit();
+            return result;
         } catch (Exception e) {
             logger.error("exception during database transaction", e);
             try {

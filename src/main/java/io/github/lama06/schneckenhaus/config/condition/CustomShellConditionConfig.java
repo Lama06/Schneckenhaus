@@ -31,8 +31,6 @@ public final class CustomShellConditionConfig extends ShellConditionConfig {
 
     @Override
     protected void serialize(Map<String, Object> result) {
-        if (template != null) {
-            result.put("template", template);
-        }
+        result.put("template", template == null ? null : template);
     }
 }

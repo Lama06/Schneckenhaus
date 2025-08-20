@@ -33,8 +33,8 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
 
     @Override
     public Iterator<BlockPosition> iterator() {
-        final BlockPosition lowerCorner = getLowerCorner();
-        final BlockPosition upperCorner = getUpperCorner();
+        BlockPosition lowerCorner = getLowerCorner();
+        BlockPosition upperCorner = getUpperCorner();
         return new Iterator<>() {
             private int x = lowerCorner.x();
             private int y = lowerCorner.y();
@@ -50,7 +50,7 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
                 if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
-                final BlockPosition position = new BlockPosition(x, y, z);
+                BlockPosition position = new BlockPosition(x, y, z);
                 if (x != upperCorner.x()) {
                     x++;
                 } else if (z != upperCorner.z()) {
@@ -66,13 +66,13 @@ public record BlockArea(BlockPosition position1, BlockPosition position2) implem
         };
     }
 
-    public boolean containsBlock(final BlockPosition position) {
-        final BlockPosition lowerCorner = getLowerCorner();
-        final BlockPosition upperCorner = getUpperCorner();
+    public boolean containsBlock(BlockPosition position) {
+        BlockPosition lowerCorner = getLowerCorner();
+        BlockPosition upperCorner = getUpperCorner();
 
-        final boolean x = position.x() >= lowerCorner.x() && position.x() <= upperCorner.x();
-        final boolean y = position.y() >= lowerCorner.y() && position.y() <= upperCorner.y();
-        final boolean z = position.z() >= lowerCorner.z() && position.z() <= upperCorner.z();
+        boolean x = position.x() >= lowerCorner.x() && position.x() <= upperCorner.x();
+        boolean y = position.y() >= lowerCorner.y() && position.y() <= upperCorner.y();
+        boolean z = position.z() >= lowerCorner.z() && position.z() <= upperCorner.z();
 
         return x && y && z;
     }

@@ -6,7 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.command.argument.EnumArgumentType;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionMode;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.github.lama06.schneckenhaus.util.InventoryUtil;
@@ -26,6 +26,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -51,7 +52,7 @@ public abstract class ShellFactory extends ConstantsHolder {
         );
     }
 
-    public void parseCommandParameters(
+    public boolean parseCommandParameters(
         ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
         Map<String, Object> parameters
@@ -65,21 +66,29 @@ public abstract class ShellFactory extends ConstantsHolder {
         }
         if (parameters.get("enterPermissionMode") instanceof ShellPermissionMode enterPermissionMode) {
             builder.setEnterPermissionMode(enterPermissionMode);
-        } else {
-            builder.setEnterPermissionMode(ShellPermissionMode.EVERYBODY);
         }
         if (parameters.get("buildPermissionMode") instanceof ShellPermissionMode buildPermissionMode) {
             builder.setBuildPermissionMode(buildPermissionMode);
-        } else {
-            builder.setBuildPermissionMode(ShellPermissionMode.EVERYBODY);
         }
+        return true;
     }
 
-    public ShellBuilder deserializeConfig(Map<?, ?> config) {
-        ShellBuilder builder = newBuilder();
-        builder.setEnterPermissionMode(ShellPermissionMode.EVERYBODY);
-        builder.setBuildPermissionMode(ShellPermissionMode.EVERYBODY);
-        return builder;
+    public boolean deserializeConfig(ShellBuilder builder, Map<?, ?> config) {
+        if (config.get("enter_permission_mode") instanceof String string) {
+            try {
+                builder.setEnterPermissionMode(ShellPermissionMode.valueOf(string.toUpperCase(Locale.ROOT)));
+            } catch (IllegalArgumentException e) {
+                logger.warn("ignoring invalid enter permission mode: {}", string, e);
+            }
+        }
+        if (config.get("build_permission_mode") instanceof String string) {
+            try {
+                builder.setBuildPermissionMode(ShellPermissionMode.valueOf(string.toUpperCase(Locale.ROOT)));
+            } catch (IllegalArgumentException e) {
+                logger.warn("ignoring invalid build permission mode: {}", string, e);
+            }
+        }
+        return true;
     }
 
     protected abstract Material getItemType(ShellData data);

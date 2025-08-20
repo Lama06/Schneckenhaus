@@ -1,7 +1,7 @@
 package io.github.lama06.schneckenhaus.shell.builtin;
 
 import io.github.lama06.schneckenhaus.config.ItemConfig;
-import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellFactory;
 

@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
-import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
@@ -24,6 +24,7 @@ public abstract class SizedShellFactory extends BuiltinShellFactory {
         return ShellPosition.CELL_SIZE - 2;
     }
 
+    @Override
     public abstract SizedShellConfig getConfig();
 
     @Override
@@ -44,7 +45,6 @@ public abstract class SizedShellFactory extends BuiltinShellFactory {
         }
         int size = config.getInitialCraftingSize() + sizeIngredients * config.getSizePerIngredient();
         size = Math.min(size, config.getMaxCraftingSize());
-        size = Math.clamp(size, getMinSize(), getMaxSize());
         sizedBuilder.setSize(size);
 
         return true;
@@ -57,29 +57,35 @@ public abstract class SizedShellFactory extends BuiltinShellFactory {
     }
 
     @Override
-    public void parseCommandParameters(
+    public boolean parseCommandParameters(
         ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
         Map<String, Object> parameters
     ) throws CommandSyntaxException {
-        super.parseCommandParameters(builder, context, parameters);
+        if (!super.parseCommandParameters(builder, context, parameters)) {
+            return false;
+        }
         SizedShellBuilder sizedBuilder = (SizedShellBuilder) builder;
         if (parameters.get("size") instanceof Integer size) {
             sizedBuilder.setSize(size);
         } else {
             sizedBuilder.setSize(getMinSize() + ThreadLocalRandom.current().nextInt(Math.min(getMaxSize(), 32) - getMinSize() + 1));
         }
+        return true;
     }
 
     @Override
-    public ShellBuilder deserializeConfig(Map<?, ?> config) {
-        SizedShellBuilder builder = (SizedShellBuilder) super.deserializeConfig(config);
-        if (config.get("size") instanceof Integer size) {
-            builder.setSize(size);
-        } else {
-            builder.setSize(Math.clamp(16, getMinSize(), getMaxSize()));
+    public boolean deserializeConfig(ShellBuilder builder, Map<?, ?> config) {
+        if (!super.deserializeConfig(builder, config)) {
+            return false;
         }
-        return builder;
+        SizedShellBuilder sizedBuilder = (SizedShellBuilder) builder;
+        if (config.get("size") instanceof Integer size) {
+            sizedBuilder.setSize(size);
+        } else {
+            sizedBuilder.setSize(Math.clamp(16, getMinSize(), getMaxSize()));
+        }
+        return true;
     }
 
     @Override

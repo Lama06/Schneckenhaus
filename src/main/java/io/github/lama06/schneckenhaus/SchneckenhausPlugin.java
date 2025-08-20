@@ -17,10 +17,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.Connection;
-import java.util.logging.Level;
 
 public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
     private static final int BSTATS_ID = 21674;
@@ -75,17 +73,15 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
 
             try {
                 startBstats();
-            } catch (RuntimeException exception) {
-                getLogger().log(Level.WARNING, "Failed to start bStats", exception);
+            } catch (Exception e) {
+                getSLF4JLogger().warn("Failed to start bStats", e);
             }
 
             Bukkit.getPluginManager().registerEvents(this, this);
-        } catch (RuntimeException | IOException e) {
+        } catch (Exception e) {
             getSLF4JLogger().error("failed to enable Schneckenhaus plugin", e);
             Bukkit.getPluginManager().disablePlugin(this);
         }
-
-        Bukkit.getPluginManager().registerEvents(this, this);
     }
 
     private void startBstats() {
@@ -99,9 +95,13 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
             }
             return language.getName();
         }));
+        metrics.addCustomChart(new SimplePie("world_count", () -> String.valueOf(config.getConfig().getWorlds().size())));
     }
 
     public SchneckenhausConfig getPluginConfig() {
+        if (config == null) {
+            return null; // during init, called by ConstantsHolder class
+        }
         return config.getConfig();
     }
 
@@ -122,6 +122,9 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
     }
 
     public Connection getDatabaseConnection() {
+        if (database == null) {
+            return null; // during init
+        }
         return database.getConnection();
     }
 

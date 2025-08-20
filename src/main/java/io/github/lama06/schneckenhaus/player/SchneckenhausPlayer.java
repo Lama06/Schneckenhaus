@@ -307,7 +307,7 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
         String sql = """
             INSERT INTO home_shells(player, id)
             VALUES (?, ?)
-            ON CONFLICT (player) DO UPDATE id = excluded.id
+            ON CONFLICT (player) DO UPDATE SET id = excluded.id
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, player.getUniqueId().toString());

@@ -22,7 +22,7 @@ public final class RemoveInvalidShellItemsSystem extends System {
                 if (item == null) {
                     continue;
                 }
-                Integer id = item.getPersistentDataContainer().get(new NamespacedKey(plugin, Shell.ITEM_ID), PersistentDataType.INTEGER);
+                Integer id = item.getPersistentDataContainer().get(new NamespacedKey(plugin, Shell.ITEM_ID_ATTRIBUTE), PersistentDataType.INTEGER);
                 if (id == null) {
                     continue;
                 }

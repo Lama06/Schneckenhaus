@@ -5,7 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
@@ -56,22 +56,26 @@ public final class HeadShellFactory extends BuiltinShellFactory {
     @Override
     public void addCommandParameters(ParameterCommandBuilder builder) {
         super.addCommandParameters(builder);
-        builder.parameter("owner", ArgumentTypes.playerProfiles());
+        builder.parameter("head-owner", ArgumentTypes.playerProfiles());
     }
 
     @Override
-    public void parseCommandParameters(
+    public boolean parseCommandParameters(
         ShellBuilder builder,
         CommandContext<CommandSourceStack> context,
         Map<String, Object> parameters
     ) throws CommandSyntaxException {
-        super.parseCommandParameters(builder, context, parameters);
+        if (!super.parseCommandParameters(builder, context, parameters)) {
+            return false;
+        }
 
         HeadShellBuilder headBuilder = (HeadShellBuilder) builder;
-        if (parameters.get("owner") instanceof PlayerProfileListResolver playerResolver) {
+        if (parameters.get("head-owner") instanceof PlayerProfileListResolver playerResolver) {
             PlayerProfile player = playerResolver.resolve(context.getSource()).iterator().next();
             headBuilder.setHeadOwner(player.getId());
         }
+
+        return true;
     }
 
     @Override

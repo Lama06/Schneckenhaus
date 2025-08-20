@@ -2,7 +2,7 @@ package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.config.ShellInstanceSyncConfig;
-import io.github.lama06.schneckenhaus.recipe.CraftingInput;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.*;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionMode;
 import io.github.lama06.schneckenhaus.util.ConcurrencyUtils;

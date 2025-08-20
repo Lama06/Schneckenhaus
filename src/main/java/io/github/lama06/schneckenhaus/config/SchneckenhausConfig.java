@@ -33,7 +33,7 @@ public final class SchneckenhausConfig {
     private Location fallbackExitLocation;
 
     public SchneckenhausConfig() {
-        worlds.put("schneckenhaus", new WorldConfig(true, List.of()));
+        worlds.put("schneckenhaus", new WorldConfig(true));
     }
 
     public void deserialize(Map<?, ?> config) {

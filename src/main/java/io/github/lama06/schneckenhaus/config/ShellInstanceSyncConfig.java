@@ -5,9 +5,12 @@ import java.util.Map;
 
 public final class ShellInstanceSyncConfig extends ConditionalTaskFeatureConfig {
     private boolean shells = true;
+
     private boolean placedShells = true;
     private int placedShellsRange = 32;
+
     private boolean items = true;
+
     private boolean droppedItems = true;
     private int droppedItemsRange = 16;
 

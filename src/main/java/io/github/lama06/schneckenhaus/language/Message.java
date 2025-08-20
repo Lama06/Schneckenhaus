@@ -125,6 +125,7 @@ public enum Message implements ComponentLike {
     DELETE("Delete", "Löschen"),
     DELETE_SUCCESS("Successfully deleted {1} snail shell(s)", "{1} Schneckenhaus/-häuser erfolgreich gelöscht"),
 
+    MISSING_CUSTOM_SHELL_TYPE("Please specify a custom shell type!", "Bitte gib eine Vorlage an!"),
     INVALID_CUSTOM_SHELL_TYPE("Unknown custom shell type: {1}", "Unbekannter Schneckenhaustyp: {1}"),
     CUSTOM_SHELL_TYPE_NAME_TAKEN("A custom shell type with this name already exists", "Es gibt bereits einen Schneckenhaustyp mit diesem Namen"),
     ADD_CUSTOM_SHELL_TYPE_SUCCESS(

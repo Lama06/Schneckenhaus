@@ -49,7 +49,9 @@ public final class CreateCommand extends ConstantsHolder {
             shellBuilder.setCreator(player.getUniqueId());
             shellBuilder.setOwner(player.getUniqueId());
         }
-        factory.parseCommandParameters(shellBuilder, context, parameters);
+        if (!factory.parseCommandParameters(shellBuilder, context, parameters)) {
+            return 0;
+        }
         shellBuilder.build().thenAcceptAsync(
             shell -> {
                 CommandSender sender = context.getSource().getSender();

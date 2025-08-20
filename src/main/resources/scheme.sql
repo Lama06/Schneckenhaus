@@ -3,36 +3,45 @@ CREATE TABLE data_version (
 ) STRICT;
 
 CREATE TABLE shells (
+    -- needs to be autoincrement to prevent ids from being reused after shell deletion
     id INTEGER PRIMARY KEY AUTOINCREMENT,
 
     world TEXT NOT NULL,
-    position INTEGER NOT NULL CHECK ( position >= 1 ),
+    -- id of the shell's position
+    position INTEGER NOT NULL,
 
-    type TEXT NOT NULL,
-
+    -- can be crafting, command or home
     creation_type TEXT NOT NULL,
+    -- uuid of the creator
     creator TEXT NOT NULL,
     creation_time TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
+    -- can be shulker, chest, head or custom
+    type TEXT NOT NULL,
+
     name TEXT,
 
+    -- can be everybody, nobody, whitelist or blacklist
     enter_permission_mode TEXT NOT NULL,
     build_permission_mode TEXT NOT NULL,
 
     UNIQUE (position, world)
 ) STRICT;
 
+-- when a shell is deleted, its position is added to this table for reuse
 CREATE TABLE unused_shell_positions (
     world TEXT NOT NULL,
+    -- id of the unused position
     position INTEGER NOT NULL,
 
     PRIMARY KEY (world, position)
 ) STRICT;
 
+-- stores the size of shulker and chest shells
 CREATE TABLE sized_shells (
     id INTEGER PRIMARY KEY,
 
-    size INTEGER,
+    size INTEGER NOT NULL,
 
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;
@@ -40,15 +49,17 @@ CREATE TABLE sized_shells (
 CREATE TABLE shulker_shells (
     id INTEGER PRIMARY KEY,
 
-    color TEXT,
-    rainbow INTEGER,
+    color TEXT NOT NULL,
+    rainbow INTEGER NOT NULL,
 
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;
 
+-- stores the colors the rainbow mode will cycle through on a shulker shell
 CREATE TABLE shulker_shell_rainbow_colors (
-    id INTEGER,
+    id INTEGER NOT NULL,
     color TEXT NOT NULL,
+
     enabled INTEGER NOT NULL,
 
     PRIMARY KEY (id, color),
@@ -63,19 +74,12 @@ CREATE TABLE chest_shells (
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;
 
-CREATE TABLE custom_shells (
-    id INTEGER PRIMARY KEY,
-
-    template TEXT,
-
-    FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
-) STRICT;
-
 CREATE TABLE head_shells (
     id INTEGER PRIMARY KEY,
 
+    -- uuid of the head owner
     head_owner TEXT NOT NULL,
-    texture INTEGER Not NULL,
+    texture INTEGER NOT NULL,
 
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE,
     FOREIGN KEY (texture) REFERENCES head_shell_textures(id)
@@ -89,8 +93,16 @@ CREATE TABLE head_shell_textures (
     UNIQUE (texture)
 ) STRICT;
 
+CREATE TABLE custom_shells (
+    id INTEGER PRIMARY KEY,
+
+    template TEXT NOT NULL,
+
+    FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
+) STRICT;
+
 CREATE TABLE shell_tags (
-    id INTEGER,
+    id INTEGER NOT NULL,
     tag TEXT NOT NULL,
 
     PRIMARY KEY (id, tag),
@@ -112,15 +124,16 @@ CREATE TABLE shell_permissions (
 ) STRICT;
 
 CREATE TABLE shell_placements(
-    id INTEGER,
+    id INTEGER NOT NULL,
 
-    world TEXT,
-    x INTEGER,
-    y INTEGER,
-    z INTEGER,
+    world TEXT NOT NULL,
+    x INTEGER NOT NULL,
+    y INTEGER NOT NULL,
+    z INTEGER NOT NULL,
 
+    -- uuid of the player who placed this, null if unknown (e.g., placed by dispenser)
     placed_by TEXT,
-    time TEXT DEFAULT CURRENT_TIMESTAMP,
+    time TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (world, x, y, z),
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
@@ -128,7 +141,7 @@ CREATE TABLE shell_placements(
 
 CREATE TABLE home_shells (
     player TEXT PRIMARY KEY,
-    id INTEGER,
+    id INTEGER NOT NULL,
 
     UNIQUE (id),
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
@@ -138,7 +151,7 @@ CREATE TABLE shell_access_statistics (
     id INTEGER NOT NULL,
     player TEXT NOT NULL,
 
-    amount INTEGER NOT NULL CHECK (amount >= 0),
+    amount INTEGER NOT NULL,
     last_time TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     PRIMARY KEY (id, player),

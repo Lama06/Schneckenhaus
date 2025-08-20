@@ -220,8 +220,8 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         ));
 
         information.add(new ShellInformation(Message.OWNERS.asComponent(), Component.text(owners.toString())));
-        information.add(new ShellInformation(Message.ENTER_PERMISSION.asComponent(), enterPermission.toComponent()));
-        information.add(new ShellInformation(Message.BUILD_PERMISSION.asComponent(), buildPermission.toComponent()));
+        information.add(new ShellInformation(Message.ENTER_PERMISSION.asComponent(), enterPermission.asComponent()));
+        information.add(new ShellInformation(Message.BUILD_PERMISSION.asComponent(), buildPermission.asComponent()));
         information.add(new ShellInformation(Message.ACCESS_COUNT.asComponent(), Component.text(getTotalAccessCount())));
     }
 

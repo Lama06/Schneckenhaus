@@ -6,6 +6,7 @@ import io.github.lama06.schneckenhaus.config.SchneckenhausConfig;
 import io.github.lama06.schneckenhaus.database.DatabaseManager;
 import io.github.lama06.schneckenhaus.language.Language;
 import io.github.lama06.schneckenhaus.language.Translator;
+import io.github.lama06.schneckenhaus.legacy.LegacyImporter;
 import io.github.lama06.schneckenhaus.shell.ShellManager;
 import io.github.lama06.schneckenhaus.shell.custom.CustomShell;
 import io.github.lama06.schneckenhaus.systems.Systems;
@@ -78,6 +79,8 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
             }
 
             Bukkit.getPluginManager().registerEvents(this, this);
+
+            new LegacyImporter().loadLegacyDataIfNecessary();
         } catch (Exception e) {
             getSLF4JLogger().error("failed to enable Schneckenhaus plugin", e);
             Bukkit.getPluginManager().disablePlugin(this);

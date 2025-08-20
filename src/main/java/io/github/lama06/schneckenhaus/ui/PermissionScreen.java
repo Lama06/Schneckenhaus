@@ -37,7 +37,7 @@ public final class PermissionScreen extends Screen {
 
             ItemStack item = new ItemStack(mode.getIcon());
             item.editMeta(meta -> {
-                meta.customName(mode.getName());
+                meta.customName(mode.asComponent());
                 if (permission.getMode() == mode) {
                     meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                     meta.addEnchant(Enchantment.SHARPNESS, 1, true);

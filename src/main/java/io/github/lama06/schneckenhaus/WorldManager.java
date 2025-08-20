@@ -27,7 +27,7 @@ public final class WorldManager {
     public void load() {
         for (String worldName : plugin.getPluginConfig().getWorlds().keySet()) {
             if (Bukkit.getWorld(worldName) == null) {
-                logger.info("creating new snail shell world: {}", worldName);
+                logger.info("loading snail shell world: {}", worldName);
             }
             World world = WorldCreator.name(worldName)
                 .environment(World.Environment.NORMAL)

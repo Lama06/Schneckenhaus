@@ -1,11 +1,12 @@
 package io.github.lama06.schneckenhaus.config.condition;
 
 import io.github.lama06.schneckenhaus.shell.ShellData;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class ShellConditionConfig {
+public abstract class ShellConditionConfig extends ConstantsHolder {
     protected abstract String getType();
 
     public abstract boolean check(ShellData data);

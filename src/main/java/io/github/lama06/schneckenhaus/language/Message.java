@@ -23,6 +23,7 @@ public enum Message implements ComponentLike {
     UNKNOWN_PLAYER("unknown player", "unbekannter Spieler"),
     WORLD("World", "Welt"),
     GRID_POSITION("Grid Position", "Position im Häuserraster"),
+    POSITION("Position", "Position"),
     POSITION_1("Position 1", "Position 1"),
     POSITION_2("Position 2", "Position 2"),
     AREA("Area", "Bereich"),
@@ -36,6 +37,7 @@ public enum Message implements ComponentLike {
     RAINBOW_COLORS("Rainbow Colors", "Regenbogenfarben"),
     WOOD("Wood", "Holz"),
     TEMPLATE("Template", "Vorlage"),
+    SHELL_PLACEMENTS("Shell Placements", "Platzierte Schneckenhäuser"),
 
     ON("on", "an"),
     OFF("off", "aus"),
@@ -49,6 +51,8 @@ public enum Message implements ComponentLike {
     CLICK_TO_REMOVE("Click to remove", "Zum Entfernen klicken"),
     CLICK_TO_ADD("Click to add", "Zum Hinzufügen klicken"),
     CLICK_TO_EDIT("Click to edit", "Zum Bearbeiten klicken"),
+    CLICK_TO_OPEN("Click to open", "Zum Öffnen klicken"),
+    CLICK_TO_TELEPORT("Click to teleport", "Zum Teleportieren klicken"),
     CLICK_HERE("Click here", "Hier klicken"),
     TELEPORT("Teleport", "Teleportieren"),
     OPEN_MENU("Open menu", "Menü öffnen"),
@@ -112,6 +116,7 @@ public enum Message implements ComponentLike {
 
     TAG_ADD_SUCCESS("Tag {1} was added to {2} shells", "{2} Schneckenhäuser wurden mit {1} verschlagwortet"),
     TAG_REMOVE_SUCCESS("Tag {1} was removed from {2} shells", "Schlagwort {1} von {2} Schneckenhäusern entfernt"),
+    TAG_CLEAR_SUCCESS("Clears tags of {1} shells", "Die Schlagwörter von {1} Häusern wurden gelöscht"),
 
     ALL_TIME_COUNT("All time snail shell count", "Gesamtzahl aller jemals erstellter Schneckenhäuser"),
     CURRENT_COUNT("Current snail shell count", "Aktuelle Anzahl an Schneckenhäusern"),

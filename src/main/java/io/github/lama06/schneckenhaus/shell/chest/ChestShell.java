@@ -1,12 +1,10 @@
 package io.github.lama06.schneckenhaus.shell.chest;
 
-import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.ShellInformation;
-import io.github.lama06.schneckenhaus.shell.ShellScreenAction;
+import io.github.lama06.schneckenhaus.shell.action.ShellScreenAction;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShell;
 import io.github.lama06.schneckenhaus.util.WoodType;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Axis;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,7 +12,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -163,26 +160,7 @@ public final class ChestShell extends SizedShell implements ChestShellData {
     @Override
     protected void addShellScreenActions(Player player, List<ShellScreenAction> actions) {
         super.addShellScreenActions(player, actions);
-        actions.add(new ShellScreenAction() {
-            @Override
-            public ItemStack getItem() {
-                if (!Permission.CHANGE_SHELL_WOOD.check(player)) {
-                    return null;
-                }
-
-                ItemStack item = new ItemStack(wood.getSapling());
-                item.editMeta(meta -> {
-                    meta.customName(Message.WOOD.asComponent());
-                    meta.lore(List.of(Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)));
-                });
-                return item;
-            }
-
-            @Override
-            public void onClick() {
-                new ChestShellWoodScreen(ChestShell.this, player).open();
-            }
-        });
+        actions.add(new ChangeWoodAction(this, player));
     }
 
     @Override

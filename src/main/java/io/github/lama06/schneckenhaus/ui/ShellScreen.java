@@ -2,7 +2,7 @@ package io.github.lama06.schneckenhaus.ui;
 
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.Shell;
-import io.github.lama06.schneckenhaus.shell.ShellScreenAction;
+import io.github.lama06.schneckenhaus.shell.action.ShellScreenAction;
 import io.github.lama06.schneckenhaus.util.InventoryUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;

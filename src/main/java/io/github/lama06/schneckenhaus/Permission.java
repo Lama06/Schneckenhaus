@@ -42,6 +42,9 @@ public enum Permission {
     UPGRADE_SNAIL_SHELL_SIZE(PermissionDefault.TRUE),
     CHANGE_SHELL_WOOD(PermissionDefault.TRUE),
     DELETE_SHELL(PermissionDefault.OP),
+    PLACEMENTS_VIEW("placements.view", PermissionDefault.TRUE),
+    PLACEMENTS_VIEW_POSITIONS("placements.view_positions", PermissionDefault.TRUE),
+    PLACEMENTS_TELEPORT("placements.teleport", PermissionDefault.OP),
 
     BYPASS_ESCAPE_PREVENTION,
 

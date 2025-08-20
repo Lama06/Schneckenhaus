@@ -70,6 +70,9 @@ public abstract class Screen extends ConstantsHolder implements Listener {
     }
 
     protected final void setItem(InventoryPosition position, Supplier<ItemStack> item, Integer animationDelay, Runnable callback) {
+        if (position.getSlot() >= getHeight() * 9) {
+            return;
+        }
         inventory.setItem(position.getSlot(), InventoryUtil.removeDefaultFormatting(item.get()));
         items.put(position, new ItemRegistration(callback, item, animationDelay));
     }

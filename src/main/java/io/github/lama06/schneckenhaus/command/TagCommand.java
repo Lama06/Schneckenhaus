@@ -39,8 +39,11 @@ public final class TagCommand extends ConstantsHolder {
                 .then(Commands.literal("remove")
                     .then(Commands.argument("tag", StringArgumentType.string())
                         .executes(this::remove)
-                        .suggests(this::removeSuggestions)
+                        .suggests(this::suggestTagsForRemoval)
                     )
+                )
+                .then(Commands.literal("clear")
+                    .executes(this::clear)
                 )
             )
             .build();
@@ -95,12 +98,21 @@ public final class TagCommand extends ConstantsHolder {
         return shells.size();
     }
 
-    private CompletableFuture<Suggestions> removeSuggestions(
+    private CompletableFuture<Suggestions> suggestTagsForRemoval(
         CommandContext<CommandSourceStack> context,
         SuggestionsBuilder builder
     ) throws CommandSyntaxException {
         Shell shell = context.getArgument("shells", ShellSelector.class).resolve(context.getSource()).getFirst();
         shell.getTags().forEach(builder::suggest);
         return builder.buildFuture();
+    }
+
+    private int clear(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        List<Shell> shells = context.getArgument("shells", ShellSelector.class).resolve(context.getSource());
+        for (Shell shell : shells) {
+            shell.clearTags();
+        }
+        context.getSource().getSender().sendMessage(Message.TAG_CLEAR_SUCCESS.asComponent(NamedTextColor.GREEN, shells.size()));
+        return shells.size();
     }
 }

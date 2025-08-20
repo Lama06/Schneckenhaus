@@ -1,20 +1,17 @@
 package io.github.lama06.schneckenhaus.shell.shulker;
 
-import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.ShellInformation;
-import io.github.lama06.schneckenhaus.shell.ShellScreenAction;
+import io.github.lama06.schneckenhaus.shell.action.ShellScreenAction;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShell;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -184,32 +181,7 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
     @Override
     protected void addShellScreenActions(Player player, List<ShellScreenAction> actions) {
         super.addShellScreenActions(player, actions);
-        actions.add(new ShellScreenAction() {
-
-
-            @Override
-            public ItemStack getItem() {
-                if (!Permission.CHANGE_SNAIL_SHELL_COLOR.check(player)) {
-                    return null;
-                }
-                ItemStack item = new ItemStack(MaterialUtil.getColoredDye(getCurrentColor()));
-                item.editMeta(meta -> {
-                    meta.customName(Message.COLOR.asComponent(TextColor.color(getCurrentColor().getColor().asRGB())));
-                    meta.lore(List.of(Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)));
-                });
-                return item;
-            }
-
-            @Override
-            public Integer getItemAnimationDelay() {
-                return getFactory().getItemAnimationDelay(ShulkerShell.this);
-            }
-
-            @Override
-            public void onClick() {
-                new ShulkerColorScreen(player, ShulkerShell.this).open();
-            }
-        });
+        actions.add(new ChangeColorAction(this, player));
     }
 
     public DyeColor getCurrentColor() {
@@ -290,4 +262,5 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
 
         place();
     }
+
 }

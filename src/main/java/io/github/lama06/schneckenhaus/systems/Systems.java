@@ -26,6 +26,8 @@ public final class Systems {
         start(new ShellRepairSystem());
         start(new TimeSystem());
         start(new RemoveInvalidShellItemsSystem());
+        start(new DispenserSystem());
+        start(new PistonSystem());
     }
 
     private void start(System system) {

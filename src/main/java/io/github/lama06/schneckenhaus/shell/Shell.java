@@ -3,22 +3,20 @@ package io.github.lama06.schneckenhaus.shell;
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
+import io.github.lama06.schneckenhaus.shell.action.*;
 import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
-import io.github.lama06.schneckenhaus.ui.*;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermission;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionPlayerList;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.util.Vector;
@@ -164,13 +162,19 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
 
     public abstract boolean isMenuBlock(Block block);
 
-    public final ItemStack createItem() {
+    public final ItemStack createItem(boolean storeId) {
         ItemStack item = getFactory().createItem(this);
         item.editMeta(meta -> {
             PersistentDataContainer data = meta.getPersistentDataContainer();
-            data.set(new NamespacedKey(plugin, "id"), PersistentDataType.INTEGER, id);
+            if (storeId) {
+                data.set(new NamespacedKey(plugin, "id"), PersistentDataType.INTEGER, id);
+            }
         });
         return item;
+    }
+
+    public final ItemStack createItem() {
+        return createItem(true);
     }
 
     protected void addInformation(List<ShellInformation> information) {
@@ -220,200 +224,27 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
     }
 
     protected void addShellScreenActions(Player player, List<ShellScreenAction> actions) {
-        actions.add(new ShellScreenAction() {
-            @Override
-            public ItemStack getItem() {
-                // item without id to prevent the animation system from messing with it
-                ItemStack item = getFactory().createItem(Shell.this);
-                item.editMeta(meta -> {
-                    List<Component> lore = new ArrayList<>(meta.hasLore() ? meta.lore() : List.of());
-                    if (Permission.CREATE_SNAIL_SHELL_COPIES.check(player)) {
-                        lore.add(Message.CLICK_TO_CREATE_SHELL_COPY.asComponent(NamedTextColor.YELLOW));
-                    }
-                    meta.lore(lore);
-                });
-                return item;
-            }
-
-            @Override
-            public Integer getItemAnimationDelay() {
-                return getFactory().getItemAnimationDelay(Shell.this);
-            }
-
-            @Override
-            public void onClick() {
-                if (!Permission.CREATE_SNAIL_SHELL_COPIES.check(player)) {
-                    return;
-                }
-                player.give(createItem());
-            }
-        });
-
-        // Name
-        actions.add(new ShellScreenAction() {
-            @Override
-            public ItemStack getItem() {
-                ItemStack item = new ItemStack(Material.NAME_TAG);
-                item.editMeta(meta -> {
-                    if (name == null) {
-                        meta.customName(Message.NAME_NOT_SET.asComponent());
-                    } else {
-                        meta.customName(Message.SNAIL_SHELL_NAME.asComponent(name));
-                    }
-                    if (Permission.RENAME_SNAIL_SHELL.check(player)) {
-                        meta.lore(List.of(Message.CLICK_TO_CHANGE_NAME.asComponent(NamedTextColor.YELLOW)));
-                    }
-                });
-                return item;
-            }
-
-            @Override
-            public void onClick() {
-                if (!Permission.RENAME_SNAIL_SHELL.check(player)) {
-                    return;
-                }
-                new InputScreen(
-                    player,
-                    Message.RENAME_SHELL_TITLE.asComponent(NamedTextColor.YELLOW),
-                    name == null ? "" : name,
-                    newName -> {
-                        setName(newName);
-                        player.sendMessage(Message.RENAME_SHELL_SUCCESS.asComponent(NamedTextColor.GREEN, newName));
-                    },
-                    () -> { }
-                ).open();
-            }
-        });
-
-        // Owners
-        actions.add(new ShellScreenAction() {
-            private static final int ANIMATION_DELAY = 20;
-
-            private final List<UUID> ownerUuids = owners.get().stream().sorted().toList();
-
-            @Override
-            public ItemStack getItem() {
-                if (!Permission.EDIT_OWNERS.check(player)) {
-                    return null;
-                }
-
-                if (ownerUuids.isEmpty()) {
-                    return null;
-                }
-                int currentlyDisplayOwnerIndex = (Bukkit.getCurrentTick() / ANIMATION_DELAY) % ownerUuids.size();
-                UUID currentlyDisplayedOwnerUuid = ownerUuids.get(currentlyDisplayOwnerIndex);
-                OfflinePlayer currentlyDisplayedOwner = Bukkit.getOfflinePlayer(currentlyDisplayedOwnerUuid);
-                String currentlyDisplayedOwnerName = Objects.requireNonNullElse(
-                    currentlyDisplayedOwner.getName(),
-                    currentlyDisplayedOwner.getUniqueId().toString()
-                );
-
-                ItemStack head = new ItemStack(Material.PLAYER_HEAD);
-                head.editMeta(SkullMeta.class, meta -> {
-                    meta.customName(Message.OWNERS.asComponent(NamedTextColor.YELLOW));
-                    meta.lore(List.of(
-                        Component.text(currentlyDisplayedOwnerName),
-                        Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)
-                    ));
-                    meta.setOwningPlayer(currentlyDisplayedOwner);
-                });
-                return head;
-            }
-
-            @Override
-            public Integer getItemAnimationDelay() {
-                if (ownerUuids.size() <= 1) {
-                    return null;
-                }
-                return ANIMATION_DELAY;
-            }
-
-            @Override
-            public void onClick() {
-                new PlayerListEditScreen(
-                    player,
-                    Message.OWNERS.asComponent(NamedTextColor.YELLOW),
-                    owners.get(),
-                    owners::set,
-                    () -> new ShellScreen(Shell.this, player).open()
-                ).open();
-            }
-        });
-
-        // Enter Permissions
-        actions.add(new ShellScreenAction() {
-            @Override
-            public ItemStack getItem() {
-                if (!Permission.CHANGE_ENTER_PERMISSION.check(player)) {
-                    return null;
-                }
-                ItemStack item = new ItemStack(Material.OAK_DOOR);
-                item.editMeta(meta -> {
-                    meta.customName(Message.ENTER_PERMISSION.asComponent(NamedTextColor.YELLOW));
-                    meta.lore(List.of(Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)));
-                });
-                return item;
-            }
-
-            @Override
-            public void onClick() {
-                new PermissionScreen(player, enterPermission).open();
-            }
-        });
-
-        // Build Permissions
-        actions.add(new ShellScreenAction() {
-            @Override
-            public ItemStack getItem() {
-                if (!Permission.CHANGE_BUILD_PERMISSION.check(player)) {
-                    return null;
-                }
-                ItemStack item = new ItemStack(Material.IRON_PICKAXE);
-                item.editMeta(meta -> {
-                    meta.customName(Message.BUILD_PERMISSION.asComponent(NamedTextColor.YELLOW));
-                    meta.lore(List.of(Message.CLICK_TO_EDIT.asComponent(NamedTextColor.YELLOW)));
-                });
-                return item;
-            }
-
-            @Override
-            public void onClick() {
-                new PermissionScreen(player, buildPermission).open();
-            }
-        });
-
-        // Delete
-        actions.add(new ShellScreenAction() {
-            @Override
-            public ItemStack getItem() {
-                if (!Permission.DELETE_SHELL.check(player)) {
-                    return null;
-                }
-                ItemStack item = new ItemStack(Material.TNT);
-                item.editMeta(meta -> {
-                    meta.customName(Message.DELETE.asComponent(NamedTextColor.RED));
-                });
-                return item;
-            }
-
-            @Override
-            public void onClick() {
-                new ConfirmationScreen(
-                    player,
-                    Message.DELETE.toString(),
-                    () -> { },
-                    () -> {
-                        delete();
-                        player.sendMessage(Message.DELETE_SUCCESS.asComponent(NamedTextColor.GREEN, 1));
-                    }
-                ).open();
-            }
-
-            @Override
-            public boolean isAlignedRight() {
-                return true;
-            }
-        });
+        actions.add(new CopyAction(this, player));
+        actions.add(new EditNameAction(this, player));
+        actions.add(new EditOwnersAction(this, player));
+        actions.add(new EditPermissionAction(
+            this,
+            player,
+            enterPermission,
+            Permission.CHANGE_ENTER_PERMISSION,
+            Material.OAK_DOOR,
+            Message.ENTER_PERMISSION
+        ));
+        actions.add(new EditPermissionAction(
+            this,
+            player,
+            buildPermission,
+            Permission.CHANGE_BUILD_PERMISSION,
+            Material.GOLDEN_PICKAXE,
+            Message.BUILD_PERMISSION
+        ));
+        actions.add(new ShowPlacementsAction(this, player));
+        actions.add(new DeleteAction(this, player));
     }
 
     public final List<ShellScreenAction> getShellScreenActions(Player player) {

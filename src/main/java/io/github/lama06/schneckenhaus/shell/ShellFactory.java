@@ -62,6 +62,10 @@ public abstract class ShellFactory extends ConstantsHolder {
             builder.setOwner(owner.iterator().next().getId());
         }
         if (parameters.get("world") instanceof World world) {
+            if (!plugin.getShellManager().isShellWorld(world)) {
+                logger.error("cannot create a shell in this world: {}", world);
+                return false;
+            }
             builder.setWorld(world);
         }
         if (parameters.get("enterPermissionMode") instanceof ShellPermissionMode enterPermissionMode) {

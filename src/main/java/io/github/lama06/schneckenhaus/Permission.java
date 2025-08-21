@@ -61,6 +61,8 @@ public enum Permission {
     COMMAND_HOME_TP_OTHERS("command.home.tp.others"),
     COMMAND_HOME_MANAGE("command.home.manage"),
     COMMAND_DISCORD("command.discord"),
+    COMMAND_MENU("command.menu"),
+    COMMAND_LANGUAGE("command.language"),
     COMMAND_CUSTOM("command.custom"),
     COMMAND_DEBUG("command.debug", PermissionDefault.FALSE);
 

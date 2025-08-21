@@ -52,7 +52,7 @@ you have multiple ways to do so:
     - `set <player> <home>`
     - `unset <player>`
   - `language <language>` changes the plugin's language
-  - ´tag <shell>´
+  - `tag <shell>`
     - `list`
     - `add <tag>`
     - `remove <tag>`

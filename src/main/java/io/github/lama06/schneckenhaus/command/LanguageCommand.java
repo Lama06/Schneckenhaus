@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus.command;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.CommandNode;
+import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.command.argument.EnumArgumentType;
 import io.github.lama06.schneckenhaus.language.Language;
 import io.github.lama06.schneckenhaus.language.Message;
@@ -14,6 +15,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 public final class LanguageCommand extends ConstantsHolder {
     public CommandNode<CommandSourceStack> create() {
         return Commands.literal("language")
+            .requires(Permission.COMMAND_LANGUAGE::check)
             .then(Commands.argument("language", new EnumArgumentType<>(Language.class))
                 .executes(this::execute)
             )

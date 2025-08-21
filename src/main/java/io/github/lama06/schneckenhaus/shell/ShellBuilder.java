@@ -85,6 +85,9 @@ public abstract class ShellBuilder extends ConstantsHolder implements ShellData 
         if (world == null) {
             throw new IllegalStateException("no world found to create snail shell");
         }
+        if (!plugin.getShellManager().isShellWorld(world)) {
+            throw new IllegalStateException("cannot create shell in this world: " + world);
+        }
 
         if (position == 0) {
             String findPositionSql = """

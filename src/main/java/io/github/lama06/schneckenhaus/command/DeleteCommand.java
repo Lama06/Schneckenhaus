@@ -6,9 +6,11 @@ import com.mojang.brigadier.tree.CommandNode;
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.command.argument.ShellSelector;
 import io.github.lama06.schneckenhaus.command.argument.ShellsArgumentType;
+import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public final class DeleteCommand {
         for (Shell shell : shells) {
             shell.delete();
         }
+        context.getSource().getSender().sendMessage(Message.DELETE_SHELL_SUCCESS.asComponent(NamedTextColor.GREEN, shells.size()));
         return shells.size();
     }
 }

@@ -2,6 +2,7 @@ package io.github.lama06.schneckenhaus.command;
 
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.tree.CommandNode;
+import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.command.argument.ShellSelector;
 import io.github.lama06.schneckenhaus.command.argument.ShellsArgumentType;
 import io.github.lama06.schneckenhaus.language.Message;
@@ -15,6 +16,7 @@ import org.bukkit.entity.Player;
 public final class MenuCommand {
     public CommandNode<CommandSourceStack> create() {
         return Commands.literal("menu")
+            .requires(Permission.COMMAND_MENU::check)
             .then(Commands.argument("shell", ShellsArgumentType.INSTANCE)
                 .executes(context -> {
                     Shell shell = context.getArgument("shell", ShellSelector.class).resolve(context.getSource()).getFirst();

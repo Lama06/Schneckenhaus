@@ -44,14 +44,10 @@ public final class Translator extends ConstantsHolder {
             return;
         }
 
-        if (!(config.get("language") instanceof String languageName)) {
+        if (config.get("language") instanceof String languageName) {
+            language = Arrays.stream(Language.values()).filter(l -> l.getId().equalsIgnoreCase(languageName)).findAny().orElse(null);
+        } else {
             logger.error("no language name specified in {}", LANGUAGE_FILE);
-            return;
-        }
-        language = Arrays.stream(Language.values()).filter(l -> l.getId().equalsIgnoreCase(languageName)).findAny().orElse(null);
-        if (language == null) {
-            logger.error("invalid language name: {}", languageName);
-            return;
         }
 
         for (Object key : config.keySet()) {

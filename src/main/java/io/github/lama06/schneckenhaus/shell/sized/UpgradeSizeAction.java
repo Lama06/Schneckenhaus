@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.shell.sized;
 
+import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.shell.action.ShellScreenAction;
 import net.kyori.adventure.text.Component;
@@ -31,9 +32,13 @@ final class UpgradeSizeAction extends ShellScreenAction {
 
     @Override
     public ItemStack getItem() {
+        if (!Permission.UPGRADE_SNAIL_SHELL_SIZE.check(player)) {
+            return null;
+        }
+
         SizedShellConfig config = shell.getFactory().getConfig();
 
-        int maxSize = Math.max(shell.getFactory().getMaxSize(), config.getMaxUpgradeSize());
+        int maxSize = Math.min(shell.getFactory().getMaxSize(), config.getMaxUpgradeSize());
         if (shell.getSize() >= maxSize) {
             return null;
         }

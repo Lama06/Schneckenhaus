@@ -11,6 +11,8 @@ public final class DebugCommand {
             .requires(Permission.COMMAND_DEBUG::check)
             .then(new BatchCreateCommand().create())
             .then(new LoadingCommand().create())
+            .then(new ReloadCommand().create())
+            .then(new SetModelCommand().create())
             .build();
     }
 }

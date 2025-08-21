@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.shell.position;
 
+import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import org.bukkit.Chunk;
@@ -33,6 +34,9 @@ public sealed abstract class ShellPosition permits GridShellPosition, IdShellPos
     }
 
     public static ShellPosition location(World world, double x, double z) {
+        if (!SchneckenhausPlugin.INSTANCE.getShellManager().isShellWorld(world)) {
+            return null;
+        }
         int cellX = (int) x / CELL_SIZE;
         int cellZ = (int) z / CELL_SIZE;
         if (cellX < 0 || cellZ < 0) {
@@ -135,7 +139,7 @@ public sealed abstract class ShellPosition permits GridShellPosition, IdShellPos
         if (!(other instanceof ShellPosition otherPosition)) {
             return false;
         }
-        return getId() == otherPosition.getId();
+        return getId() == otherPosition.getId() && world.equals(otherPosition.getWorld());
     }
 
     @Override

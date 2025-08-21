@@ -117,14 +117,15 @@ public enum Message implements ComponentLike {
         "You are not allowed to break other player's snail shells",
         "Du darfst die Schneckenhäuser anderer Spieler nicht abbauen"
     ),
+    PLAYER_REQUESTS_ENTER_PERMISSIONS("{1} wants to enter your snail shell", "{1} will dein Schneckenhaus betreten"),
 
     ADD_PLAYER("Add player", "Spieler hinzufügen"),
     PLAYER_NAME_INPUT("Player Name Input", "Spielernameneingabe"),
     ADD_PLAYER_SUCCESS("{1} was successfully added", "{1} wurde erfolgreich hinzugefügt"),
     PLAYER_NOT_FOUND("{1} has never player on this server", "{1} hat nie auf diesem Server gespielt"),
 
-    SHELL_NAME("Snail Shell Name: {1}", "Name des Schneckenhauses: {1}"),
-    SHELL_NAME_NOT_SET("Snail Shell Name: not set", "Name des Schneckenhauses: nicht festgelegt"),
+    SHELL_NAME("Name: {1}", "Name: {1}"),
+    SHELL_NAME_NOT_SET("Name: not set", "Name: nicht festgelegt"),
     RENAME_SHELL_SUCCESS("Successfully renamed snail shell to {1}", "Namen des Schneckenhauses erfolgreich auf {1} geändert"),
 
     SIZE_UPGRADE("Size Upgrade", "Vergrößerung"),

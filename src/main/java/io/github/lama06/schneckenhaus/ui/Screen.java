@@ -96,14 +96,18 @@ public abstract class Screen extends ConstantsHolder implements Listener {
             return;
         }
         for (InventoryPosition position : items.keySet()) {
-            ItemRegistration item = items.get(position);
-            if (item.animationDelay == null) {
+            ItemRegistration itemRegistration = items.get(position);
+            if (itemRegistration.animationDelay == null) {
                 continue;
             }
-            if (Bukkit.getCurrentTick() % item.animationDelay != 0) {
+            if (Bukkit.getCurrentTick() % itemRegistration.animationDelay != 0) {
                 continue;
             }
-            inventory.setItem(position.getSlot(), InventoryUtil.removeDefaultFormatting(item.item().get()));
+            ItemStack item = itemRegistration.item().get();
+            if (item == null) {
+                continue;
+            }
+            inventory.setItem(position.getSlot(), InventoryUtil.removeDefaultFormatting(item));
         }
     }
 

@@ -47,9 +47,9 @@ public final class ShellPermission implements ComponentLike {
     public boolean hasPermission(Player player) {
         return bypassPermission.check(player) ||
             shell.getOwners().contains(player) ||
-            mode == ShellPermissionMode.EVERYBODY ||
-            (mode == ShellPermissionMode.WHITELIST && whitelist.contains(player)) ||
-            (mode == ShellPermissionMode.BLACKLIST && !blacklist.contains(player));
+            getMode() == ShellPermissionMode.EVERYBODY ||
+            (getMode() == ShellPermissionMode.WHITELIST && whitelist.contains(player)) ||
+            (getMode() == ShellPermissionMode.BLACKLIST && !blacklist.contains(player));
     }
 
     public ShellPermissionMode getMode() {

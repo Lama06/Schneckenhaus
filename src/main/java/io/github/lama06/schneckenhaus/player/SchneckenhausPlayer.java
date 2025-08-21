@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public final class SchneckenhausPlayer extends ConstantsHolder {
     private final Player player;
@@ -29,8 +30,8 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
     }
 
     public boolean isInside(Shell shell, boolean direct, boolean nesting) {
-        ShellPosition position = ShellPosition.location(player.getLocation());
-        if (position == null) {
+        ShellPosition playerPosition = ShellPosition.location(player.getLocation());
+        if (playerPosition == null) {
             return false;
         }
 
@@ -41,13 +42,13 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
                 if (previousPosition == null) {
                     continue;
                 }
-                if (previousPosition.equals(position)) {
+                if (previousPosition.equals(shell.getPosition())) {
                     return true;
                 }
             }
         }
 
-        return direct && shell.getPosition().equals(position);
+        return direct && shell.getPosition().equals(playerPosition);
     }
 
     public boolean isInside(Shell shell) {
@@ -67,6 +68,11 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
         }
         if (!shell.getEnterPermission().hasPermission(player)) {
             player.sendMessage(Message.ERROR_ENTER_PERMISSION.asComponent(NamedTextColor.RED));
+            if (Permission.ASK_FOR_ENTER_PERMISSION.check(player)) {
+                shell.getOwners().get().stream().map(Bukkit::getPlayer).filter(Objects::nonNull).forEach(owner -> {
+                    owner.sendMessage(Message.PLAYER_REQUESTS_ENTER_PERMISSIONS.asComponent(player.getName()));
+                });
+            }
             return;
         }
 

@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.command.argument.EnumArgumentType;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
+import io.github.lama06.schneckenhaus.config.ItemConfig;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
@@ -67,8 +68,8 @@ public final class ShulkerShellFactory extends SizedShellFactory {
         }
         shulkerBuilder.setColor(color);
 
-        ShulkerShellConfig config = getConfig();
-        if (config.isRainbowMode() && input.remove(config.getRainbowIngredient())) {
+        ItemConfig rainbowIngredient = getConfig().getRainbowIngredient();
+        if (rainbowIngredient != null && input.remove(rainbowIngredient)) {
             shulkerBuilder.setRainbow(true);
         }
 

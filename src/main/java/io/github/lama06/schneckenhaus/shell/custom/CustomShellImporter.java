@@ -170,8 +170,9 @@ public final class CustomShellImporter extends ConstantsHolder implements AutoCl
             """;
         try (Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(sql);
-            result.next();
-            config.getExitBlocks().add(templateCorner.add(result.getInt(1), result.getInt(2), result.getInt(3)));
+            while (result.next()) {
+                config.getExitBlocks().add(templateCorner.add(result.getInt(1), result.getInt(2), result.getInt(3)));
+            }
         }
     }
 

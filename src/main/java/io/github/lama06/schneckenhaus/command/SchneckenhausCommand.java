@@ -30,6 +30,7 @@ public final class SchneckenhausCommand {
                 .then(new LanguageCommand().create())
                 .then(new CustomCommand().create())
                 .then(new DiscordCommand().create())
+                .then(new HomeCommand().create())
                 .then(new DebugCommand().create())
                 .build(),
             Set.of("sh")

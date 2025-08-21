@@ -35,7 +35,7 @@ public final class DeleteAction extends ShellScreenAction {
             },
             () -> {
                 shell.delete();
-                player.sendMessage(Message.DELETE_SUCCESS.asComponent(NamedTextColor.GREEN, 1));
+                player.sendMessage(Message.DELETE_SHELL_SUCCESS.asComponent(NamedTextColor.GREEN, 1));
             }
         ).open();
     }

@@ -35,8 +35,17 @@ public final class EditOwnersAction extends ShellScreenAction {
         }
 
         if (ownerUuids.isEmpty()) {
-            return null;
+            ItemStack item = new ItemStack(Material.PLAYER_HEAD);
+            item.editMeta(meta -> {
+                meta.customName(Message.OWNERS.asComponent());
+                meta.lore(List.of(
+                    Message.EMPTY.asComponent(NamedTextColor.RED),
+                    Message.CLICK_TO_ADD.asComponent(NamedTextColor.YELLOW)
+                ));
+            });
+            return item;
         }
+
         int currentlyDisplayOwnerIndex = (Bukkit.getCurrentTick() / ANIMATION_DELAY) % ownerUuids.size();
         UUID currentlyDisplayedOwnerUuid = ownerUuids.get(currentlyDisplayOwnerIndex);
         OfflinePlayer currentlyDisplayedOwner = Bukkit.getOfflinePlayer(currentlyDisplayedOwnerUuid);

@@ -285,36 +285,10 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
     }
 
     public Shell getHomeShell() {
-        String sql = """
-            SELECT id
-            FROM home_shells
-            WHERE player = ?
-            """;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, player.getUniqueId().toString());
-            ResultSet result = statement.executeQuery();
-            if (!result.next()) {
-                return null;
-            }
-            return plugin.getShellManager().getShell(result.getInt("id"));
-        } catch (SQLException e) {
-            logger.error("failed to query player's home shell: {}", player, e);
-            return null;
-        }
+        return plugin.getShellManager().getHomeShell(player.getUniqueId());
     }
 
     public void setHomeShell(int id) {
-        String sql = """
-            INSERT INTO home_shells(player, id)
-            VALUES (?, ?)
-            ON CONFLICT (player) DO UPDATE SET id = excluded.id
-            """;
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, player.getUniqueId().toString());
-            statement.setInt(2, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            logger.error("failed to set player's home shell: {}", player, e);
-        }
+        plugin.getShellManager().setHomeShell(player.getUniqueId(), id);
     }
 }

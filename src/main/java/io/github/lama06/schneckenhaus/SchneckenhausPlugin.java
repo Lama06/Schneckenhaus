@@ -40,6 +40,7 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        Permission.generateDocs();
         try {
             Files.createDirectories(getDataPath().resolve(CustomShell.IMPORT_DIRECTORY));
             Files.createDirectories(getDataPath().resolve(CustomShell.EXPORT_DIRECTORY));

@@ -23,7 +23,7 @@ public final class CopyAction extends ShellScreenAction {
         item.editMeta(meta -> {
             List<Component> lore = new ArrayList<>(meta.hasLore() ? meta.lore() : List.of());
             if (Permission.CREATE_SNAIL_SHELL_COPIES.check(player)) {
-                lore.add(Message.CLICK_TO_CREATE_SHELL_COPY.asComponent(NamedTextColor.YELLOW));
+                lore.add(Message.CLICK_TO_CREATE_COPY.asComponent(NamedTextColor.YELLOW));
             }
             meta.lore(lore);
         });

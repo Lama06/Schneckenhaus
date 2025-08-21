@@ -15,7 +15,7 @@ public enum Permission {
     PLACE_SHELL(PermissionDefault.TRUE),
 
     ENTER_SHELL(PermissionDefault.TRUE),
-    QUICKLY_ENTER_SHELL(PermissionDefault.TRUE),
+    QUICKLY_ENTER_SHELL(PermissionDefault.FALSE),
     ENTER_NESTED_SHELLS(PermissionDefault.TRUE),
 
     ASK_FOR_ENTER_PERMISSION(PermissionDefault.TRUE),
@@ -57,6 +57,9 @@ public enum Permission {
     COMMAND_COUNT("command.count"),
     COMMAND_DELETE("command.delete"),
     COMMAND_TP("command.tp"),
+    COMMAND_HOME_TP_OWN("command.home.tp.own"),
+    COMMAND_HOME_TP_OTHERS("command.home.tp.others"),
+    COMMAND_HOME_MANAGE("command.home.manage"),
     COMMAND_DISCORD("command.discord"),
     COMMAND_CUSTOM("command.custom"),
     COMMAND_DEBUG("command.debug", PermissionDefault.FALSE);
@@ -68,6 +71,18 @@ public enum Permission {
                 permission.defaultValue
             ));
         }
+    }
+
+    public static void generateDocs() {
+        StringBuilder builder = new StringBuilder();
+
+        for (Permission permission : values()) {
+            builder.append("- `").append(permission.name).append("` ");
+            builder.append("(default: ").append(permission.defaultValue.name().toLowerCase()).append(")");
+            builder.append("\n");
+        }
+
+        System.out.println(builder);
     }
 
     private final String name;

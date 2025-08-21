@@ -7,7 +7,7 @@ public class ShellConditionConfigFactory {
     private static final Map<String, Supplier<ShellConditionConfig>> CONSTRUCTORS = Map.ofEntries(
         Map.entry(AndShellConditionConfig.TYPE, AndShellConditionConfig::new),
         Map.entry(ChestShellConditionConfig.TYPE, ChestShellConditionConfig::new),
-        Map.entry(CreatorConditionConfig.TYPE, CreatorConditionConfig::new),
+        Map.entry(CreationConditionConfig.TYPE, CreationConditionConfig::new),
         Map.entry(CustomShellConditionConfig.TYPE, CustomShellConditionConfig::new),
         Map.entry(HeadShellConditionConfig.TYPE, HeadShellConditionConfig::new),
         Map.entry(NotShellConditionConfig.TYPE, NotShellConditionConfig::new),

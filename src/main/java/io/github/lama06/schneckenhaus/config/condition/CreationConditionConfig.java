@@ -8,7 +8,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-public final class CreatorConditionConfig extends ShellConditionConfig {
+public final class CreationConditionConfig extends ShellConditionConfig {
     public static final String TYPE = "creation";
 
     private ShellCreationType creationType;

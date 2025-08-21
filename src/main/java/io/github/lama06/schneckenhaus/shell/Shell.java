@@ -214,6 +214,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
             Message.CREATOR.asComponent(),
             Component.text(Objects.requireNonNullElse(Bukkit.getOfflinePlayer(creator).getName(), Message.UNKNOWN_PLAYER.toString()))
         ));
+        information.add(new ShellInformation(Message.CREATION_TYPE.asComponent(), creationType.getMessage().asComponent()));
         information.add(new ShellInformation(
             Message.CREATION_TIME.asComponent(),
             Component.text(creationTime.toString())

@@ -21,9 +21,9 @@ public class EditNameAction extends ShellScreenAction {
         ItemStack item = new ItemStack(Material.NAME_TAG);
         item.editMeta(meta -> {
             if (shell.getName() == null) {
-                meta.customName(Message.NAME_NOT_SET.asComponent());
+                meta.customName(Message.SHELL_NAME_NOT_SET.asComponent());
             } else {
-                meta.customName(Message.SNAIL_SHELL_NAME.asComponent(shell.getName()));
+                meta.customName(Message.SHELL_NAME.asComponent(shell.getName()));
             }
             if (Permission.RENAME_SNAIL_SHELL.check(player)) {
                 meta.lore(List.of(Message.CLICK_TO_CHANGE_NAME.asComponent(NamedTextColor.YELLOW)));
@@ -39,7 +39,7 @@ public class EditNameAction extends ShellScreenAction {
         }
         new InputScreen(
             player,
-            Message.RENAME_SHELL_TITLE.asComponent(NamedTextColor.YELLOW),
+            Message.RENAME.asComponent(NamedTextColor.YELLOW),
             shell.getName() == null ? "" : shell.getName(),
             newName -> {
                 shell.setName(newName);

@@ -43,6 +43,9 @@ public class ShellScreen extends Screen {
 
         int slot = 10;
         for (ShellScreenAction action : actions) {
+            if (action.getItem() == null) {
+                continue;
+            }
             if (slot == 17) {
                 slot += 2;
             }

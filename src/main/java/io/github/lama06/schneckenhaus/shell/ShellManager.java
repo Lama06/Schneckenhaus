@@ -71,7 +71,12 @@ public final class ShellManager extends ConstantsHolder {
         if (factory == null) {
             return null;
         }
-        return factory.loadShell(id);
+        try {
+            return factory.loadShell(id);
+        } catch (Exception e) {
+            logger.error("failed to load shell {}", id, e);
+            return null;
+        }
     }
 
     public Shell getShell(ShellPosition position) {
@@ -232,6 +237,53 @@ public final class ShellManager extends ConstantsHolder {
 
     public Set<Shell> getShells(Chunk chunk) {
         return getShellIds(chunk).stream().map(this::getShell).filter(Objects::nonNull).collect(Collectors.toSet());
+    }
+
+    public Shell getHomeShell(UUID player) {
+        String sql = """
+            SELECT id
+            FROM home_shells
+            WHERE player = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, player.toString());
+            ResultSet result = statement.executeQuery();
+            if (!result.next()) {
+                return null;
+            }
+            return plugin.getShellManager().getShell(result.getInt("id"));
+        } catch (SQLException e) {
+            logger.error("failed to query player's home shell: {}", player, e);
+            return null;
+        }
+    }
+
+    public void setHomeShell(UUID player, int id) {
+        String sql = """
+            INSERT INTO home_shells(player, id)
+            VALUES (?, ?)
+            ON CONFLICT (player) DO UPDATE SET id = excluded.id
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, player.toString());
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("failed to set player's home shell: {}", player, e);
+        }
+    }
+
+    public void unsetHomeShell(UUID player) {
+        String sql = """
+            DELETE FROM home_shells
+            WHERE player = ?
+            """;
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, player.toString());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            logger.error("failed to unset home of {}", player, e);
+        }
     }
 
     public Set<ShellPlacement> getShellPlacements(Block center, int range) {

@@ -170,7 +170,7 @@ public abstract class ShellBuilder extends ConstantsHolder implements ShellData 
 
         if (creationType == ShellCreationType.HOME) {
             String homeSql = """
-                INSERT INTO home_shells(player, shell_id)
+                INSERT INTO home_shells(player, id)
                 VALUES (?, ?)
                 """;
             try (PreparedStatement statement = connection.prepareStatement(homeSql)) {

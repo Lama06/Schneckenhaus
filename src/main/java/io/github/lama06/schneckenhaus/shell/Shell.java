@@ -127,7 +127,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
             if (block.getBlockData().equals(blocks.get(block))) {
                 continue;
             }
-            block.setBlockData(blocks.get(block));
+            block.setBlockData(blocks.get(block), false);
         }
     }
 
@@ -135,7 +135,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         place();
         Map<Block, BlockData> initialBlocks = getInitialBlocks();
         for (Block block : initialBlocks.keySet()) {
-            block.setBlockData(initialBlocks.get(block));
+            block.setBlockData(initialBlocks.get(block), false);
         }
     }
 

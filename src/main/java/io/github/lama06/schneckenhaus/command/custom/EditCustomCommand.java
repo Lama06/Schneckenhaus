@@ -8,6 +8,7 @@ import io.github.lama06.schneckenhaus.command.CommandUtils;
 import io.github.lama06.schneckenhaus.command.argument.CustomShellTypeArgument;
 import io.github.lama06.schneckenhaus.config.ItemConfig;
 import io.github.lama06.schneckenhaus.shell.custom.CustomShellConfig;
+import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -15,6 +16,7 @@ import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.BlockPositionResolver;
 import io.papermc.paper.registry.RegistryKey;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockType;
@@ -49,6 +51,13 @@ public final class EditCustomCommand extends ConstantsHolder {
                 .then(Commands.literal("add-initial-block")
                     .then(Commands.argument("initialBlock", ArgumentTypes.blockPosition())
                         .executes(this::addInitialBlock)
+                    )
+                )
+                .then(Commands.literal("add-initial-block-area")
+                    .then(Commands.argument("position1", ArgumentTypes.blockPosition())
+                        .then(Commands.argument("position2", ArgumentTypes.blockPosition())
+                            .executes(this::addInitialBlockArea)
+                        )
                     )
                 )
                 .then(Commands.literal("add-alternative-block")
@@ -98,6 +107,21 @@ public final class EditCustomCommand extends ConstantsHolder {
         CustomShellConfig config = this.config.getCustom().get(context.getArgument("type", String.class));
         BlockPosition initialBlock = new BlockPosition(context.getArgument("initialBlock", BlockPositionResolver.class).resolve(context.getSource()));
         config.getInitialBlocks().add(initialBlock);
+        plugin.getConfigManager().save();
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int addInitialBlockArea(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CustomShellConfig config = this.config.getCustom().get(context.getArgument("type", String.class));
+        BlockPosition position1 = new BlockPosition(context.getArgument("position1", BlockPositionResolver.class).resolve(context.getSource()));
+        BlockPosition position2 = new BlockPosition(context.getArgument("position2", BlockPositionResolver.class).resolve(context.getSource()));
+        BlockArea area = new BlockArea(position1, position2);
+        for (BlockPosition position : area) {
+            if (position.getBlock(Bukkit.getWorld(config.getTemplateWorld())).isEmpty()) {
+                continue;
+            }
+            config.getInitialBlocks().add(position);
+        }
         plugin.getConfigManager().save();
         return Command.SINGLE_SUCCESS;
     }

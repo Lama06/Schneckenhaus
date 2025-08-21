@@ -48,9 +48,6 @@ public final class CustomShellFactory extends ShellFactory {
                 continue;
             }
             CraftingInput inputCopy = input.copy();
-            if (!inputCopy.remove(customConfig.getItem())) {
-                continue;
-            }
             for (ItemConfig ingredient : customConfig.getIngredients()) {
                 if (!inputCopy.remove(ingredient)) {
                     continue customConfigs;

@@ -8,8 +8,9 @@ After leaving the shulker box again, you can break it and take it (and the base 
 
 Table of contents:
 1. [Commands](#command-system)
-2. [Configuration](#configuration)
-3. [Permissions](#permissions)
+2. [Custom Shells](#custom-shells)
+3. [Configuration](#configuration)
+4. [Permissions](#permissions)
 
 ## Command System
 
@@ -52,6 +53,7 @@ you have multiple ways to do so:
     - `set <player> <home>`
     - `unset <player>`
   - `language <language>` changes the plugin's language
+  - `discord` shows the link to join our discord server
   - `tag <shell>`
     - `list`
     - `add <tag>`
@@ -105,6 +107,79 @@ Every player and the server console has a current selection which is empty be de
 
 ## Custom Shells
 
+### Creating Custom Shells
+
+You first have to build a template for your custom shell type. 
+When the custom shell type is instantiated, e.g. through crafting, a copy of the template is created in the snails shell world.
+
+The template can be built in any world, but it is advisable to build it in the snail shell world.
+To do that, execute `/sh tp world schneckenhaus` to be teleported to the default snail shell world.
+You must build your template at a position where every block of the template has either a negative x or z coordinate.
+Otherwise, there could be conflicts between shells created by the plugin and your template.
+
+When you are finished building, run `/sh custom add <name> <world> <position1> <position2> <item> <ingredient>`.
+`name` can be freely chosen by you and is used to identify your custom shell type.
+Renaming your custom shell type afterward is not possible.
+`world` is the world where you built the template, for example `schneckenhaus`.
+`position1` and `position2` are the corner positions of your template.
+Look at these corner blocks and use tab completion to make your life easier.
+`item` is the item/block that will represent an instance of your custom shell.
+`ingredient` is an ingredient used to craft your custom shell type.
+You can later edit and add ingredients in the config file.
+
+Using the command `/sh custom edit <name> ...` you can set some other properties of your custom shell type.
+You could also change this is the config file.
+
+#### Spawn Point
+
+`/sh custom edit <name> set-spawn`
+
+Configure where the player spawns in the snail shell and in which direction he will look.
+
+#### Initial Blocks
+
+`/sh custom edit <name> add-initial-block <block>`
+
+`/sh custom edit <name> add-initial-block-area <position1> <position2>`
+
+If you want a block to be copied, but you want the player to be able to break it and replace it afterward, configure the block as an initial one.
+
+#### Menu Block
+
+`/sh custom edit <name> set-menu-block <block>`
+
+Clicking this block will open the snail shell menu. 
+
+#### Exit Blocks
+
+`/sh custom edit <name> add-exit-block <block>`
+
+Clicking one of these blocks will make the player leave the shell.
+
+#### Alternative Blocks
+
+`/sh custom edit <name> add-alternative-block <block> <alternative>`
+
+For example, if you have a cauldron and want the player to be able to place water/lava in it, you could add minecraft:lava_cauldron
+as an alternative block. Otherwise, the automatic shell repair system will not allow the block type to change.
+
+### Exporting Custom Shell Types
+
+Run `/sh custom export <name>`. Copy the file created in the `plugins/Schneckenhaus/export` directory.
+
+### Importing Custom Shell Types
+
+Place the file to import in the `plugins/Schneckenhaus/import` directory.
+Move to the world and position where you want the template to be placed.
+It is recommended to place your template in the default snail shell world.
+To do that, type `/sh tp world schneckenhaus` to be teleported to this world.
+Now make sure that your x and z coordinate are both negative, and that you are far enough away from positive x or z coordinates (e. g. x = z = -100)
+This is important because if you place the template too near to other shells (which always have positive x and z coordinates), the template's area
+and the shell's area could overlap.
+Now run `/sh custom import <filename> as <name>`
+`name` will be the alias you use to refer to the newly imported shell type.
+Custom shell types can't be renamed afterwad.
+After importing, you can use the crafting recipe (see config file) or `/sh create custom template <name>` to create instances of your custom shell type. 
 
 
 ## Configuration

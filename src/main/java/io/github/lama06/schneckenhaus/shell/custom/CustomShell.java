@@ -122,7 +122,7 @@ public final class CustomShell extends Shell implements CustomShellData {
         int widthZ = template.getWidthZ();
         return new BlockArea(
             position.getCornerBlock(),
-            position.getCornerBlock().getRelative(widthX, height, widthZ)
+            position.getCornerBlock().getRelative(widthX - 1, height - 1, widthZ - 1)
         );
     }
 

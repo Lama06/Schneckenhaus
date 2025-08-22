@@ -67,7 +67,7 @@ public final class CustomShellImporter extends ConstantsHolder implements AutoCl
                     continue;
                 }
 
-                templateCorner.add(x, y, z).getBlock(templateWorld).setBlockData(data);
+                templateCorner.add(x, y, z).getBlock(templateWorld).setBlockData(data, false);
             }
         }
     }

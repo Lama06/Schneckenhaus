@@ -56,7 +56,7 @@ public final class LegacyImporter extends ConstantsHolder {
         if (shellPdc.getOrDefault(new NamespacedKey(plugin, "deleted"), PersistentDataType.BOOLEAN, false)) {
             return;
         }
-        String type = shellPdc.get(new NamespacedKey(plugin, "type"), PersistentDataType.STRING);
+        String type = shellPdc.getOrDefault(new NamespacedKey(plugin, "type"), PersistentDataType.STRING, "shulker");
         UUID creator = UUID.fromString(shellPdc.get(new NamespacedKey(plugin, "creator"), PersistentDataType.STRING));
 
         String insertSql = """

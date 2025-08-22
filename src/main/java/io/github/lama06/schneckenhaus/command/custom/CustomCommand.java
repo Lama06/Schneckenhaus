@@ -61,7 +61,7 @@ public final class CustomCommand extends ConstantsHolder {
                 .then(Commands.argument("file", StringArgumentType.string())
                     .suggests((context, builder) -> {
                         try (Stream<Path> files = Files.list(plugin.getDataPath().resolve("import"))) {
-                            files.forEach(path -> builder.suggest(path.getFileName().toString()));
+                            files.forEach(path -> builder.suggest(StringArgumentType.escapeIfRequired(path.getFileName().toString())));
                         } catch (IOException e) {
                             logger.error("failed to provide custom shell type import suggestions", e);
                         }
@@ -71,7 +71,9 @@ public final class CustomCommand extends ConstantsHolder {
                         .then(Commands.argument("name", StringArgumentType.string())
                             .suggests((context, builder) -> {
                                 try {
-                                    builder.suggest(StringArgumentType.getString(context, "file").replace(CustomShell.FILE_EXTENSION, ""));
+                                    builder.suggest(StringArgumentType.escapeIfRequired(
+                                        StringArgumentType.getString(context, "file").replace(CustomShell.FILE_EXTENSION, ""))
+                                    );
                                 } catch (IllegalArgumentException ignored) { }
                                 return builder.buildFuture();
                             })

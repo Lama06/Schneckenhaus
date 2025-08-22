@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.shell;
 
+import io.github.lama06.schneckenhaus.event.ShellPlaceEvent;
 import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import io.papermc.paper.persistence.PersistentDataContainerView;
@@ -364,6 +365,7 @@ public final class ShellManager extends ConstantsHolder {
         } catch (SQLException e) {
             logger.error("failed to insert shell placement: {}, {}", shell.getId(), block, e);
         }
+        Bukkit.getPluginManager().callEvent(new ShellPlaceEvent(shell, block));
     }
 
     public void unregisterPlacedShell(Block block) {

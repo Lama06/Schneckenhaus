@@ -13,12 +13,15 @@ import java.util.Map;
 public final class ConfigManager extends ConstantsHolder {
     private static final String FILE = "config.yml";
     private static final String HEADER = """
-        # Schneckenhaus Plugin
+        # Schneckenhaus Plugin by Lama06
+        
+        # Documentation (config, commands, permissions etc.): https://github.com/Lama06/Schneckenhaus#documentation
+        
         # Spigot: https://www.spigotmc.org/resources/schneckenhaus.116315/
-        # Source Code: https://github.com/Lama06/Schneckenhaus
-        # Discord: https://discord.com/invite/7cHfHAgGpY
+        # Discord (support, feedback): https://discord.com/invite/7cHfHAgGpY
+        
         # PayPal: https://www.paypal.com/paypalme/andreasprues
-        # If you enjoy the plugin, please consider making a donation on PayPal :)
+        # If you enjoy the plugin, please consider making a donation :)
         
         """;
 

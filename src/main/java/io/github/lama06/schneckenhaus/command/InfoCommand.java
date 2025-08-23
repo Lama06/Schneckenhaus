@@ -45,10 +45,15 @@ public final class InfoCommand extends ConstantsHolder {
             builder.appendNewline();
             builder.append(information.name().colorIfAbsent(NamedTextColor.AQUA));
             builder.append(Component.text(": "));
-            builder.append(information.value()
-                .hoverEvent(HoverEvent.showText(Message.CLICK_TO_COPY.asComponent(NamedTextColor.YELLOW)))
-                .clickEvent(ClickEvent.copyToClipboard(PlainTextComponentSerializer.plainText().serialize(information.value())))
-            );
+
+            Component value = information.value();
+            if (value.hoverEvent() == null) {
+                value = value.hoverEvent(HoverEvent.showText(Message.CLICK_TO_COPY.asComponent(NamedTextColor.YELLOW)));
+            }
+            if (value.clickEvent() == null) {
+                value = value.clickEvent(ClickEvent.copyToClipboard(PlainTextComponentSerializer.plainText().serialize(information.value())));
+            }
+            builder.append(value);
         }
 
         builder.appendNewline();

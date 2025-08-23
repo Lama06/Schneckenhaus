@@ -62,9 +62,9 @@ you have multiple ways to do so:
 
 ### Selections
 
-Selections is a powerful feature which enabled you to search for snail shells using a variety of criteria. Besides,
+Selections is a powerful feature, which enables you to search for snail shells using a variety of criteria. Besides,
 selections make it possible to run other commands on all shells that are selected.
-Every player and the server console has a current selection which is empty be default.
+Every player and the server console has a current selection, which is empty be default.
 
 - `sh`
   - `selection`
@@ -110,7 +110,7 @@ Every player and the server console has a current selection which is empty be de
 ### Creating Custom Shells
 
 You first have to build a template for your custom shell type. 
-When the custom shell type is instantiated, e.g. through crafting, a copy of the template is created in the snails shell world.
+When the custom shell type is instantiated, e.g. through crafting, a copy of the template is created in the snail shell world.
 
 The template can be built in any world, but it is advisable to build it in the snail shell world.
 To do that, execute `/sh tp world schneckenhaus` to be teleported to the default snail shell world.
@@ -178,11 +178,137 @@ This is important because if you place the template too near to other shells (wh
 and the shell's area could overlap.
 Now run `/sh custom import <filename> as <name>`
 `name` will be the alias you use to refer to the newly imported shell type.
-Custom shell types can't be renamed afterwad.
+Custom shell types can't be renamed afterward.
 After importing, you can use the crafting recipe (see config file) or `/sh create custom template <name>` to create instances of your custom shell type. 
 
 
 ## Configuration
+
+### Shulker / Chest / Head Shell Configuration
+
+```yaml
+# This documentation applies to chest and head shells accordingly
+shulker:
+  # whether shulker shells can be crafted
+  crafting: true
+  # ingredients needed for crafting besides a (colored) shulker block
+  ingredients:
+    - item: 'minecraft:spyglass'
+      amount: 1
+      # model refers to the custom model data attached to an item (used to create custom items)
+      model: null
+      
+  # the size if no size ingredient is used
+  initial_size: 4
+  # the maximum size that can be achieved through adding size ingredients
+  max_size: 30
+  # can be optionally added to the crafting recipe to increase the shell's size
+  size_ingredient: { item: 'minecraft:gold_ingot', amount: 1, model: null }
+  # how much the size will increase if one size ingredient is added
+  size_per_ingredient: 2
+
+  # the maximum size that can be achieved through upgrades
+  max_upgrade_size: 30
+  # used to upgrade the size in the snail shell menu
+  upgrade_ingredient: { item: 'minecraft:gold_ingot', amount: 1, model: null }
+  # how much the size increases per upgrade
+  size_per_upgrade_ingredient: 2
+
+  # number of ticks between color changes in rainbow mode
+  # this is also limited by shell_instances_sync
+  rainbow_delay: 60 
+  # can be added to the crafting recipe to enable rainbow mode
+  rainbow_ingredient: { item: 'minecraft:clock', amount: 1, model: null }
+```
+
+### Custom Shell Configuration
+
+*NOTE*: While it is possible to add and edit custom shell types through the config file, it is way easier to do so
+by using the commands [described here](#creating-custom-shells)
+
+```yaml
+custom:
+  # name of your custom shell type, don't change this unless you know what you are doing
+  portable-garden:
+    item: minecraft:birch_wood # the item / block representing this shell type
+    crafting: true
+    # ingredients needed to craft this custom shell type
+    ingredients:
+    - {item: 'minecraft:birch_log', amount: 64, model: null}
+    - {item: 'minecraft:birch_sapling', amount: 1, model: null}
+    - {item: 'minecraft:bone_meal', amount: 16, model: null}
+    - {item: 'minecraft:moss_block', amount: 32, model: null}
+    - {item: 'minecraft:spyglass', amount: 1, model: null}
+    template_world: schneckenhaus # name of the world where the template for this shell type is placed
+    template_position: -30 0 -30 -20 10 -20 # area of the template
+    initial_blocks: [-29 1 -29] # list of blocks that are copied from the template, but can be broken by players after that
+    alternative_blocks:
+      # the shell repair system will not revert block type changes if they are registered here
+      -25 1 -25: ['minecraft:lava_cauldron', 'water_cauldron']
+    spawn_position: {x: -188.50940344422307, y: 122.9375, z: 219.30000001192093, yaw: -18.117798,
+      pitch: 3.7506914}
+    # clicking one of these blocks teleports you back
+    exit_blocks: [-189 124 218, -189 123 218]
+    # opens the snail shell menu
+    menu_block: -188 123 218
+```
+
+### Home Shell Configuration
+
+If home shells are enabled, players will automatically receive a new shell on first join. 
+The player must have the permission `schneckenhaus.home_shell` (which is false by default).
+If players additionally have the permission `schneckenhaus.never_homeless` (which is true by default),
+it is impossible for them to lose their homes.
+Because if they lose it, it will be given back to them on rejoin / respawn.
+
+Examples:
+
+```yaml
+home_shell:
+  type: shulker,
+  size: 16,
+  color: white
+  enter_permission_mode: everybody # this can be specified regardless of shell type
+  build_permission_mode: whitelist # but is repeated for the following
+```
+
+```yaml
+home_shell:
+  type: chest
+  size: 16
+  wood: birch
+```
+
+```yaml
+home_shell:
+  type: head
+```
+
+```yaml
+home_shell:
+  type: custom
+  template: your-template-name
+```
+
+### World Configuration
+
+Example:
+
+```yaml
+worlds:
+  # name of the world
+  schneckenhaus:
+    fallback: true # whether this is the default world for snail shell creation, can only be true for one world
+    time_sync_world: world # will sync the time
+    conditions: []
+  schneckenhaus_homes:
+    fallback: false
+    time_sync_world: world
+    conditions: # at least one of the following conditions must be true for a shell to be created in this world
+      # example condition: all shells created by crafting will be created in this world
+      type: creation
+      creation_type: crafting
+```
 
 ### Shell Conditions
 
@@ -224,6 +350,11 @@ permission: some.permission # optional, permission which the creator must have,
 ```
 
 ```yaml
+type: tag
+tag: some-tag-name
+```
+
+```yaml
 type: not
 condition:
   type: shulker
@@ -236,6 +367,57 @@ conditions:
   - type: shulker
   - type: creation
     creation_type: crafting
+```
+
+### Miscellaneous Config Options
+
+```yaml
+# if enabled, the chunks of a snail shell stay loaded if it is in an online player's inventory or placed in a loaded chunk
+chunk_loading:
+  enabled: true
+  conditions: []
+  delay: 100
+# if enabled, hoppers can be used to transfer items into snail shells and out of them
+hoppers:
+  enabled: true
+  conditions: []
+# this system handles animations (rainbow mode) and manual color changes
+shell_instances_sync:
+  enabled: true
+  conditions: []
+  delay: 20
+  shells: true
+  placed_shells: true
+  placed_shells_range: 32
+  items: true # animate items in inventory
+  dropped_items: true # animate dropped items
+  dropped_items_range: 16 # max range near a player
+# if enabled, players can't break other players' snail shells
+# there can be exceptions to this via permissions
+theft_prevention:
+  enabled: true
+  conditions: []
+# will prevent exploits like using pistons / ender pearls etc. to escape a shell
+escape_prevention:
+  enabled: true
+  conditions: []
+  delay: 20
+# will revert even the most severe kinds of damages to snail shells (WorldEdit etc.)
+repair_system:
+  enabled: true
+  conditions: []
+  delay: 200
+# players will be teleported here when leaving a shell, but no exit location is known
+# set to null to use world spawn
+fallback_exit_location:
+  world: world
+  x: 0
+  y: 80
+  z: 0
+  yaw: 0
+  pitch: 0
+# don't change this
+data_version: 3.0.0
 ```
 
 ## Permissions
@@ -281,5 +463,7 @@ conditions:
 - `schneckenhaus.command.home.tp.others` (default: op)
 - `schneckenhaus.command.home.manage` (default: op)
 - `schneckenhaus.command.discord` (default: op)
+- `schneckenhaus.command.menu` (default: op)
+- `schneckenhaus.command.language` (default: op)
 - `schneckenhaus.command.custom` (default: op)
 - `schneckenhaus.command.debug` (default: false)

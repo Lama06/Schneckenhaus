@@ -6,6 +6,7 @@ import io.github.lama06.schneckenhaus.shell.action.ShellScreenAction;
 import io.github.lama06.schneckenhaus.shell.sized.SizedShell;
 import io.github.lama06.schneckenhaus.util.MaterialUtil;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
@@ -170,11 +171,13 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
         ));
         information.add(new ShellInformation(
             Message.RAINBOW_COLORS.asComponent(),
-            Component.text(rainbowColors.stream()
-                .map(Message::getDyeColor)
-                .map(Message::toString)
-                .collect(Collectors.joining(", "))
-            )
+            Component.text(getRainbowColors().size()).hoverEvent(HoverEvent.showText(
+                Component.text(getRainbowColors().stream()
+                    .map(Message::getDyeColor)
+                    .map(Message::toString)
+                    .collect(Collectors.joining(", "))
+                )
+            ))
         ));
     }
 

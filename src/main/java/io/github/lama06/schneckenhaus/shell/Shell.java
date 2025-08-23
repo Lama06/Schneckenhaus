@@ -220,6 +220,17 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
             Component.text(creationTime.toString())
         ));
 
+        UUID homeOwnerUuid = getHomeOwner();
+        if (homeOwnerUuid != null) {
+            OfflinePlayer homeOwner = Bukkit.getOfflinePlayer(homeOwnerUuid);
+            information.add(new ShellInformation(
+                Message.HOME_OWNER.asComponent(),
+                Component.text(homeOwner.getName() == null ? homeOwner.getUniqueId().toString() : homeOwner.getName())
+            ));
+        } else {
+            information.add(new ShellInformation(Message.HOME_OWNER.asComponent(), Message.EMPTY.asComponent()));
+        }
+
         information.add(new ShellInformation(Message.OWNERS.asComponent(), Component.text(owners.toString())));
         information.add(new ShellInformation(Message.ENTER_PERMISSION.asComponent(), enterPermission.asComponent()));
         information.add(new ShellInformation(Message.BUILD_PERMISSION.asComponent(), buildPermission.asComponent()));

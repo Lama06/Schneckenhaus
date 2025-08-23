@@ -13,6 +13,7 @@ public final class DebugCommand {
             .then(new LoadingCommand().create())
             .then(new ReloadCommand().create())
             .then(new SetModelCommand().create())
+            .then(new ListPermissionsCommand().create())
             .build();
     }
 }

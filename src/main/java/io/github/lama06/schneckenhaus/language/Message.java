@@ -20,6 +20,7 @@ public enum Message implements ComponentLike {
     CREATOR("Creator", "Ersteller"),
     CREATION_TIME("Creation Time", "Erstellungsdatum"),
     OWNERS("Owners", "Eigentümer"),
+    HOME_OWNER("Home Owner", "Hausbesitzer"),
     UNKNOWN_PLAYER("unknown player", "unbekannter Spieler"),
     WORLD("World", "Welt"),
     GRID_POSITION("Grid Position", "Position im Häuserraster"),
@@ -133,6 +134,10 @@ public enum Message implements ComponentLike {
     SIZE_AFTER_UPGRADE("Upgraded size", "Neue Größe"),
     SIZE_UPGRADE_SUCCESS("Successfully upgraded size!", "Schneckenhaus erfolgreich vergrößert!"),
 
+    COMMAND_HELP(
+        "You can learn how to use this plugin's commands here",
+        "Über die Funktionsweise der Befehle dieses Plugins kannst du hier mehr erfahren"
+    ),
     COMMAND_ERROR_NOT_PLAYER("Only players can use this command", "Nur Spieler können diesen Befehl verwenden"),
     INVALID_SHELL_TYPE("Invalid shell type: {1}", "Unbekannter Schneckenhaustyp: {1}"),
     SELECT_SHELLS_SUCCESS("Selected {1} shells", "{1} Schneckenhäuser ausgewählt"),

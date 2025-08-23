@@ -11,7 +11,8 @@ public class ShellConditionConfigFactory {
         Map.entry(CustomShellConditionConfig.TYPE, CustomShellConditionConfig::new),
         Map.entry(HeadShellConditionConfig.TYPE, HeadShellConditionConfig::new),
         Map.entry(NotShellConditionConfig.TYPE, NotShellConditionConfig::new),
-        Map.entry(ShulkerShellConditionConfig.TYPE, ShulkerShellConditionConfig::new)
+        Map.entry(ShulkerShellConditionConfig.TYPE, ShulkerShellConditionConfig::new),
+        Map.entry(TagShellConditionConfig.TYPE, TagShellConditionConfig::new)
     );
 
     public static ShellConditionConfig deserialize(Object config) {

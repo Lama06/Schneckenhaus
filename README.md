@@ -269,7 +269,7 @@ home_shell:
   size: 16,
   color: white
   enter_permission_mode: everybody # this can be specified regardless of shell type
-  build_permission_mode: whitelist # but is repeated for the following
+  build_permission_mode: whitelist # but is not repeated for the following
 ```
 
 ```yaml

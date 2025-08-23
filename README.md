@@ -1,8 +1,51 @@
 # Schneckenhaus Plugin
+
 Ever wanted to know how a shulker box looks from the inside? 
-Using this Minecraft plugin, you can enter shulker boxes, chests and more!
-Inside you can, for example, build your base.
-After leaving the shulker box again, you can break it and take it (and the base it contains) with you in your inventory.
+Ever wanted to enter a chest?
+Ever wanted to store your house in your inventory?
+This plugin has you covered!
+
+![Entering Shulker Boxes](img/enter.gif)
+![Breaking Shulker Boxes](img/break.gif)
+
+Every snail shell (an enterable block) can be customized using a graphical interface:
+- Rename your snail shell
+- Manage permissions (owners, enter permissions, build permissions, whitelists, blacklists)
+- Keep track of where you placed down your snail shell
+- Upgrade its size
+- Change its color (for shulker boxes)
+- Change its wood type (for chests)
+
+![Menu](img/menu.gif)
+![Entering Shulker Boxes](img/color.gif)
+
+If you can't decide what color to pick, no worries, just choose all of them!
+
+![Entering Shulker Boxes](img/rainbow.gif)
+
+If you aren't convinced yet, the plugin also features:
+
+- Support for **completely custom shell types**!
+  - Configure the template, item, spawn position, exit blocks, menu block, initial blocks and more
+  - Simple **importing and exporting** to a custom file format.
+  - Share and download your custom shell types on our Discord server.
+- **Nested snail shells**: Enter a snail while already inside another one! (Recursion means that something is recursive)
+- Finely grained **permissions**
+- Enable **home shells** to automatically give every new player a new snail shell
+  - Configure its type, color, size, etc. in the config
+  - Prevent homelessness on your server and make home shells impossible to lose
+- Custom, highly configurable **crafting recipes**
+  - specify optional ingredients that increase the snail shell's size
+  - specify an optional ingredient that enabled rainbow mode
+  - support for items with custom model data
+- Use hoppers to transfer items into shells and out of them. You can build whole factories inside a shell and connect them to the outside world!
+- Your snail shell will stay loaded if you have it in your inventory or placed in a loaded chunk
+- Support for **multiple worlds**, for example, one world where player-crafted shells are stored in, and one for command-created ones
+- Powerful tab-completed syntax-highlighted commands
+- **Ultra powerful shell management tools**:
+  Ever wanted to delete all light blue shulker box shells of size 13 with whitelist enabled owned by some player crafted in the last week?
+  Let's be honest: You always wanted to do exactly that. And this plugin makes it possible.
+- Data is stored efficiently and securely in an **SQLITE database**
 
 ## Documentation
 

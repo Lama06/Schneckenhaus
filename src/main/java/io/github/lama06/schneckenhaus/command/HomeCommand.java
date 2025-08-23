@@ -38,6 +38,7 @@ public final class HomeCommand extends ConstantsHolder {
             .then(Commands.literal("set")
                 .requires(Permission.COMMAND_HOME_MANAGE::check)
                 .then(Commands.argument("player", ArgumentTypes.playerProfiles())
+                    .executes(this::setHome)
                     .then(Commands.argument("home", ShellsArgumentType.INSTANCE)
                         .executes(this::setHome)
                     )
@@ -81,7 +82,7 @@ public final class HomeCommand extends ConstantsHolder {
 
     private int setHome(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         PlayerProfile player = context.getArgument("player", PlayerProfileListResolver.class).resolve(context.getSource()).iterator().next();
-        Shell home = context.getArgument("home", ShellSelector.class).resolve(context.getSource()).getFirst();
+        Shell home = ShellSelector.getSelectorOrHere(context, "home").resolve(context.getSource()).getFirst();
         plugin.getShellManager().setHomeShell(player.getId(), home.getId());
         return Command.SINGLE_SUCCESS;
     }

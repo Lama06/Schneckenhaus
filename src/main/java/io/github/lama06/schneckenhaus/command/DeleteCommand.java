@@ -18,6 +18,7 @@ public final class DeleteCommand {
     public CommandNode<CommandSourceStack> create() {
         return Commands.literal("delete")
             .requires(Commands.restricted(Permission.COMMAND_DELETE::check))
+            .executes(this::execute)
             .then(Commands.argument("shells", ShellsArgumentType.INSTANCE)
                 .requires(Commands.restricted(Permission.COMMAND_DELETE::check))
                 .executes(this::execute)
@@ -26,7 +27,7 @@ public final class DeleteCommand {
     }
 
     private int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        List<Shell> shells = context.getArgument("shells", ShellSelector.class).resolve(context.getSource());
+        List<Shell> shells = ShellSelector.getSelectorOrHere(context, "shells").resolve(context.getSource());
         for (Shell shell : shells) {
             shell.delete();
         }

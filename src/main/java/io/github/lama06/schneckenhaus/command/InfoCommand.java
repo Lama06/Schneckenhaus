@@ -27,6 +27,7 @@ public final class InfoCommand extends ConstantsHolder {
     public CommandNode<CommandSourceStack> create() {
         return Commands.literal("info")
             .requires(Permission.COMMAND_INFO::check)
+            .executes(this::execute)
             .then(Commands.argument("shell", ShellsArgumentType.INSTANCE)
                 .executes(this::execute)
             )
@@ -34,7 +35,7 @@ public final class InfoCommand extends ConstantsHolder {
     }
 
     private int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        List<Shell> shells = context.getArgument("shell", ShellSelector.class).resolve(context.getSource());
+        List<Shell> shells = ShellSelector.getSelectorOrHere(context, "shell").resolve(context.getSource());
         Shell shell = shells.getFirst();
 
         TextComponent.Builder builder = Component.text();

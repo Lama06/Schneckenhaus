@@ -1,6 +1,8 @@
 package io.github.lama06.schneckenhaus.command;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.tree.CommandNode;
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.command.argument.ShellSelector;
@@ -17,17 +19,20 @@ public final class MenuCommand {
     public CommandNode<CommandSourceStack> create() {
         return Commands.literal("menu")
             .requires(Permission.COMMAND_MENU::check)
+            .executes(this::execute)
             .then(Commands.argument("shell", ShellsArgumentType.INSTANCE)
-                .executes(context -> {
-                    Shell shell = context.getArgument("shell", ShellSelector.class).resolve(context.getSource()).getFirst();
-                    if (!(context.getSource().getExecutor() instanceof Player player)) {
-                        context.getSource().getSender().sendMessage(Message.COMMAND_ERROR_NOT_PLAYER.asComponent(NamedTextColor.RED));
-                        return 0;
-                    }
-                    new ShellScreen(shell, player).open();
-                    return Command.SINGLE_SUCCESS;
-                })
+                .executes(this::execute)
             )
             .build();
+    }
+
+    private int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        Shell shell = ShellSelector.getSelectorOrHere(context, "shell").resolve(context.getSource()).getFirst();
+        if (!(context.getSource().getExecutor() instanceof Player player)) {
+            context.getSource().getSender().sendMessage(Message.COMMAND_ERROR_NOT_PLAYER.asComponent(NamedTextColor.RED));
+            return 0;
+        }
+        new ShellScreen(shell, player).open();
+        return Command.SINGLE_SUCCESS;
     }
 }

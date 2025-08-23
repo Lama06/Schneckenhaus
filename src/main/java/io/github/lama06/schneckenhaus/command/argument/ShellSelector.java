@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.command.argument;
 
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
@@ -13,6 +14,14 @@ import java.util.List;
 import java.util.Objects;
 
 public interface ShellSelector {
+    static ShellSelector getSelectorOrHere(CommandContext<CommandSourceStack> context, String arg) {
+        try {
+            return context.getArgument(arg, ShellSelector.class);
+        } catch (IllegalArgumentException e) {
+            return Here.INSTANCE;
+        }
+    }
+
     List<Shell> resolve(CommandSourceStack source) throws CommandSyntaxException;
 
     enum Here implements ShellSelector {

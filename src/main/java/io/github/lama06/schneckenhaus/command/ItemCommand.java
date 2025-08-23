@@ -17,6 +17,7 @@ public final class ItemCommand {
     public CommandNode<CommandSourceStack> create() {
         return Commands.literal("item")
             .requires(Permission.COMMAND_ITEM::check)
+            .executes(this::execute)
             .then(Commands.argument("shells", ShellsArgumentType.INSTANCE)
                 .executes(this::execute)
             )
@@ -25,7 +26,7 @@ public final class ItemCommand {
 
     private int execute(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         Player player = CommandUtils.requirePlayer(context.getSource());
-        List<Shell> shells = context.getArgument("shells", ShellSelector.class).resolve(context.getSource());
+        List<Shell> shells = ShellSelector.getSelectorOrHere(context, "shells").resolve(context.getSource());
         for (Shell shell : shells) {
             player.give(shell.createItem());
         }

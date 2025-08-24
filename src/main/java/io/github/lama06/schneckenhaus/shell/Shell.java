@@ -287,7 +287,7 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
             position.getBlock(getWorld()).setType(Material.AIR);
         }
         for (ShellPlacement placement : plugin.getShellManager().getShellPlacements(this)) {
-            placement.block().setType(Material.AIR);
+            placement.getBlock().setType(Material.AIR);
         }
 
         try {

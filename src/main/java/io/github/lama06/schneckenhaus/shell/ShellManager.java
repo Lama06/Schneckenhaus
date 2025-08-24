@@ -288,9 +288,8 @@ public final class ShellManager extends ConstantsHolder {
     }
 
     public Set<ShellPlacement> getShellPlacements(Block center, int range) {
-        Set<ShellPlacement> shells = new HashSet<>();
         String sql = """
-            SELECT id, world, x, y, z
+            SELECT world, x, y, z
             FROM shell_placements
             WHERE world = ?
             AND x BETWEEN ? AND ?
@@ -302,20 +301,7 @@ public final class ShellManager extends ConstantsHolder {
             statement.setInt(3, center.getX() + range);
             statement.setInt(4, center.getZ() - range);
             statement.setInt(5, center.getZ() + range);
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                Shell shell = getShell(result.getInt(1));
-                if (shell == null) {
-                    continue;
-                }
-                World world = Bukkit.getWorld(result.getString(2));
-                if (world == null) {
-                    continue;
-                }
-                Block block = world.getBlockAt(result.getInt(3), result.getInt(4), result.getInt(5));
-                shells.add(new ShellPlacement(shell, block));
-            }
-            return shells;
+            return getShellPlacements(statement.executeQuery());
         } catch (SQLException e) {
             logger.error("failed to query nearby shells: {} {}", center, range, e);
             return Set.of();
@@ -323,7 +309,6 @@ public final class ShellManager extends ConstantsHolder {
     }
 
     public Set<ShellPlacement> getShellPlacements(Shell shell) {
-        Set<ShellPlacement> shells = new HashSet<>();
         String sql = """
             SELECT world, x, y, z
             FROM shell_placements
@@ -331,20 +316,24 @@ public final class ShellManager extends ConstantsHolder {
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, shell.getId());
-            ResultSet result = statement.executeQuery();
-            while (result.next()) {
-                World world = Bukkit.getWorld(result.getString(1));
-                if (world == null) {
-                    continue;
-                }
-                Block block = world.getBlockAt(result.getInt(2), result.getInt(3), result.getInt(4));
-                shells.add(new ShellPlacement(shell, block));
-            }
-            return shells;
+            return getShellPlacements(statement.executeQuery());
         } catch (SQLException e) {
             logger.error("failed to query shell placements: {}", shell.getId(), e);
             return Set.of();
         }
+    }
+
+    private Set<ShellPlacement> getShellPlacements(ResultSet result) throws SQLException {
+        Set<ShellPlacement> shells = new HashSet<>();
+        while (result.next()) {
+            World world = Bukkit.getWorld(result.getString(1));
+            if (world == null) {
+                continue;
+            }
+            Block block = world.getBlockAt(result.getInt(2), result.getInt(3), result.getInt(4));
+            shells.add(new ShellPlacement(block));
+        }
+        return shells;
     }
 
     public void registerPlacedShell(Shell shell, Block block, Player player) {

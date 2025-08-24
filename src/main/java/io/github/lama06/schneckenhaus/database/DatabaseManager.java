@@ -10,8 +10,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public final class DatabaseManager extends ConstantsHolder {
     private Connection connection;
@@ -86,6 +85,18 @@ public final class DatabaseManager extends ConstantsHolder {
     }
 
     private void upgrade(PluginVersion current) throws SQLException {
+        if (PluginVersion.current().equals(current)) {
+            return;
+        }
+
+        SortedMap<PluginVersion, FailableRunnable<SQLException>> upgrades = new TreeMap<>(Map.ofEntries(
+            Map.entry(new PluginVersion(3, 0, 0), this::upgrade3_0_0)
+        ));
+        for (PluginVersion upgradeFromVersion : upgrades.tailMap(current).keySet()) {
+            logger.info("upgrading database from version {}", upgradeFromVersion);
+            upgrades.get(upgradeFromVersion).run();
+        }
+
         String updateVersionSql = """
             UPDATE data_version
             SET data_version = ?
@@ -93,6 +104,19 @@ public final class DatabaseManager extends ConstantsHolder {
         try (PreparedStatement statement = connection.prepareStatement(updateVersionSql)) {
             statement.setString(1, PluginVersion.current().toString());
             statement.executeUpdate();
+        }
+    }
+
+    private void upgrade3_0_0() throws SQLException {
+        // during beta phase, 24.08.2025
+        try (Statement statement = connection.createStatement()) {
+            statement.addBatch("ALTER TABLE shell_placements ADD COLUMN name TEXT");
+            statement.addBatch("ALTER TABLE shell_placements ADD COLUMN exit_position_x REAL");
+            statement.addBatch("ALTER TABLE shell_placements ADD COLUMN exit_position_y REAL");
+            statement.addBatch("ALTER TABLE shell_placements ADD COLUMN exit_position_z REAL");
+            statement.addBatch("ALTER TABLE shell_placements ADD COLUMN exit_position_pitch REAL");
+            statement.addBatch("ALTER TABLE shell_placements ADD COLUMN exit_position_yaw REAL");
+            statement.executeBatch();
         }
     }
 

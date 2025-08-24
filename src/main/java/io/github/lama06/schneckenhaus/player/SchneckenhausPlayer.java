@@ -2,6 +2,7 @@ package io.github.lama06.schneckenhaus.player;
 
 import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
+import io.github.lama06.schneckenhaus.shell.ShellPlacement;
 import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
@@ -76,8 +77,13 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
             return;
         }
 
+
+
         if (previousLocations.isEmpty() || options.isStorePreviousPositionWhenNesting()) {
             pushPreviousLocation(player.getLocation());
+        }
+        if (options.getPlacementUsed() != null && shell.getOwners().contains(player.getUniqueId())) {
+            options.getPlacementUsed().setExitPosition(player.getLocation());
         }
 
         player.teleport(shell.getSpawnLocation());
@@ -158,7 +164,7 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
                 return false;
             }
             Block block = world.getBlockAt(result.getInt("x"), result.getInt("y"), result.getInt("z"));
-            player.teleport(block.getLocation().toCenterLocation().add(0, 1, 0));
+            player.teleport(new ShellPlacement(block).getExitPositionOrFallback());
             return true;
         } catch (SQLException e) {
             logger.error("failed to query latest shell placement: {}", shell.getId(), e);

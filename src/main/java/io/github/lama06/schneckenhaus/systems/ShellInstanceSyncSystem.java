@@ -79,8 +79,8 @@ public final class ShellInstanceSyncSystem extends System {
                 syncConfig.getPlacedShellsRange()
             );
             for (ShellPlacement shellPlacement : nearbyShells) {
-                Shell shell = shellPlacement.shell();
-                Block block = shellPlacement.block();
+                Shell shell = shellPlacement.getShell();
+                Block block = shellPlacement.getBlock();
                 if (!shouldSyncPlacedShell(shell, block)) {
                     continue;
                 }

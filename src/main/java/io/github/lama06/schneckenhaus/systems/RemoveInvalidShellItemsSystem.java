@@ -8,6 +8,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public final class RemoveInvalidShellItemsSystem extends System {
     @Override
     public void start() {
@@ -26,10 +30,23 @@ public final class RemoveInvalidShellItemsSystem extends System {
                 if (id == null) {
                     continue;
                 }
-                Shell shell = plugin.getShellManager().getShell(id);
-                if (shell != null) {
+
+                String sql = """
+                    SELECT 1
+                    FROM shells
+                    WHERE id = ?
+                    """;
+                try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                    statement.setInt(1, id);
+                    ResultSet result = statement.executeQuery();
+                    if (result.next()) {
+                        continue;
+                    }
+                } catch (SQLException e) {
+                    logger.error("failed to query if shell with id {} still exists", id, e);
                     continue;
                 }
+
                 inventory.setItem(slot, null);
                 logger.info("removed invalid shell item from slot {} of {}'s inventory", slot, player.getName());
             }

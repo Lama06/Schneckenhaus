@@ -135,6 +135,14 @@ CREATE TABLE shell_placements(
     placed_by TEXT,
     time TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
+    name TEXT,
+
+    exit_position_x REAL,
+    exit_position_y REAL,
+    exit_position_z REAL,
+    exit_position_yaw REAL,
+    exit_position_pitch REAL,
+
     PRIMARY KEY (world, x, y, z),
     FOREIGN KEY (id) REFERENCES shells(id) ON DELETE CASCADE
 ) STRICT;

@@ -4,6 +4,7 @@ import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.player.ShellTeleportOptions;
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.shell.ShellPlacement;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,6 +37,7 @@ public final class EnterShellSystem extends System {
         ShellTeleportOptions options = new ShellTeleportOptions();
         options.setPlaySound(true);
         options.setStorePreviousPositionWhenNesting(true);
+        options.setPlacementUsed(new ShellPlacement(block));
         schneckenhausPlayer.enter(shell, options);
     }
 

@@ -45,6 +45,7 @@ public enum Permission {
     PLACEMENTS_VIEW("placements.view", PermissionDefault.TRUE),
     PLACEMENTS_VIEW_POSITIONS("placements.view_positions", PermissionDefault.TRUE),
     PLACEMENTS_TELEPORT("placements.teleport", PermissionDefault.OP),
+    PLACEMENTS_RENAME("placements.rename", PermissionDefault.TRUE),
 
     BYPASS_ESCAPE_PREVENTION,
 

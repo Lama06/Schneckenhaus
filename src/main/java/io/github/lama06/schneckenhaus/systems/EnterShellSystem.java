@@ -50,6 +50,9 @@ public final class EnterShellSystem extends System {
         if (shell == null) {
             return;
         }
+        if (event.getPlayer().isSneaking()) {
+            return;
+        }
 
         SchneckenhausPlayer schneckenhausPlayer = new SchneckenhausPlayer(event.getPlayer());
         ShellTeleportOptions options = new ShellTeleportOptions();

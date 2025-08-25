@@ -8,6 +8,7 @@ import java.util.*;
 public final class WorldConfig {
     private boolean fallback;
     private String timeSyncWorld = "world";
+    private String biome = "plains";
     private List<ShellConditionConfig> conditions = new ArrayList<>();
 
     public WorldConfig() { }
@@ -23,6 +24,9 @@ public final class WorldConfig {
         if (config.get("time_sync_world") instanceof String timeSync) {
             this.timeSyncWorld = timeSync;
         }
+        if (config.get("biome") instanceof String biome) {
+            this.biome = biome;
+        }
         if (config.get("conditions") instanceof List<?> conditions) {
             this.conditions = conditions.stream()
                 .map(ShellConditionConfigFactory::deserialize)
@@ -35,6 +39,7 @@ public final class WorldConfig {
         Map<String, Object> config = new LinkedHashMap<>();
         config.put("fallback", fallback);
         config.put("time_sync_world", timeSyncWorld);
+        config.put("biome", biome);
         config.put("conditions", conditions.stream().map(ShellConditionConfig::serialize).toList());
         return config;
     }
@@ -45,6 +50,10 @@ public final class WorldConfig {
 
     public String getTimeSyncWorld() {
         return timeSyncWorld;
+    }
+
+    public String getBiome() {
+        return biome;
     }
 
     public List<ShellConditionConfig> getConditions() {

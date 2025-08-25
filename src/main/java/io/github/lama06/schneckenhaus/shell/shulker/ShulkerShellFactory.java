@@ -170,7 +170,7 @@ public final class ShulkerShellFactory extends SizedShellFactory {
     }
 
     @Override
-    protected Material getItemType(ShellData data) {
+    public Material getItemType(ShellData data) {
         return MaterialUtil.getColoredShulkerBox(getCurrentColor((ShulkerShellData) data));
     }
 

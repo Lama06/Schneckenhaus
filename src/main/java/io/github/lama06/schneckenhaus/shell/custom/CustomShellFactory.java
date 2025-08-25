@@ -109,7 +109,7 @@ public final class CustomShellFactory extends ShellFactory {
     }
 
     @Override
-    protected Material getItemType(ShellData data) {
+    public Material getItemType(ShellData data) {
         CustomShellData customData = (CustomShellData) data;
         return config.getCustom().get(customData.getTemplate()).getItem();
     }

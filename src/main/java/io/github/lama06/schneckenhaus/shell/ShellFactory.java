@@ -1,11 +1,15 @@
 package io.github.lama06.schneckenhaus.shell;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import io.github.lama06.schneckenhaus.command.CommandUtils;
 import io.github.lama06.schneckenhaus.command.argument.EnumArgumentType;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.language.Message;
+import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionMode;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
@@ -20,6 +24,7 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
@@ -50,6 +55,24 @@ public abstract class ShellFactory extends ConstantsHolder {
                 .then(Commands.argument("buildPermissionMode", new EnumArgumentType<>(ShellPermissionMode.class)))
             )
         );
+        builder.parameter(Commands.literal("position")
+            .then(Commands.literal("grid")
+                .then(Commands.argument("positionGridX", IntegerArgumentType.integer(0))
+                    .then(Commands.argument("positionGridZ", IntegerArgumentType.integer(0)))
+                )
+            )
+            .then(Commands.literal("id")
+                .then(Commands.argument("positionId", IntegerArgumentType.integer(1)))
+            )
+            .then(Commands.argument("positionFlag", StringArgumentType.word())
+                .suggests((context, suggestionsBuilder) -> {
+                    if ("here".startsWith(suggestionsBuilder.getRemainingLowerCase())) {
+                        suggestionsBuilder.suggest("here");
+                    }
+                    return suggestionsBuilder.buildFuture();
+                })
+            )
+        );
     }
 
     public boolean parseCommandParameters(
@@ -68,6 +91,23 @@ public abstract class ShellFactory extends ConstantsHolder {
             }
             builder.setWorld(world);
         }
+
+        if (parameters.get("positionId") instanceof Integer positionId) {
+            builder.setPosition(positionId);
+        }
+        if (parameters.get("positionGridX") instanceof Integer positionGridX &&
+            parameters.get("positionGridZ") instanceof Integer positionGridZ) {
+            builder.setPosition(ShellPosition.grid(null, positionGridX, positionGridZ).getId());
+        }
+        if ("here".equals(parameters.get("positionFlag"))) {
+            Player player = CommandUtils.requirePlayer(context.getSource());
+            ShellPosition position = ShellPosition.location(player.getLocation());
+            Shell shell = plugin.getShellManager().getShell(position);
+            if (position != null && shell == null) {
+                builder.setPosition(position.getId());
+            }
+        }
+
         if (parameters.get("enterPermissionMode") instanceof ShellPermissionMode enterPermissionMode) {
             builder.setEnterPermissionMode(enterPermissionMode);
         }
@@ -95,7 +135,7 @@ public abstract class ShellFactory extends ConstantsHolder {
         return true;
     }
 
-    protected abstract Material getItemType(ShellData data);
+    public abstract Material getItemType(ShellData data);
 
     protected TextColor getItemColor(ShellData data) {
         return NamedTextColor.WHITE;

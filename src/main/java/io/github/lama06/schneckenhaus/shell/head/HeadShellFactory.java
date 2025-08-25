@@ -5,11 +5,11 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import io.github.lama06.schneckenhaus.command.parameter.ParameterCommandBuilder;
 import io.github.lama06.schneckenhaus.language.Message;
-import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.github.lama06.schneckenhaus.shell.ShellBuilder;
 import io.github.lama06.schneckenhaus.shell.ShellData;
-import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellConfig;
+import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShellFactory;
+import io.github.lama06.schneckenhaus.util.CraftingInput;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.PlayerProfileListResolver;
@@ -79,15 +79,18 @@ public final class HeadShellFactory extends BuiltinShellFactory {
     }
 
     @Override
-    protected Material getItemType(ShellData data) {
+    public Material getItemType(ShellData data) {
         return Material.PLAYER_HEAD;
     }
 
     @Override
     public ItemStack createItem(ShellData data) {
+        HeadShellData headData = (HeadShellData) data;
         ItemStack item = super.createItem(data);
         item.editMeta(SkullMeta.class, meta -> {
-            meta.setOwningPlayer(Bukkit.getOfflinePlayer(data.getCreator()));
+            PlayerProfile profile = Bukkit.getOfflinePlayer(headData.getHeadOwner()).getPlayerProfile();
+            profile.complete(true);
+            meta.setPlayerProfile(profile);
         });
         return item;
     }

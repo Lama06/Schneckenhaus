@@ -105,7 +105,7 @@ public final class ChestShellFactory extends SizedShellFactory {
     }
 
     @Override
-    protected Material getItemType(ShellData data) {
+    public Material getItemType(ShellData data) {
         return Material.CHEST;
     }
 

@@ -5,6 +5,7 @@ import io.github.lama06.schneckenhaus.shell.ShellPlacement;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -84,7 +85,10 @@ public final class ShellInstanceSyncSystem extends System {
                 if (!shouldSyncPlacedShell(shell, block)) {
                     continue;
                 }
-                block.setType(shell.createItem().getType()); // TODO copy item data
+                block.setType(shell.getPlacementBlockType());
+                BlockState state = block.getState();
+                shell.initializePlacementBlockState(state);
+                state.update();
             }
         }
     }
@@ -128,18 +132,18 @@ public final class ShellInstanceSyncSystem extends System {
         if (delay != null) {
             return shouldSyncBecauseOfAnimation(delay);
         }
-        return shell.createItem().getType() != item.getType();
+        return shell.getFactory().getItemType(shell) != item.getType();
     }
 
     private boolean shouldSyncPlacedShell(Shell shell, Block block) {
         if (!syncConfig.check(shell)) {
             return false;
         }
-        Integer delay = shell.getFactory().getItemAnimationDelay(shell);
+        Integer delay = shell.getPlacementAnimationDelay();
         if (delay != null) {
             return shouldSyncBecauseOfAnimation(delay);
         }
-        return shell.createItem().getType() != block.getType();
+        return shell.getPlacementBlockType() != block.getType() && !shell.getAlternativePlacementBlockTypes().contains(block.getType());
     }
 
     private boolean shouldSyncBecauseOfAnimation(int animationDelay) {

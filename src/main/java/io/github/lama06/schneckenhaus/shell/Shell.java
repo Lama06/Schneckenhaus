@@ -4,9 +4,9 @@ import io.github.lama06.schneckenhaus.Permission;
 import io.github.lama06.schneckenhaus.language.Message;
 import io.github.lama06.schneckenhaus.player.SchneckenhausPlayer;
 import io.github.lama06.schneckenhaus.shell.action.*;
-import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermission;
 import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionPlayerList;
+import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.BlockPosition;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
@@ -14,6 +14,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -108,6 +109,20 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
     }
 
     public abstract ShellFactory getFactory();
+
+    public Material getPlacementBlockType() {
+        return getFactory().getItemType(this);
+    }
+
+    public Set<Material> getAlternativePlacementBlockTypes() {
+        return Set.of();
+    }
+
+    public void initializePlacementBlockState(BlockState state) { }
+
+    public Integer getPlacementAnimationDelay() {
+        return getFactory().getItemAnimationDelay(this);
+    }
 
     public abstract Map<Block, BlockData> getBlocks();
 

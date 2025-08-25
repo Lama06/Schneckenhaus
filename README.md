@@ -46,6 +46,7 @@ If you aren't convinced yet, the plugin also features:
   Ever wanted to delete all light blue shulker box shells of size 13 with whitelist enabled owned by some player crafted in the last week?
   Let's be honest: You always wanted to do exactly that. And this plugin makes it possible.
 - Data is stored efficiently and securely in an **SQLITE database**
+- and much more!
 
 ## Documentation
 

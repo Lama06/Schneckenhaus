@@ -1,20 +1,21 @@
 package io.github.lama06.schneckenhaus.shell.head;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import io.github.lama06.schneckenhaus.shell.builtin.BuiltinShell;
 import io.github.lama06.schneckenhaus.util.BlockArea;
 import io.github.lama06.schneckenhaus.util.ColorUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Skull;
 import org.bukkit.block.data.BlockData;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public final class HeadShell extends BuiltinShell implements HeadShellData {
     public static final int SIZE = 8;
@@ -32,6 +33,21 @@ public final class HeadShell extends BuiltinShell implements HeadShellData {
     @Override
     public HeadShellFactory getFactory() {
         return HeadShellFactory.INSTANCE;
+    }
+
+    @Override
+    public Set<Material> getAlternativePlacementBlockTypes() {
+        return Set.of(Material.PLAYER_WALL_HEAD);
+    }
+
+    @Override
+    public void initializePlacementBlockState(BlockState state) {
+        if (!(state instanceof Skull skull)) {
+            return;
+        }
+        PlayerProfile profile = Bukkit.getOfflinePlayer(headOwner).getPlayerProfile();
+        profile.complete(true);
+        skull.setPlayerProfile(profile);
     }
 
     @Override

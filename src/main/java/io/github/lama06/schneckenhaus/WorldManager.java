@@ -1,38 +1,40 @@
 package io.github.lama06.schneckenhaus;
 
-import org.bukkit.*;
-import org.slf4j.Logger;
+import io.github.lama06.schneckenhaus.config.WorldConfig;
+import io.github.lama06.schneckenhaus.util.ConstantsHolder;
+import org.bukkit.GameRule;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public final class WorldManager {
-    private static final String EMPTY_GENERATOR_SETTINGS = """
-         {
-            "layers": [
-                {
-                    "block": "air",
-                    "height": 1
-                }
-            ],
-            "biome": "plains"
-         }
-         """;
-
-    private final SchneckenhausPlugin plugin = SchneckenhausPlugin.INSTANCE;
-    private final Logger logger = plugin.getSLF4JLogger();
+public final class WorldManager extends ConstantsHolder {
+    private static String getVoidGeneratorSettings(String biome) {
+        return """
+             {
+                "layers": [
+                    {
+                        "block": "air",
+                        "height": 1
+                    }
+                ],
+                "biome": "%biome%"
+             }
+             """.replace("%biome%", biome);
+    }
 
     private final Map<String, World> worlds = new HashMap<>();
 
     public void load() {
-        for (String worldName : plugin.getPluginConfig().getWorlds().keySet()) {
-            if (Bukkit.getWorld(worldName) == null) {
-                logger.info("loading snail shell world: {}", worldName);
-            }
+        for (String worldName : config.getWorlds().keySet()) {
+            WorldConfig worldConfig = config.getWorlds().get(worldName);
+            logger.info("loading snail shell world: {}", worldName);
             World world = WorldCreator.name(worldName)
                 .environment(World.Environment.NORMAL)
                 .type(WorldType.FLAT)
-                .generatorSettings(EMPTY_GENERATOR_SETTINGS)
+                .generatorSettings(getVoidGeneratorSettings(worldConfig.getBiome()))
                 .generateStructures(false)
                 .createWorld();
             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);

@@ -67,6 +67,15 @@ public final class EditCustomCommand extends ConstantsHolder {
                         )
                     )
                 )
+                .then(Commands.literal("add-alternative-block-area")
+                    .then(Commands.argument("position1", ArgumentTypes.blockPosition())
+                        .then(Commands.argument("position2", ArgumentTypes.blockPosition())
+                            .then(Commands.argument("alternative", ArgumentTypes.resource(RegistryKey.BLOCK))
+                                .executes(this::addAlternativeBlockArea)
+                            )
+                        )
+                    )
+                )
             )
             .build();
     }
@@ -132,6 +141,19 @@ public final class EditCustomCommand extends ConstantsHolder {
         BlockType alternative = context.getArgument("alternative", BlockType.class);
         Set<Material> materials = config.getAlternativeBlocks().computeIfAbsent(block, key -> new HashSet<>());
         materials.add(Registry.MATERIAL.get(alternative.getKey()));
+        plugin.getConfigManager().save();
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int addAlternativeBlockArea(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        CustomShellConfig config = this.config.getCustom().get(context.getArgument("type", String.class));
+        BlockPosition position1 = new BlockPosition(context.getArgument("position1", BlockPositionResolver.class).resolve(context.getSource()));
+        BlockPosition position2 = new BlockPosition(context.getArgument("position2", BlockPositionResolver.class).resolve(context.getSource()));
+        BlockType alternative = context.getArgument("alternative", BlockType.class);
+        for (BlockPosition position : new BlockArea(position1, position2)) {
+            Set<Material> materials = config.getAlternativeBlocks().computeIfAbsent(position, key -> new HashSet<>());
+            materials.add(Registry.MATERIAL.get(alternative.getKey()));
+        }
         plugin.getConfigManager().save();
         return Command.SINGLE_SUCCESS;
     }

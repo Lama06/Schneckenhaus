@@ -3,6 +3,7 @@ package io.github.lama06.schneckenhaus.systems;
 import io.github.lama06.schneckenhaus.shell.Shell;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.type.Dispenser;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockDispenseEvent;
@@ -45,7 +46,10 @@ public final class DispenserSystem extends System {
             }
 
             Block shellPlacement = event.getBlock().getRelative(dispenserData.getFacing());
-            shellPlacement.setType(shell.createItem().getType());
+            shellPlacement.setType(shell.getPlacementBlockType());
+            BlockState state = shellPlacement.getState();
+            shell.initializePlacementBlockState(state);
+            state.update();
             plugin.getShellManager().registerPlacedShell(shell, shellPlacement, null);
         });
     }

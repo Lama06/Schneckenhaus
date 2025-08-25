@@ -17,10 +17,10 @@ import java.util.List;
 public final class DeleteCommand {
     public CommandNode<CommandSourceStack> create() {
         return Commands.literal("delete")
-            .requires(Commands.restricted(Permission.COMMAND_DELETE::check))
+            .requires(Permission.COMMAND_DELETE::check)
             .executes(this::execute)
             .then(Commands.argument("shells", ShellsArgumentType.INSTANCE)
-                .requires(Commands.restricted(Permission.COMMAND_DELETE::check))
+                .requires(Permission.COMMAND_DELETE::check)
                 .executes(this::execute)
             )
             .build();

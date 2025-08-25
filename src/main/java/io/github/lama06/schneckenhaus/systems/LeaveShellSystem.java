@@ -48,6 +48,9 @@ public final class LeaveShellSystem extends System {
         if (shell == null) {
             return;
         }
+        if (event.getPlayer().isSneaking()) {
+            return;
+        }
         SchneckenhausPlayer schneckenhausPlayer = new SchneckenhausPlayer(event.getPlayer());
         schneckenhausPlayer.leave();
     }

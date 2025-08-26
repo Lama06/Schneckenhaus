@@ -6,13 +6,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import java.util.*;
 
 public final class ProtectShellSystem extends System {
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     private void preventBlockBreaking(BlockBreakEvent event) {
         Block brokenBlock = event.getBlock();
         ShellPosition shellPosition = ShellPosition.block(event.getBlock());
@@ -30,7 +31,7 @@ public final class ProtectShellSystem extends System {
         event.setCancelled(true);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW) // call before PlaceShellSystem
     private void preventBlockPlacement(BlockPlaceEvent event) {
         Block placedBlock = event.getBlock();
         ShellPosition shellPosition = ShellPosition.block(event.getBlock());

@@ -7,7 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 public final class PlaceShellSystem extends System {
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     private void placeShell(BlockPlaceEvent event) {
         Shell shell = plugin.getShellManager().getShell(event.getItemInHand());
         if (shell == null) {

@@ -38,15 +38,12 @@ public final class CustomShellConfig {
             return null;
         }
 
-        if (config.get("initial_blocks") instanceof List<?> initialBlocks) {
-            initialBlocks.stream()
-                .filter(string -> string instanceof String).map(string -> (String) string)
-                .map(BlockPosition::fromString).filter(Objects::nonNull)
-                .forEach(result.initialBlocks::add);;
+        if (config.get("protect_air") instanceof Boolean protectAir) {
+            result.protectAir = protectAir;
         }
 
-        if (config.get("alternative_blocks") instanceof Map<?, ?> alternativeBlocksConfig) {
-            for (Object positionConfig : alternativeBlocksConfig.keySet()) {
+        if (config.get("block_restrictions") instanceof Map<?, ?> blockRestrictionsConfig) {
+            for (Object positionConfig : blockRestrictionsConfig.keySet()) {
                 if (!(positionConfig instanceof String positionConfigString)) {
                     continue;
                 }
@@ -54,7 +51,7 @@ public final class CustomShellConfig {
                 if (position == null) {
                     continue;
                 }
-                if (!(alternativeBlocksConfig.get(positionConfig) instanceof List<?> materialsConfig)) {
+                if (!(blockRestrictionsConfig.get(positionConfig) instanceof List<?> materialsConfig)) {
                     continue;
                 }
                 Set<Material> materials = new HashSet<>();
@@ -72,9 +69,7 @@ public final class CustomShellConfig {
                     }
                     materials.add(material);
                 }
-                if (!materials.isEmpty()) {
-                    result.alternativeBlocks.put(position, materials);
-                }
+                result.blockRestrictions.put(position, materials);
             }
         }
 
@@ -103,8 +98,8 @@ public final class CustomShellConfig {
 
     private String templateWorld;
     private BlockArea templatePosition;
-    private final Set<BlockPosition> initialBlocks = new HashSet<>();
-    private final Map<BlockPosition, Set<Material>> alternativeBlocks = new HashMap<>();
+    private final Map<BlockPosition, Set<Material>> blockRestrictions = new HashMap<>();
+    private boolean protectAir;
 
     private Location spawnPosition;
     private final Set<BlockPosition> exitBlocks = new HashSet<>();
@@ -117,11 +112,11 @@ public final class CustomShellConfig {
         result.put("ingredients", ingredients.stream().map(ItemConfig::serialize).toList());
         result.put("template_world", templateWorld);
         result.put("template_position", templatePosition.toString());
-        result.put("initial_blocks", initialBlocks.stream().map(BlockPosition::toString).toList());
-        result.put("alternative_blocks", alternativeBlocks.keySet().stream().collect(Collectors.toMap(
+        result.put("block_restrictions", blockRestrictions.keySet().stream().collect(Collectors.toMap(
             BlockPosition::toString,
-            pos -> alternativeBlocks.get(pos).stream().map(block -> block.getKey().toString()).toList()
+            pos -> blockRestrictions.get(pos).stream().map(material -> material.getKey().toString()).toList()
         )));
+        result.put("protect_air", protectAir);
         result.put("spawn_position", ConfigUtil.serializeLocation(spawnPosition, false));
         result.put("exit_blocks", exitBlocks.stream().map(BlockPosition::toString).toList());
         result.put("menu_block", menuBlock == null ? null : menuBlock.toString());
@@ -164,12 +159,16 @@ public final class CustomShellConfig {
         this.templatePosition = templatePosition;
     }
 
-    public Set<BlockPosition> getInitialBlocks() {
-        return initialBlocks;
+    public Map<BlockPosition, Set<Material>> getBlockRestrictions() {
+        return blockRestrictions;
     }
 
-    public Map<BlockPosition, Set<Material>> getAlternativeBlocks() {
-        return alternativeBlocks;
+    public boolean isProtectAir() {
+        return protectAir;
+    }
+
+    public void setProtectAir(boolean protectAir) {
+        this.protectAir = protectAir;
     }
 
     public Location getSpawnPosition() {

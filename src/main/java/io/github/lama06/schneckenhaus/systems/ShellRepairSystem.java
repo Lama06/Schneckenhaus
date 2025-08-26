@@ -20,7 +20,7 @@ public final class ShellRepairSystem extends System {
             if (!config.getRepairSystem().check(shell)) {
                 continue;
             }
-            shell.place();
+            shell.repair();
         }
     }
 }

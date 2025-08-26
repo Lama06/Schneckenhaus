@@ -48,7 +48,7 @@ public abstract class ShellBuilder extends ConstantsHolder implements ShellData 
                 if (shell == null) {
                     return null;
                 }
-                shell.placeInitially();
+                shell.place();
 
                 return shell;
             },

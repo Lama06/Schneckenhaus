@@ -2,6 +2,7 @@ package io.github.lama06.schneckenhaus.systems;
 
 import io.github.lama06.schneckenhaus.shell.Shell;
 import io.github.lama06.schneckenhaus.shell.position.ShellPosition;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
@@ -13,17 +14,35 @@ import java.util.*;
 public final class ProtectShellSystem extends System {
     @EventHandler
     private void preventBlockBreaking(BlockBreakEvent event) {
-        Block block = event.getBlock();
-        ShellPosition position = ShellPosition.block(event.getBlock());
-        if (position == null) {
+        Block brokenBlock = event.getBlock();
+        ShellPosition shellPosition = ShellPosition.block(event.getBlock());
+        if (shellPosition == null) {
             return;
         }
-        Shell shell = plugin.getShellManager().getShell(position);
+        Shell shell = plugin.getShellManager().getShell(shellPosition);
         if (shell == null) {
             return;
         }
-        Map<Block, BlockData> blocks = shell.getBlocks();
-        if (!blocks.containsKey(block)) {
+        Map<Block, BlockData> shellBlocks = shell.getBlocks();
+        if (shell.isBlockTypeAllowed(shellBlocks, brokenBlock, Material.AIR)) {
+            return;
+        }
+        event.setCancelled(true);
+    }
+
+    @EventHandler
+    private void preventBlockPlacement(BlockPlaceEvent event) {
+        Block placedBlock = event.getBlock();
+        ShellPosition shellPosition = ShellPosition.block(event.getBlock());
+        if (shellPosition == null) {
+            return;
+        }
+        Shell shell = plugin.getShellManager().getShell(shellPosition);
+        if (shell == null) {
+            return;
+        }
+        Map<Block, BlockData> shellBlocks = shell.getBlocks();
+        if (shell.isBlockTypeAllowed(shellBlocks, placedBlock, placedBlock.getType())) {
             return;
         }
         event.setCancelled(true);
@@ -69,7 +88,7 @@ public final class ProtectShellSystem extends System {
     }
 
     private void preventExplosion(List<Block> destroyedBlocks) {
-        Map<ShellPosition, Set<Block>> shellBlocks = new HashMap<>();
+        Map<ShellPosition, Map<Block, BlockData>> shellBlocks = new HashMap<>();
         Iterator<Block> iterator = destroyedBlocks.iterator();
         while (iterator.hasNext()) {
             Block destroyedBlock = iterator.next();
@@ -77,15 +96,15 @@ public final class ProtectShellSystem extends System {
             if (position == null) {
                 continue;
             }
-            if (!shellBlocks.containsKey(position)) {
-                Shell shell = plugin.getShellManager().getShell(position);
-                if (shell == null) {
-                    continue;
-                }
-                shellBlocks.put(position, shell.getBlocks().keySet());
+            Shell shell = plugin.getShellManager().getShell(position);
+            if (shell == null) {
+                continue;
             }
-            Set<Block> blocks = shellBlocks.get(position);
-            if (!blocks.contains(destroyedBlock)) {
+            if (!shellBlocks.containsKey(position)) {
+                shellBlocks.put(position, shell.getBlocks());
+            }
+            Map<Block, BlockData> blocks = shellBlocks.get(position);
+            if (shell.isBlockTypeAllowed(blocks, destroyedBlock, Material.AIR)) {
                 continue;
             }
             iterator.remove();

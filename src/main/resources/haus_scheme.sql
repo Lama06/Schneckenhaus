@@ -20,6 +20,8 @@ CREATE TABLE custom_shell_type (
     spawn_yaw REAL,
     spawn_pitch REAL,
 
+    protect_air INTEGER NOT NULL,
+
     creation_time TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) STRICT;
 
@@ -28,9 +30,16 @@ CREATE TABLE blocks (
     y INTEGER NOT NULL,
     z INTEGER NOT NULL,
     block TEXT NOT NULL, -- block data string
-    initial INTEGER NOT NULL CHECK (initial IN (TRUE, FALSE)),
 
     PRIMARY KEY (x, y, z)
+) STRICT;
+
+CREATE TABLE block_restrictions (
+    x INTEGER NOT NULL,
+    y INTEGER NOT NULL,
+    z INTEGER NOT NULL,
+    restriction TEXT -- block identifier or null if no restriction
+    -- no primary key because restriction can be null
 ) STRICT;
 
 CREATE TABLE exit_blocks (
@@ -44,13 +53,4 @@ CREATE TABLE exit_blocks (
 CREATE TABLE crafting_ingredients (
     item TEXT NOT NULL, -- item identifier
     amount INTEGER NOT NULL
-) STRICT;
-
-CREATE TABLE alternative_blocks (
-    x INTEGER NOT NULL,
-    y INTEGER NOT NULL,
-    z INTEGER NOT NULL,
-    alternative_block TEXT NOT NULL, -- block identifier
-
-    PRIMARY KEY (x, y, z, alternative_block)
 ) STRICT;

@@ -74,6 +74,6 @@ final class UpgradeSizeAction extends ShellScreenAction {
             return;
         }
         shell.setSize(newSize);
-        player.sendMessage(Message.SIZE_UPGRADE_SUCCESS);
+        player.sendMessage(Message.SIZE_UPGRADE_SUCCESS.asComponent(NamedTextColor.GREEN));
     }
 }

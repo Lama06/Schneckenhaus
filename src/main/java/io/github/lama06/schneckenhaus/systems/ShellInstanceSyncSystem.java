@@ -45,7 +45,7 @@ public final class ShellInstanceSyncSystem extends System {
             if (!shouldSyncShell(shell)) {
                 continue;
             }
-            shell.place();
+            shell.repair();
         }
     }
 

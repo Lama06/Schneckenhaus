@@ -24,6 +24,7 @@ import io.papermc.paper.command.brigadier.argument.ArgumentTypes;
 import io.papermc.paper.command.brigadier.argument.resolvers.BlockPositionResolver;
 import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Material;
 import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -99,12 +100,14 @@ public final class CustomCommand extends ConstantsHolder {
         BlockPosition position1 = new BlockPosition(context.getArgument("position1", BlockPositionResolver.class).resolve(context.getSource()));
         BlockPosition position2 = new BlockPosition(context.getArgument("position2", BlockPositionResolver.class).resolve(context.getSource()));
         ItemType item = context.getArgument("item", ItemType.class);
+        Material itemMaterial = Registry.MATERIAL.get(item.getKey());
         ItemStack ingredient = context.getArgument("ingredient", ItemStack.class);
 
         CustomShellConfig config = new CustomShellConfig();
         config.setTemplateWorld(world.getName());
         config.setTemplatePosition(new BlockArea(position1, position2));
-        config.setItem(Registry.MATERIAL.get(item.getKey()));
+        config.setItem(itemMaterial);
+        config.getIngredients().add(new ItemConfig(itemMaterial));
         config.getIngredients().add(new ItemConfig(ingredient));
         this.config.getCustom().put(name, config);
         plugin.getConfigManager().save();

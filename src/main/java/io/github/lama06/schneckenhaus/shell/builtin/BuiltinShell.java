@@ -1,6 +1,7 @@
 package io.github.lama06.schneckenhaus.shell.builtin;
 
 import io.github.lama06.schneckenhaus.shell.Shell;
+import io.github.lama06.schneckenhaus.util.BlockArea;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -9,6 +10,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.type.Door;
 
 import java.util.Map;
+import java.util.Set;
 
 public abstract class BuiltinShell extends Shell implements BuiltinShellData {
     protected BuiltinShell(int id) {
@@ -43,13 +45,22 @@ public abstract class BuiltinShell extends Shell implements BuiltinShellData {
         blocks.put(getMenuBlock(), Material.CRAFTING_TABLE.createBlockData());
     }
 
-    protected final void addCornerTorches(Map<Block, BlockData> blocks, int size) {
-        Block corner = position.getCornerBlock();
+    protected final Set<Block> getCornerTorchBlocks() {
+        BlockArea area = getArea();
+        Block corner = area.getLowerCorner().getBlock(world);
+        return Set.of(
+            corner.getRelative(1, 1, 1),
+            corner.getRelative(area.getWidthX() - 2, 1, 1),
+            corner.getRelative(1, 1, area.getWidthZ() - 2),
+            corner.getRelative(area.getWidthX() - 2, 1, area.getWidthZ() - 2)
+        );
+    }
+
+    protected final void addCornerTorches(Map<Block, BlockData> blocks) {
         BlockData torch = Material.TORCH.createBlockData();
-        blocks.put(corner.getRelative(1, 1, 1), torch);
-        blocks.put(corner.getRelative(size, 1, 1), torch);
-        blocks.put(corner.getRelative(1, 1, size), torch);
-        blocks.put(corner.getRelative(size, 1, size), torch);
+        for (Block block : getCornerTorchBlocks()) {
+            blocks.put(block, torch);
+        }
     }
 
     @Override

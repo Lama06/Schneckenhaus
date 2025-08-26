@@ -14,8 +14,7 @@ import org.bukkit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class SizedShell extends BuiltinShell implements SizedShellData {
     protected SizedShell(int id) {
@@ -78,7 +77,14 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
     }
 
     public void setSize(int size) {
+       Map<Block, BlockData> blockUpdates = new HashMap<>();
+
         Map<Block, BlockData> oldBlocks = getBlocks();
+        for (Block block : oldBlocks.keySet()) {
+            if (oldBlocks.get(block).getMaterial() != Material.TORCH) {
+                blockUpdates.put(block, Material.AIR.createBlockData());
+            }
+        }
 
         String sql = """
             UPDATE sized_shells
@@ -97,12 +103,18 @@ public abstract class SizedShell extends BuiltinShell implements SizedShellData 
         this.size = size;
 
         Map<Block, BlockData> newBlocks = getBlocks();
-        for (Block block : oldBlocks.keySet()) {
-            if (newBlocks.containsKey(block)) {
-                continue;
+        for (Block block : newBlocks.keySet()) {
+            if (newBlocks.get(block).getMaterial() != Material.TORCH) {
+                blockUpdates.put(block, newBlocks.get(block));
             }
-            block.setType(Material.AIR);
         }
-        place();
+
+        for (Block block : blockUpdates.keySet()) {
+            BlockData currentBlockData = block.getBlockData();
+            BlockData updatedBlockData = blockUpdates.get(block);
+            if (!currentBlockData.equals(updatedBlockData)) {
+                block.setBlockData(updatedBlockData);
+            }
+        }
     }
 }

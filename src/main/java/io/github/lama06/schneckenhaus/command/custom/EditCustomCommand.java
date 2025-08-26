@@ -49,29 +49,43 @@ public final class EditCustomCommand extends ConstantsHolder {
                     )
                 )
                 .then(Commands.literal("add-initial-block")
-                    .then(Commands.argument("initialBlock", ArgumentTypes.blockPosition())
-                        .executes(this::addInitialBlock)
+                    .then(Commands.argument("position1", ArgumentTypes.blockPosition())
+                        .executes(this::addInitialBlocks)
                     )
                 )
                 .then(Commands.literal("add-initial-block-area")
                     .then(Commands.argument("position1", ArgumentTypes.blockPosition())
                         .then(Commands.argument("position2", ArgumentTypes.blockPosition())
-                            .executes(this::addInitialBlockArea)
+                            .executes(this::addInitialBlocks)
                         )
                     )
                 )
-                .then(Commands.literal("add-alternative-block")
-                    .then(Commands.argument("block", ArgumentTypes.blockPosition())
-                        .then(Commands.argument("alternative", ArgumentTypes.resource(RegistryKey.BLOCK))
-                            .executes(this::addAlternativeBlock)
+                .then(Commands.literal("set-block-restrictions")
+                    .then(Commands.argument("position1", ArgumentTypes.blockPosition())
+                        .executes(this::setBlockRestrictions)
+                        .then(Commands.argument("restriction1", ArgumentTypes.resource(RegistryKey.BLOCK))
+                            .executes(this::setBlockRestrictions)
+                            .then(Commands.argument("restriction2", ArgumentTypes.resource(RegistryKey.BLOCK))
+                                .executes(this::setBlockRestrictions)
+                                .then(Commands.argument("restriction3", ArgumentTypes.resource(RegistryKey.BLOCK))
+                                    .executes(this::setBlockRestrictions)
+                                )
+                            )
                         )
                     )
                 )
-                .then(Commands.literal("add-alternative-block-area")
+                .then(Commands.literal("set-block-area-restrictions")
                     .then(Commands.argument("position1", ArgumentTypes.blockPosition())
                         .then(Commands.argument("position2", ArgumentTypes.blockPosition())
-                            .then(Commands.argument("alternative", ArgumentTypes.resource(RegistryKey.BLOCK))
-                                .executes(this::addAlternativeBlockArea)
+                            .executes(this::setBlockRestrictions)
+                            .then(Commands.argument("restriction1", ArgumentTypes.resource(RegistryKey.BLOCK))
+                                .executes(this::setBlockRestrictions)
+                                .then(Commands.argument("restriction2", ArgumentTypes.resource(RegistryKey.BLOCK))
+                                    .executes(this::setBlockRestrictions)
+                                    .then(Commands.argument("restriction3", ArgumentTypes.resource(RegistryKey.BLOCK))
+                                        .executes(this::setBlockRestrictions)
+                                    )
+                                )
                             )
                         )
                     )
@@ -112,49 +126,53 @@ public final class EditCustomCommand extends ConstantsHolder {
         return Command.SINGLE_SUCCESS;
     }
 
-    private int addInitialBlock(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private int addInitialBlocks(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         CustomShellConfig config = this.config.getCustom().get(context.getArgument("type", String.class));
-        BlockPosition initialBlock = new BlockPosition(context.getArgument("initialBlock", BlockPositionResolver.class).resolve(context.getSource()));
-        config.getInitialBlocks().add(initialBlock);
-        plugin.getConfigManager().save();
-        return Command.SINGLE_SUCCESS;
-    }
 
-    private int addInitialBlockArea(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        CustomShellConfig config = this.config.getCustom().get(context.getArgument("type", String.class));
-        BlockPosition position1 = new BlockPosition(context.getArgument("position1", BlockPositionResolver.class).resolve(context.getSource()));
-        BlockPosition position2 = new BlockPosition(context.getArgument("position2", BlockPositionResolver.class).resolve(context.getSource()));
-        BlockArea area = new BlockArea(position1, position2);
+        BlockArea area = getBlockAreaOrBlock(context);
         for (BlockPosition position : area) {
             if (position.getBlock(Bukkit.getWorld(config.getTemplateWorld())).isEmpty()) {
                 continue;
             }
-            config.getInitialBlocks().add(position);
+            config.getBlockRestrictions().put(position, Set.of());
         }
+
         plugin.getConfigManager().save();
         return Command.SINGLE_SUCCESS;
     }
 
-    private int addAlternativeBlock(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+    private int setBlockRestrictions(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         CustomShellConfig config = this.config.getCustom().get(context.getArgument("type", String.class));
-        BlockPosition block = new BlockPosition(context.getArgument("block", BlockPositionResolver.class).resolve(context.getSource()));
-        BlockType alternative = context.getArgument("alternative", BlockType.class);
-        Set<Material> materials = config.getAlternativeBlocks().computeIfAbsent(block, key -> new HashSet<>());
-        materials.add(Registry.MATERIAL.get(alternative.getKey()));
+
+        BlockArea area = getBlockAreaOrBlock(context);
+
+        Set<Material> restrictions = new HashSet<>();
+        for (int i = 1; i <= 3; i++) {
+            BlockType restriction = CommandUtils.getArgumentOrDefault(context, "restriction" + i, BlockType.class, null);
+            if (restriction != null) {
+                restrictions.add(Registry.MATERIAL.get(restriction.getKey()));
+            }
+        }
+
+        for (BlockPosition position : area) {
+            config.getBlockRestrictions().put(position, new HashSet<>(restrictions));
+        }
+
         plugin.getConfigManager().save();
         return Command.SINGLE_SUCCESS;
     }
 
-    private int addAlternativeBlockArea(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        CustomShellConfig config = this.config.getCustom().get(context.getArgument("type", String.class));
+    private BlockArea getBlockAreaOrBlock(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPosition position1 = new BlockPosition(context.getArgument("position1", BlockPositionResolver.class).resolve(context.getSource()));
-        BlockPosition position2 = new BlockPosition(context.getArgument("position2", BlockPositionResolver.class).resolve(context.getSource()));
-        BlockType alternative = context.getArgument("alternative", BlockType.class);
-        for (BlockPosition position : new BlockArea(position1, position2)) {
-            Set<Material> materials = config.getAlternativeBlocks().computeIfAbsent(position, key -> new HashSet<>());
-            materials.add(Registry.MATERIAL.get(alternative.getKey()));
+
+        BlockPositionResolver position2Resolver = CommandUtils.getArgumentOrDefault(context, "position2", BlockPositionResolver.class, null);
+        BlockPosition position2;
+        if (position2Resolver == null) {
+            position2 = position1;
+        } else {
+            position2 = new BlockPosition(position2Resolver.resolve(context.getSource()));
         }
-        plugin.getConfigManager().save();
-        return Command.SINGLE_SUCCESS;
+
+        return new BlockArea(position1, position2);
     }
 }

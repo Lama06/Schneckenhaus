@@ -80,20 +80,10 @@ public final class CustomShell extends Shell implements CustomShellData {
 
         for (BlockPosition templatePosition : config.getTemplatePosition()) {
             Block templateBlock = templatePosition.getBlock(templateWorld);
-            BlockPosition instancePosition = translateTemplatePosition(templatePosition);
+            BlockPosition instancePosition = templatePosToInstancePos(templatePosition);
             Block instanceBlock = instancePosition.getBlock(world);
 
             if (templateBlock.isEmpty()) {
-                continue;
-            }
-
-            if (config.getInitialBlocks().contains(templatePosition)) {
-                continue;
-            }
-
-            Set<Material> alternatives = config.getAlternativeBlocks().getOrDefault(templatePosition, Set.of());
-            if (alternatives.contains(instanceBlock.getType())) {
-                blocks.put(instanceBlock, instanceBlock.getBlockData());
                 continue;
             }
 
@@ -104,14 +94,15 @@ public final class CustomShell extends Shell implements CustomShellData {
     }
 
     @Override
-    public Map<Block, BlockData> getInitialBlocks() {
-        Map<Block, BlockData> result = new HashMap<>();
-        for (BlockPosition templatePosition : config.getInitialBlocks()) {
-            BlockData data = templatePosition.getBlock(templateWorld).getBlockData();
-            BlockPosition instancePosition = translateTemplatePosition(templatePosition);
-            result.put(instancePosition.getBlock(world), data);
+    public Set<Material> getBlockRestrictionsOverride(Block block) {
+        BlockPosition templatePosition = new BlockPosition(block)
+            .subtract(position.getCornerBlockPosition())
+            .add(config.getTemplatePosition().getLowerCorner());
+        Set<Material> restrictionsOverride = config.getBlockRestrictions().getOrDefault(templatePosition, null);
+        if (restrictionsOverride == null && config.isProtectAir() && templatePosition.getBlock(Bukkit.getWorld(config.getTemplateWorld())).isEmpty()) {
+            return Set.of(Material.AIR, Material.VOID_AIR, Material.CAVE_AIR);
         }
-        return result;
+        return restrictionsOverride;
     }
 
     @Override
@@ -140,7 +131,7 @@ public final class CustomShell extends Shell implements CustomShellData {
 
     @Override
     public boolean isExitBlock(Block block) {
-        Set<BlockPosition> exitBlocks = config.getExitBlocks().stream().map(this::translateTemplatePosition).collect(Collectors.toSet());
+        Set<BlockPosition> exitBlocks = config.getExitBlocks().stream().map(this::templatePosToInstancePos).collect(Collectors.toSet());
         if (exitBlocks.isEmpty()) {
             return block != null && Tag.DOORS.isTagged(block.getType()) && getBlocks().containsKey(block);
         }
@@ -153,7 +144,7 @@ public final class CustomShell extends Shell implements CustomShellData {
         if (menuBlock == null) {
             return block != null && block.getType() == Material.CRAFTING_TABLE && getBlocks().containsKey(block);
         }
-        return translateTemplatePosition(menuBlock).getBlock(world).equals(block);
+        return templatePosToInstancePos(menuBlock).getBlock(world).equals(block);
     }
 
     @Override
@@ -165,7 +156,7 @@ public final class CustomShell extends Shell implements CustomShellData {
         ));
     }
 
-    private BlockPosition translateTemplatePosition(BlockPosition position) {
+    private BlockPosition templatePosToInstancePos(BlockPosition position) {
         return position.subtract(config.getTemplatePosition().getLowerCorner()).add(this.position.getCornerBlockPosition());
     }
 

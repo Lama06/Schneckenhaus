@@ -26,23 +26,29 @@ public sealed abstract class ShellPosition permits GridShellPosition, IdShellPos
     public static final int CELL_SIZE = 16 * CELL_SIZE_CHUNKS;
 
     public static ShellPosition id(World world, int id) {
+        if (id <= 0) {
+            return null;
+        }
         return new IdShellPosition(world, id);
     }
 
-    public static ShellPosition grid(World world, int x, int y) {
-        return new GridShellPosition(world, x, y);
+    public static ShellPosition grid(World world, int x, int z) {
+        if (x < 0 || z < 0) {
+            return null;
+        }
+        return new GridShellPosition(world, x, z);
     }
 
     public static ShellPosition location(World world, double x, double z) {
         if (!SchneckenhausPlugin.INSTANCE.getShellManager().isShellWorld(world)) {
             return null;
         }
-        int cellX = (int) x / CELL_SIZE;
-        int cellZ = (int) z / CELL_SIZE;
-        if (cellX < 0 || cellZ < 0) {
+        if (x < 0 || z < 0) {
             return null;
         }
-        return new GridShellPosition(world, cellX, cellZ);
+        int cellX = (int) x / CELL_SIZE;
+        int cellZ = (int) z / CELL_SIZE;
+        return grid(world, cellX, cellZ);
     }
 
     public static ShellPosition location(Location location) {
@@ -51,6 +57,9 @@ public sealed abstract class ShellPosition permits GridShellPosition, IdShellPos
 
     public static ShellPosition block(Block block) {
         if (block == null) {
+            return null;
+        }
+        if (block.getX() < 0 || block.getZ() < 0) {
             return null;
         }
         int cellX = block.getX() / CELL_SIZE;

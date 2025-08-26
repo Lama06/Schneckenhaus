@@ -211,7 +211,7 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
             logger.error("failed to update shulker shell color: {}", id, e);
         }
 
-        place();
+        repair();
     }
 
     public boolean isRainbow() {
@@ -234,7 +234,7 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
             logger.error("failed to update rainbow mode: {}", id, e);
         }
 
-        place();
+        repair();
     }
 
     public Set<DyeColor> getRainbowColors() {
@@ -263,7 +263,7 @@ public final class ShulkerShell extends SizedShell implements ShulkerShellData {
             logger.error("failed to update shulker shell rainbow colors: {}", id, e);
         }
 
-        place();
+        repair();
     }
 
 }

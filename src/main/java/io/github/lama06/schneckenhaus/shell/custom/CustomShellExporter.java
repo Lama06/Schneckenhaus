@@ -14,6 +14,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.*;
+import java.util.Set;
 
 public final class CustomShellExporter extends ConstantsHolder implements AutoCloseable {
     private final String name;
@@ -70,7 +71,7 @@ public final class CustomShellExporter extends ConstantsHolder implements AutoCl
         insertBlocks();
         insertExitBlocks();
         insertCraftingIngredients();
-        insertAlternativeBlocks();
+        insertBlockRestrictions();
     }
 
     private void insertDataVersion() throws SQLException {
@@ -91,9 +92,10 @@ public final class CustomShellExporter extends ConstantsHolder implements AutoCl
                 size_x, size_y, size_z,
                 item,
                 menu_block_x, menu_block_y, menu_block_z,
-                spawn_x, spawn_y, spawn_z, spawn_yaw, spawn_pitch
+                spawn_x, spawn_y, spawn_z, spawn_yaw, spawn_pitch,
+                protect_air
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             int i = 1;
@@ -123,6 +125,9 @@ public final class CustomShellExporter extends ConstantsHolder implements AutoCl
                 statement.setFloat(i + 3, spawnPosition.getYaw());
                 statement.setFloat(i + 4, spawnPosition.getPitch());
             }
+            i += 5;
+
+            statement.setBoolean(i++, config.isProtectAir());
 
             statement.executeUpdate();
         }
@@ -130,8 +135,8 @@ public final class CustomShellExporter extends ConstantsHolder implements AutoCl
 
     private void insertBlocks() throws SQLException {
         String sql = """
-            INSERT INTO blocks(x, y, z, block, initial)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO blocks(x, y, z, block)
+            VALUES (?, ?, ?, ?)
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             BlockArea area = config.getTemplatePosition();
@@ -145,7 +150,6 @@ public final class CustomShellExporter extends ConstantsHolder implements AutoCl
                 statement.setInt(2, relativePosition.y());
                 statement.setInt(3, relativePosition.z());
                 statement.setString(4, block.getBlockData().getAsString());
-                statement.setBoolean(5, config.getInitialBlocks().contains(absolutePosition));
                 statement.addBatch();
             }
             statement.executeBatch();
@@ -184,19 +188,24 @@ public final class CustomShellExporter extends ConstantsHolder implements AutoCl
         }
     }
 
-    private void insertAlternativeBlocks() throws SQLException {
+    private void insertBlockRestrictions() throws SQLException {
         String sql = """
-            INSERT INTO alternative_blocks(x, y, z, alternative_block)
+            INSERT INTO block_restrictions(x, y, z, restriction)
             VALUES (?, ?, ?, ?)
             """;
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            for (BlockPosition position : config.getAlternativeBlocks().keySet()) {
+            for (BlockPosition position : config.getBlockRestrictions().keySet()) {
                 BlockPosition relativePosition = position.subtract(config.getTemplatePosition().getLowerCorner());
-                for (Material alternativeBlock : config.getAlternativeBlocks().get(position)) {
-                    statement.setInt(1, relativePosition.x());
-                    statement.setInt(2, relativePosition.y());
-                    statement.setInt(3, relativePosition.z());
-                    statement.setString(4, alternativeBlock.getKey().toString());
+                statement.setInt(1, relativePosition.x());
+                statement.setInt(2, relativePosition.y());
+                statement.setInt(3, relativePosition.z());
+                Set<Material> restrictions = config.getBlockRestrictions().get(position);
+                if (restrictions.isEmpty()) {
+                    statement.setString(4, null);
+                    statement.addBatch();
+                }
+                for (Material restriction : restrictions) {
+                    statement.setString(4, restriction.getKey().toString());
                     statement.addBatch();
                 }
             }

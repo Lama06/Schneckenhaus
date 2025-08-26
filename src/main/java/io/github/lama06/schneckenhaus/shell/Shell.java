@@ -126,8 +126,37 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
 
     public abstract Map<Block, BlockData> getBlocks();
 
-    public Map<Block, BlockData> getInitialBlocks() {
-        return Map.of();
+    /**
+     * @return null if no override, empty set if no restrictions, or set containing allowed block types
+     */
+    public Set<Material> getBlockRestrictionsOverride(Block block) {
+        return null;
+    }
+
+    /**
+     * @return empty set means every block is allowed; else only returned materials are allowed
+     */
+    public final Set<Material> getBlockRestrictions(Map<Block, BlockData> blocks, Block position) {
+        Set<Material> restrictionsOverride = getBlockRestrictionsOverride(position);
+        if (restrictionsOverride != null) {
+            return restrictionsOverride;
+        }
+        if (!blocks.containsKey(position) || blocks.get(position).getMaterial().isAir()) {
+            return Set.of();
+        }
+        return Set.of(blocks.get(position).getMaterial());
+    }
+
+    /**
+     * Checks if a block type is allowed at a position
+     * @param blocks return value of {@link #getBlocks(), for caching
+     */
+    public final boolean isBlockTypeAllowed(Map<Block, BlockData> blocks, Block position, Material block) {
+        Set<Material> restrictions = getBlockRestrictions(blocks, position);
+        if (restrictions.isEmpty()) {
+            return true;
+        }
+        return restrictions.contains(block);
     }
 
     public Integer getAnimationDelay() {
@@ -139,18 +168,29 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
     public final void place() {
         Map<Block, BlockData> blocks = getBlocks();
         for (Block block : blocks.keySet()) {
-            if (block.getBlockData().equals(blocks.get(block))) {
-                continue;
-            }
             block.setBlockData(blocks.get(block), false);
         }
     }
 
-    public final void placeInitially() {
-        place();
-        Map<Block, BlockData> initialBlocks = getInitialBlocks();
-        for (Block block : initialBlocks.keySet()) {
-            block.setBlockData(initialBlocks.get(block), false);
+    public final void repair() {
+        Map<Block, BlockData> blocks = getBlocks();
+        for (BlockPosition blockPosition : getArea()) {
+            Block blockToBeRepaired = blockPosition.getBlock(getWorld());
+            if (!isBlockTypeAllowed(blocks, blockToBeRepaired, blockToBeRepaired.getType())) {
+                // repair the block
+                BlockData templateBlockData = blocks.get(blockToBeRepaired);
+                if (templateBlockData == null)  {
+                    templateBlockData = Material.AIR.createBlockData();
+                }
+                if (isBlockTypeAllowed(blocks, blockToBeRepaired, templateBlockData.getMaterial())) {
+                    blockToBeRepaired.setBlockData(templateBlockData);
+                } else if (isBlockTypeAllowed(blocks, blockToBeRepaired, Material.AIR)) {
+                    blockToBeRepaired.setType(Material.AIR);
+                } else {
+                    Set<Material> restrictions = getBlockRestrictions(blocks, blockToBeRepaired);
+                    blockToBeRepaired.setType(restrictions.iterator().next());
+                }
+            }
         }
     }
 

@@ -16,10 +16,7 @@ import org.bukkit.entity.Player;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public final class ChestShell extends SizedShell implements ChestShellData {
     private WoodType wood;
@@ -66,14 +63,16 @@ public final class ChestShell extends SizedShell implements ChestShellData {
             addSideBlocks(side, blocks);
         }
         addDoorBlocks(blocks);
+        addCornerTorches(blocks);
         return blocks;
     }
 
     @Override
-    public Map<Block, BlockData> getInitialBlocks() {
-        Map<Block, BlockData> blocks = new HashMap<>();
-        addCornerTorches(blocks, getSize());
-        return blocks;
+    public Set<Material> getBlockRestrictionsOverride(Block block) {
+        if (getCornerTorchBlocks().contains(block)) {
+            return Set.of();
+        }
+        return null;
     }
 
     private void addSideBlocks(BlockFace side, Map<Block, BlockData> blocks) {
@@ -188,6 +187,6 @@ public final class ChestShell extends SizedShell implements ChestShellData {
         } catch (SQLException e) {
             logger.error("failed to update chest shell wood type: {}", id, e);
         }
-        place();
+        repair();
     }
 }

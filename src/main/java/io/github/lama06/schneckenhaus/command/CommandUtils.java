@@ -1,5 +1,6 @@
 package io.github.lama06.schneckenhaus.command;
 
+import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import io.github.lama06.schneckenhaus.language.Message;
@@ -16,5 +17,13 @@ public final class CommandUtils {
             throw NOT_PLAYER.create();
         }
         return player;
+    }
+
+    public static <T> T getArgumentOrDefault(CommandContext<CommandSourceStack> context, String name, Class<T> type, T fallback) {
+        try {
+            return context.getArgument(name, type);
+        } catch (IllegalArgumentException e) {
+            return fallback;
+        }
     }
 }

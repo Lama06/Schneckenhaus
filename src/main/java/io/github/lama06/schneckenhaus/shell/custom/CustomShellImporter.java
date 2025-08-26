@@ -35,8 +35,7 @@ public final class CustomShellImporter extends ConstantsHolder implements AutoCl
             importMetadata();
             importExitBlocks();
             importCraftingIngredients();
-            importInitialBlocks();
-            importAlternativeBlocks();
+            importBlockRestrictions();
             placeTemplate();
             super.config.getCustom().put(name, config);
             plugin.getConfigManager().save();
@@ -77,7 +76,8 @@ public final class CustomShellImporter extends ConstantsHolder implements AutoCl
             SELECT item,
                    size_x, size_y, size_z,
                    menu_block_x, menu_block_y, menu_block_z,
-                   spawn_x, spawn_y, spawn_z, spawn_yaw, spawn_pitch
+                   spawn_x, spawn_y, spawn_z, spawn_yaw, spawn_pitch,
+                   protect_air
             FROM custom_shell_type
             """;
         try (Statement statement = connection.createStatement()) {
@@ -102,43 +102,32 @@ public final class CustomShellImporter extends ConstantsHolder implements AutoCl
                 templateCorner.add(result.getInt("size_x") - 1, result.getInt("size_y") - 1, result.getInt("size_z") - 1)
             ));
 
-            config.setMenuBlock(templateCorner.add(
-                result.getInt("menu_block_x"),
-                result.getInt("menu_block_y"),
-                result.getInt("menu_block_z")
-            ));
-
-            config.setSpawnPosition(
-                new Location(
-                    null,
-                    result.getDouble("spawn_x"), result.getDouble("spawn_y"), result.getDouble("spawn_z"),
-                    result.getFloat("spawn_yaw"), result.getFloat("spawn_pitch")
-                ).add(templateCorner.toVector())
-            );
-        }
-    }
-
-    private void importInitialBlocks() throws SQLException {
-        String sql = """
-            SELECT x, y, z
-            FROM blocks
-            WHERE initial
-            """;
-        try (Statement statement = connection.createStatement()) {
-            ResultSet result = statement.executeQuery(sql);
-            while (result.next()) {
-                int x = result.getInt(1);
-                int y = result.getInt(2);
-                int z = result.getInt(3);
-                config.getInitialBlocks().add(templateCorner.add(x, y, z));
+            if (result.getObject("menu_block_x") != null) {
+                config.setMenuBlock(templateCorner.add(
+                    result.getInt("menu_block_x"),
+                    result.getInt("menu_block_y"),
+                    result.getInt("menu_block_z")
+                ));
             }
+
+            if (result.getObject("spawn_x") != null) {
+                config.setSpawnPosition(
+                    new Location(
+                        null,
+                        result.getDouble("spawn_x"), result.getDouble("spawn_y"), result.getDouble("spawn_z"),
+                        result.getFloat("spawn_yaw"), result.getFloat("spawn_pitch")
+                    ).add(templateCorner.toVector())
+                );
+            }
+
+            config.setProtectAir(result.getBoolean("protect_air"));
         }
     }
 
-    private void importAlternativeBlocks() throws SQLException {
+    private void importBlockRestrictions() throws SQLException {
         String sql = """
-            SELECT x, y, z, alternative_block
-            FROM alternative_blocks
+            SELECT x, y, z, restriction
+            FROM block_restrictions
             """;
         try (Statement statement = connection.createStatement()) {
             ResultSet result = statement.executeQuery(sql);
@@ -147,18 +136,26 @@ public final class CustomShellImporter extends ConstantsHolder implements AutoCl
                 int y = result.getInt(2);
                 int z = result.getInt(3);
                 BlockPosition block = templateCorner.add(x, y, z);
-                Set<Material> alternatives = config.getAlternativeBlocks().computeIfAbsent(block, key -> new HashSet<>());
-                NamespacedKey alternativeKey = NamespacedKey.fromString(result.getString(4));
-                if (alternativeKey == null) {
-                    logger.error("invalid block key during custom shell import: {}", result.getString(4));
+
+                String restrictionString = result.getString(4);
+
+                Set<Material> restrictions = config.getBlockRestrictions().computeIfAbsent(block, key -> new HashSet<>());
+
+                if (restrictionString == null) {
                     continue;
                 }
-                Material alternative = Registry.MATERIAL.get(alternativeKey);
-                if (alternative == null) {
-                    logger.error("unknown block key during custom shell import: {}", alternativeKey);
+
+                NamespacedKey restrictionKey = NamespacedKey.fromString(restrictionString);
+                if (restrictionKey == null) {
+                    logger.error("invalid block key during custom shell import: {}", restrictionString);
                     continue;
                 }
-                alternatives.add(alternative);
+                Material restriction = Registry.MATERIAL.get(restrictionKey);
+                if (restriction == null) {
+                    logger.error("unknown block key during custom shell import: {}", restrictionKey);
+                    continue;
+                }
+                restrictions.add(restriction);
             }
         }
     }

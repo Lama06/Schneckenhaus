@@ -83,6 +83,7 @@ public final class HeadShell extends BuiltinShell implements HeadShellData {
         }
         addDoorBlocks(blocks);
         addDoorBlocks(blocks);
+        addCornerTorches(blocks);
         return blocks;
     }
 
@@ -96,10 +97,11 @@ public final class HeadShell extends BuiltinShell implements HeadShellData {
     }
 
     @Override
-    public Map<Block, BlockData> getInitialBlocks() {
-        Map<Block, BlockData> blocks = new HashMap<>();
-        addCornerTorches(blocks, SIZE);
-        return blocks;
+    public Set<Material> getBlockRestrictionsOverride(Block block) {
+        if (getCornerTorchBlocks().contains(block)) {
+            return Set.of();
+        }
+        return null;
     }
 
     @Override

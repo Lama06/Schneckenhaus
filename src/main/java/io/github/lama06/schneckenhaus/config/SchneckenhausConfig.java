@@ -8,7 +8,10 @@ import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellConfig;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public final class SchneckenhausConfig {
     private final ShulkerShellConfig shulker = new ShulkerShellConfig();
@@ -37,6 +40,11 @@ public final class SchneckenhausConfig {
     }
 
     public void deserialize(Map<?, ?> config) {
+        if (config.get("data_version") instanceof String dataVersionString
+            && (dataVersionString.startsWith("1.") || dataVersionString.startsWith("2."))) {
+            return;
+        }
+
         if (config.get("shulker") instanceof Map<?, ?> shulker) {
             this.shulker.deserialize(shulker);
         }

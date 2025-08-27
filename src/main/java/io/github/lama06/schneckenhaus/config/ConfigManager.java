@@ -3,6 +3,9 @@ package io.github.lama06.schneckenhaus.config;
 import io.github.lama06.schneckenhaus.util.ConstantsHolder;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.Tag;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -55,7 +58,16 @@ public final class ConfigManager extends ConstantsHolder {
         DumperOptions options = new DumperOptions();
         options.setDereferenceAliases(true);
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.AUTO);
-        Yaml yaml = new Yaml(options);
+        Yaml yaml = new Yaml(new Representer(options) {
+            @Override
+            protected Node representMapping(Tag tag, Map<?, ?> mapping, DumperOptions.FlowStyle flowStyle) {
+                // make custom.block_restrictions more readable
+                if (mapping.size() >= 100) {
+                    flowStyle = DumperOptions.FlowStyle.FLOW;
+                }
+                return super.representMapping(tag, mapping, flowStyle);
+            }
+        }, options);
         String text = yaml.dump(map);
         text = HEADER + text;
 

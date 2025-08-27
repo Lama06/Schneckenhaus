@@ -160,10 +160,11 @@ public final class ShellManager extends ConstantsHolder {
             statement.setInt(5, shell.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            logger.error("failed to insert legacy shell placement");
+            logger.error("failed to insert legacy shell placement", e);
             return id;
         }
         data.remove(new NamespacedKey(plugin, "id"));
+        state.update();
         return id;
     }
 

@@ -98,7 +98,7 @@ public final class SchneckenhausPlayer extends ConstantsHolder {
         String incrementStatisticsSql = """
             INSERT INTO shell_access_statistics(id, player, amount)
             VALUES (?, ?, 1)
-            ON CONFLICT (id, player) DO UPDATE SET amount = amount + 1
+            ON CONFLICT (id, player) DO UPDATE SET amount = amount + 1, last_time = CURRENT_TIMESTAMP
             """;
         try (PreparedStatement statement = connection.prepareStatement(incrementStatisticsSql)) {
             statement.setInt(1, shell.getId());

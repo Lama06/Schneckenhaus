@@ -23,7 +23,7 @@ public final class ShulkerShellConfig extends SizedShellConfig {
 
     @Override
     protected int getDefaultSizePerIngredient() {
-        return 2;
+        return 1;
     }
 
     @Override

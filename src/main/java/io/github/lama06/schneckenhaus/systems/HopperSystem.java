@@ -43,5 +43,6 @@ public final class HopperSystem extends System {
             event.setInventory(hopperState.getInventory());
             return;
         }
+        event.setInventory(null);
     }
 }

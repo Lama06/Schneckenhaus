@@ -8,10 +8,10 @@ import java.util.Objects;
 
 public abstract class SizedShellConfig extends BuiltinShellConfig {
     private int initialCraftingSize = 4;
-    private int maxCraftingSize = 30;
+    private int maxCraftingSize = 16;
     private ItemConfig sizeIngredient = getDefaultSizeIngredient();
     private int sizePerIngredient = getDefaultSizePerIngredient();
-    private int maxUpgradeSize = 30;
+    private int maxUpgradeSize = 16;
     private ItemConfig upgradeIngredient = getDefaultSizeIngredient();
     private int sizePerUpgradeIngredient = getDefaultSizePerIngredient();
 

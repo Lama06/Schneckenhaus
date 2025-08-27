@@ -17,7 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 public final class PermissionSystem extends System {
-    private static final int ENFORCE_ENTER_PERMISSIONS_DELAY = 20;
+    private static final int ENFORCE_ENTER_PERMISSIONS_DELAY = 40;
 
     @Override
     public void start() {

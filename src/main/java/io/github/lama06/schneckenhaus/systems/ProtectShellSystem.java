@@ -43,7 +43,7 @@ public final class ProtectShellSystem extends System {
             return;
         }
         Map<Block, BlockData> shellBlocks = shell.getBlocks();
-        if (shell.isBlockTypeAllowed(shellBlocks, placedBlock, placedBlock.getType())) {
+        if (shell.isBlockDataAllowed(shellBlocks, placedBlock, placedBlock.getBlockData())) {
             return;
         }
         event.setCancelled(true);

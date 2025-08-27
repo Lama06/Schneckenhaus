@@ -159,6 +159,18 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         return restrictions.contains(block);
     }
 
+    public final boolean isBlockDataAllowed(Map<Block, BlockData> blocks, Block position, BlockData blockData) {
+        Set<Material> restrictionsOverride = getBlockRestrictionsOverride(position);
+        if (restrictionsOverride != null) {
+            return restrictionsOverride.isEmpty() || restrictionsOverride.contains(blockData.getMaterial());
+        }
+        BlockData templateBlockData = blocks.get(position);
+        if (templateBlockData == null || templateBlockData.getMaterial().isAir()) {
+            return true;
+        }
+        return templateBlockData.equals(blockData);
+    }
+
     public Integer getAnimationDelay() {
         return null;
     }
@@ -176,13 +188,15 @@ public abstract class Shell extends ConstantsHolder implements ShellData {
         Map<Block, BlockData> blocks = getBlocks();
         for (BlockPosition blockPosition : getArea()) {
             Block blockToBeRepaired = blockPosition.getBlock(getWorld());
-            if (!isBlockTypeAllowed(blocks, blockToBeRepaired, blockToBeRepaired.getType())) {
+            if (!isBlockDataAllowed(blocks, blockToBeRepaired, blockToBeRepaired.getBlockData())) {
                 // repair the block
+
                 BlockData templateBlockData = blocks.get(blockToBeRepaired);
                 if (templateBlockData == null)  {
                     templateBlockData = Material.AIR.createBlockData();
                 }
-                if (isBlockTypeAllowed(blocks, blockToBeRepaired, templateBlockData.getMaterial())) {
+
+                if (isBlockDataAllowed(blocks, blockToBeRepaired, templateBlockData)) {
                     blockToBeRepaired.setBlockData(templateBlockData);
                 } else if (isBlockTypeAllowed(blocks, blockToBeRepaired, Material.AIR)) {
                     blockToBeRepaired.setType(Material.AIR);

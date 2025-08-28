@@ -5,8 +5,8 @@ Ever wanted to enter a chest?
 Ever wanted to store your house in your inventory?
 This plugin has you covered!
 
-![Entering Shulker Boxes](img/enter.gif)
-![Breaking Shulker Boxes](img/break.gif)
+![Entering Shulker Boxes](img/enter-optimized.gif)
+![Breaking Shulker Boxes](img/break-optimized.gif)
 
 Every snail shell (an enterable block) can be customized using a graphical interface:
 - Rename your snail shell
@@ -16,12 +16,12 @@ Every snail shell (an enterable block) can be customized using a graphical inter
 - Change its color (for shulker boxes)
 - Change its wood type (for chests)
 
-![Menu](img/menu.gif)
-![Entering Shulker Boxes](img/color.gif)
+![Menu](img/menu-optimized.gif)
+![Entering Shulker Boxes](img/color-optimized.gif)
 
 If you can't decide what color to pick, no worries, just choose all of them!
 
-![Entering Shulker Boxes](img/rainbow.gif)
+![Entering Shulker Boxes](img/rainbow-optimized.gif)
 
 If you aren't convinced yet, the plugin also features:
 

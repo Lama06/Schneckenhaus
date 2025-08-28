@@ -63,7 +63,7 @@ Table of contents:
 When a command requires you to specify one or multiple shells like `/sh tp shell <shell>` or `/sh info <shell>`,
 you have multiple ways to do so:
 
-- `here` resolves to the shell at your location
+- `here` resolves to the shell at your location, this is the default value for many commands
 - `selection` resolves to all shells you selected, see [Selections](#selections)
 - `<id>` resolves to the shell with the specified id
 
@@ -79,7 +79,7 @@ you have multiple ways to do so:
   - `count`
     - `total` displays the total number of snail shells on this server
     - `world <world>` displays the number of snail shells which are stored inside a world
-  - `delete <shell>` deletes a shell
+  - `delete <shell>` deletes a shell, cannot be undone
   - `create <type>` type can be `shulker`, `chest`, `head` or `custom`; depending on the type, you specify one or more of these options:
     - `owner <owner>`
     - `world <world>` world in which the snail shell will be stored
@@ -87,10 +87,14 @@ you have multiple ways to do so:
       - `enter <enterPermissionMode>`
       - `build <buildPermissionMode>`
     - `size <size>` only for shulker and chest shells, will be random in unspecified
-    - `color <color>` only for shulker shells
-    - `rainbow <rainbow>` only for shulker shells
-    - `head-owner <headOwner>` only for head shells
-    - `template <template>` only for custom shells
+    - `color <color>` only for shulker shells, will be random if unspecified
+    - `rainbow <rainbow>` only for shulker shells, false by default
+    - `head-owner <headOwner>` only for head shells, will be the creator by default
+    - `template <template>` only for custom shells, **required to create custom shells**
+    - `position` specify at which position in the grid the shell will be generated, has some quirks
+      - `id <id>` id of the position
+      - `grid <x> <z>` coordinates of the position
+      - `here` position at your current location
   - `home`
     - `tp` teleports to your own home shell
     - `tp <player>` teleport to someone else's home shell
@@ -182,7 +186,7 @@ Configure where the player spawns in the snail shell and in which direction he w
 
 #### Initial Blocks
 
-`/sh custom edit <name> add-initial-block <block>`
+`/sh custom edit <name> add-initial-block <position>`
 
 `/sh custom edit <name> add-initial-block-area <position1> <position2>`
 
@@ -190,26 +194,50 @@ If you want a block to be copied, but you want the player to be able to break it
 
 #### Menu Block
 
-`/sh custom edit <name> set-menu-block <block>`
+`/sh custom edit <name> set-menu-block <position>`
 
 Clicking this block will open the snail shell menu. 
 
 #### Exit Blocks
 
-`/sh custom edit <name> add-exit-block <block>`
+`/sh custom edit <name> add-exit-block <position>`
 
 Clicking one of these blocks will make the player leave the shell.
 
-#### Alternative Blocks
+#### Block Restrictions
 
-`/sh custom edit <name> add-alternative-block <block> <alternative>`
+`/sh custom edit <name> set-block-restrictions <position> [<restriction1>] [<restriction2>] [<restriction3>]`
 
-For example, if you have a cauldron and want the player to be able to place water/lava in it, you could add minecraft:lava_cauldron
-as an alternative block. Otherwise, the automatic shell repair system will not allow the block type to change.
+`/sh custom edit <name> set-block-area-restrictions <position1> <position2> [<restriction1>] [<restriction2>] [<restriction3>]`
+
+`/sh custom edit <name> clear-block-restrictions <position1>`
+
+For every block in your snail shell, there is a list of block types, which is called "block restrictions".
+
+If this list is empty for a block, it means that there are no restrictions, 
+and that the player can break the block and place another block at this position.
+Actually adding a block as an initial block (using `/sh custom <name> edit add-initial-block`), will under the hood
+set the block restrictions list for that block to be empty.
+
+If the restriction list of a block is not empty, that block's type must be contained in the list.
+
+Players won't be able to place/break blocks if this invariant is not fulfilled after that.
+Besides, the repair system also enforces this.
+
+If you don't explicitly specify the restriction list for a block, the list's default value depends on whether the block is an air or non-air one.
+If it is an air block, the restriction list defaults to an empty list, meaning that players can place anything they want at that block position.
+If it is a non-air block, the restriction list defaults to a list only containing the block type of that non-air block.
+This means that players can't break any blocks that are part of the template by default.
+
+The default values can also be changed by using `/sh custom edit <name> set-protect-air true`.
+If the `protect_air` property is set to true, the restriction list of an air block in the template will default to a list
+containing only air. Therefore, players can't place blocks in the custom shell unless they are explicitly allowed to do so
+at a certain location.
 
 ### Exporting Custom Shell Types
 
 Run `/sh custom export <name>`. Copy the file created in the `plugins/Schneckenhaus/export` directory.
+You can share your creations on our Discord server.
 
 ### Importing Custom Shell Types
 
@@ -285,10 +313,9 @@ custom:
     - {item: 'minecraft:spyglass', amount: 1, model: null}
     template_world: schneckenhaus # name of the world where the template for this shell type is placed
     template_position: -30 0 -30 -20 10 -20 # area of the template
-    initial_blocks: [-29 1 -29] # list of blocks that are copied from the template, but can be broken by players after that
-    alternative_blocks:
-      # the shell repair system will not revert block type changes if they are registered here
-      -25 1 -25: ['minecraft:lava_cauldron', 'water_cauldron']
+    protect_air: false # whether players can build anywhere inside the shell by default
+    block_restrictions: # see the section about creating custom shells for a detailed explanation of what this means
+      -25 1 -25: ['minecraft:cauldron', 'minecraft:lava_cauldron', 'water_cauldron']
     spawn_position: {x: -188.50940344422307, y: 122.9375, z: 219.30000001192093, yaw: -18.117798,
       pitch: 3.7506914}
     # clicking one of these blocks teleports you back
@@ -299,7 +326,8 @@ custom:
 
 ### Home Shell Configuration
 
-If home shells are enabled, players will automatically receive a new shell on first join. 
+If home shells are enabled, players will automatically receive a new shell when they join the server
+and don't already have a home belonging to them.
 The player must have the permission `schneckenhaus.home_shell` (which is false by default).
 If players additionally have the permission `schneckenhaus.never_homeless` (which is true by default),
 it is impossible for them to lose their homes.
@@ -343,15 +371,16 @@ worlds:
   # name of the world
   schneckenhaus:
     fallback: true # whether this is the default world for snail shell creation, can only be true for one world
-    time_sync_world: world # will sync the time
+    biome: 'plains' # biome of the void world, this value is only used when newly creating the world, not for already existing ones
+    time_sync_world: world # will sync the time with another world
     conditions: []
-  schneckenhaus_homes:
+  schneckenhaus_homes: # for example, a second world that should contain all home shells
     fallback: false
     time_sync_world: world
     conditions: # at least one of the following conditions must be true for a shell to be created in this world
-      # example condition: all shells created by crafting will be created in this world
+      # example condition: all shells created by the home shell system will be created in this world
       type: creation
-      creation_type: crafting
+      creation_type: home
 ```
 
 ### Shell Conditions

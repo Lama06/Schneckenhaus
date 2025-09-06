@@ -14,7 +14,7 @@ import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 
 public final class LeaveShellSystem extends System {
     public LeaveShellSystem() {
-        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::detectPlayerLeaveSnailShellUnexpectedly, 0, 10);
+        Bukkit.getScheduler().runTaskTimer(SchneckenhausPlugin.INSTANCE, this::detectPlayerLeaveSnailShellUnexpectedly, 0, 40);
     }
 
     @EventHandler

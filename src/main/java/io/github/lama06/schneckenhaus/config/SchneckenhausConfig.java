@@ -30,8 +30,8 @@ public final class SchneckenhausConfig {
     private final ConditionalTaskFeatureConfig chunkLoading = new ConditionalTaskFeatureConfig(100);
     private final ConditionalFeatureConfig hoppers = new ConditionalFeatureConfig();
     private final ShellInstanceSyncConfig shellInstancesSync = new ShellInstanceSyncConfig();
-    private final ConditionalFeatureConfig theftPrevention = new ConditionalFeatureConfig();
-    private final ConditionalTaskFeatureConfig escapePrevention = new ConditionalTaskFeatureConfig(20);
+    private final ConditionalFeatureConfig theftPrevention = new ConditionalFeatureConfig(false);
+    private final ConditionalTaskFeatureConfig escapePrevention = new ConditionalTaskFeatureConfig(60);
     private final ConditionalTaskFeatureConfig repairSystem = new ConditionalTaskFeatureConfig(200);
     private Location fallbackExitLocation;
 

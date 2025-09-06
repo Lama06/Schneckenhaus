@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public final class RemoveInvalidShellItemsSystem extends System {
     @Override
     public void start() {
-        Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 20, 20);
+        Bukkit.getScheduler().runTaskTimer(plugin, this::tick, 80, 80);
     }
 
     private void tick() {

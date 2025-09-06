@@ -7,8 +7,16 @@ import io.github.lama06.schneckenhaus.shell.ShellData;
 import java.util.*;
 
 public class ConditionalFeatureConfig {
-    private boolean enabled = true;
+    private boolean enabled;
     private List<ShellConditionConfig> conditions = List.of();
+
+    public ConditionalFeatureConfig() {
+        enabled = true;
+    }
+
+    public ConditionalFeatureConfig(boolean enabled) {
+        this.enabled = enabled;
+    }
 
     public boolean check(ShellData data) {
         if (conditions.isEmpty()) {

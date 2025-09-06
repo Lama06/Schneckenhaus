@@ -36,6 +36,9 @@ public final class InputScreen implements Listener {
             Message.PLAYER_NAME_INPUT.asComponent(NamedTextColor.WHITE),
             initialText,
             name -> {
+                if (name.isEmpty()) {
+                    return;
+                }
                 OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
                 if (!offlinePlayer.isOnline() && !offlinePlayer.hasPlayedBefore()) {
                     player.sendMessage(Message.PLAYER_NOT_FOUND.asComponent(NamedTextColor.RED, name));

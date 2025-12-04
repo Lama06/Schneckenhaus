@@ -4,6 +4,7 @@ import io.github.lama06.schneckenhaus.SchneckenhausPlugin;
 import io.github.lama06.schneckenhaus.shell.chest.ChestShellConfig;
 import io.github.lama06.schneckenhaus.shell.custom.CustomShellConfig;
 import io.github.lama06.schneckenhaus.shell.head.HeadShellConfig;
+import io.github.lama06.schneckenhaus.shell.permission.ShellPermissionMode;
 import io.github.lama06.schneckenhaus.shell.shulker.ShulkerShellConfig;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
@@ -34,6 +35,9 @@ public final class SchneckenhausConfig {
     private final ConditionalTaskFeatureConfig escapePrevention = new ConditionalTaskFeatureConfig(60);
     private final ConditionalTaskFeatureConfig repairSystem = new ConditionalTaskFeatureConfig(200);
     private Location fallbackExitLocation;
+
+    private ShellPermissionMode defaultEnterPermissionMode = ShellPermissionMode.EVERYBODY;
+    private ShellPermissionMode defaultBuildPermissionMode = ShellPermissionMode.EVERYBODY;
 
     public SchneckenhausConfig() {
         worlds.put("schneckenhaus", new WorldConfig(true));
@@ -118,6 +122,18 @@ public final class SchneckenhausConfig {
         if (config.get("fallback_exit_location") instanceof Map<?, ?> fallbackExitLocation) {
             this.fallbackExitLocation = ConfigUtil.deserializeLocation(fallbackExitLocation);
         }
+
+        if (config.get("default_enter_permission_mode") instanceof String enterModeStr) {
+            try {
+                defaultEnterPermissionMode = ShellPermissionMode.valueOf(enterModeStr.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException ignored) { }
+        }
+
+        if (config.get("default_build_permission_mode") instanceof String buildModeStr) {
+            try {
+                defaultBuildPermissionMode = ShellPermissionMode.valueOf(buildModeStr.toUpperCase(Locale.ROOT));
+            } catch (IllegalArgumentException ignored) { }
+        }
     }
 
     public Map<String, Object> serialize() {
@@ -148,6 +164,9 @@ public final class SchneckenhausConfig {
         config.put("escape_prevention", escapePrevention.serialize());
         config.put("repair_system", repairSystem.serialize());
         config.put("fallback_exit_location", ConfigUtil.serializeLocation(fallbackExitLocation, true));
+
+        config.put("default_enter_permission_mode", defaultEnterPermissionMode.name());
+        config.put("default_build_permission_mode", defaultBuildPermissionMode.name());
 
         config.put("data_version", SchneckenhausPlugin.INSTANCE.getPluginMeta().getVersion());
 
@@ -205,4 +224,13 @@ public final class SchneckenhausConfig {
     public Location getFallbackExitLocation() {
         return fallbackExitLocation;
     }
+
+    public ShellPermissionMode getDefaultEnterPermissionMode() {
+        return defaultEnterPermissionMode;
+    }
+
+    public ShellPermissionMode getDefaultBuildPermissionMode() {
+        return defaultBuildPermissionMode;
+    }
+
 }

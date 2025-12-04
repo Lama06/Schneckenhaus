@@ -126,11 +126,11 @@ public abstract class ShellBuilder extends ConstantsHolder implements ShellData 
         }
 
         if (enterPermissionMode == null) {
-            enterPermissionMode = ShellPermissionMode.EVERYBODY;
+            enterPermissionMode = plugin.getPluginConfig().getDefaultEnterPermissionMode();
         }
 
         if (buildPermissionMode == null) {
-            buildPermissionMode = ShellPermissionMode.EVERYBODY;
+            buildPermissionMode = plugin.getPluginConfig().getDefaultBuildPermissionMode();
         }
 
         String insertSql = """

@@ -11,9 +11,9 @@ import io.github.lama06.schneckenhaus.shell.ShellManager;
 import io.github.lama06.schneckenhaus.shell.custom.CustomShell;
 import io.github.lama06.schneckenhaus.systems.Systems;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
-import org.bstats.bukkit.Metrics;
+/*import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bstats.charts.SingleLineChart;
+import org.bstats.charts.SingleLineChart;*/
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -74,11 +74,11 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
             command = new SchneckenhausCommand();
             getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> command.register(event.registrar()));
 
-            try {
+            /*try {
                 startBstats();
             } catch (Exception e) {
                 getSLF4JLogger().warn("Failed to start bStats", e);
-            }
+            }*/
 
             Bukkit.getPluginManager().registerEvents(this, this);
 
@@ -89,7 +89,7 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
         }
     }
 
-    private void startBstats() {
+    /*private void startBstats() {
         Metrics metrics = new Metrics(this, BSTATS_ID);
         metrics.addCustomChart(new SimplePie("custom_shell_types", () -> getPluginConfig().getCustom().isEmpty() ? "no" : "yes"));
         metrics.addCustomChart(new SingleLineChart("shells", shellManager::getCurrentShellCount));
@@ -101,7 +101,7 @@ public final class SchneckenhausPlugin extends JavaPlugin implements Listener {
             return language.getName();
         }));
         metrics.addCustomChart(new SimplePie("world_count", () -> String.valueOf(config.getConfig().getWorlds().size())));
-    }
+    }*/
 
     @Override
     public Logger getSLF4JLogger() {
